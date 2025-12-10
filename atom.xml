@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://blog.oldwang.site</id>
+    <title>老王的个人博客</title>
+    <link href="http://blog.oldwang.site" />
+    <updated>2025-12-09T16:00:00.000Z</updated>
+    <category term="ELK" />
+    <entry>
+        <id>http://blog.oldwang.site/posts/3825997150.html</id>
+        <title>01 ELK 日志收集系统概述</title>
+        <link rel="alternate" href="http://blog.oldwang.site/posts/3825997150.html"/>
+        <content type="html">&lt;h1 id=&#34;elk-相关技术介绍&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#elk-相关技术介绍&#34;&gt;#&lt;/a&gt; ELK 相关技术介绍&lt;/h1&gt;
+&lt;h2 id=&#34;1-elk-诞生的背景&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-elk-诞生的背景&#34;&gt;#&lt;/a&gt; 1. ELK 诞生的背景&lt;/h2&gt;
+&lt;h3 id=&#34;11-没有-elk-分析日志前&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#11-没有-elk-分析日志前&#34;&gt;#&lt;/a&gt; 1.1 没有 ELK 分析日志前&lt;/h3&gt;
+&lt;p&gt;没有日志分析工具之前，运维工作存在哪些痛点？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;痛点 1：生产出现故障后，运维需要不停的查看各种不同的日志进行分析？是不是毫无头绪？&lt;/li&gt;
+&lt;li&gt;痛点 2：项目上线出现错误，如何快速定位问题？如果后端节点过多、日志分散怎么办？&lt;/li&gt;
+&lt;li&gt;痛点 3：开发人员需要实时查看日志但又不想给服务器的登陆权限，怎么办？难道每天帮开发取日志？&lt;/li&gt;
+&lt;li&gt;痛点 4：如何在海量的日志中快速的提取我们想要的数据？比如：PV、UV、TOP10 的 URL？如果分析的日志数据量大，那么势必会导致查询速度慢、难度增大，最终则会导致我们无法快速的获取到想要的指标。&lt;/li&gt;
+&lt;li&gt;痛点 5：CDN 公司需要不停的分析日志，那分析什么？主要分析命中率，为什么？因为我们给用户承诺的命中率是 90% 以上。如果没有达到 90%，我们就要去分析数据为什么没有被命中、为什么没有被缓存下来。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;12-使用-elk-分析日志后&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#12-使用-elk-分析日志后&#34;&gt;#&lt;/a&gt; 1.2 使用 ELK 分析日志后&lt;/h3&gt;
+&lt;p&gt;如上所有的痛点都可以使用日志分析系统 ELK 解决，通过 ELK，将运维所有的服务器日志，业务系统日志都收集到一个平台下，然后提取想要的内容，比如错误信息，警告信息等，当过滤到这种信息，就马上告警，告警后，运维人员就能马上定位是哪台机器、哪个业务系统出现了问题，出现了什么问题。&lt;/p&gt;
+&lt;h2 id=&#34;2-elk-技术栈是什么&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2-elk-技术栈是什么&#34;&gt;#&lt;/a&gt; 2. ELK 技术栈是什么&lt;/h2&gt;
+&lt;h3 id=&#34;21-什么是-elk&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#21-什么是-elk&#34;&gt;#&lt;/a&gt; 2.1 什么是 ELK&lt;/h3&gt;
+&lt;p&gt;其实 ELK 不是一个单独的技术，而是一套技术的组合，是由 Elasticsearch、Logstash、Kibana 组合而成的。&lt;br /&gt;
+ELK 是一套开源免费、功能强大的日志分析管理系统。ELK 可以将我们的系统日志、网站日志、应用系统日志等各种日志进行收集、过滤、清洗，然后进行集中存放并可用于实时检索、分析。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;E：Elasticsearch 数据存储；&lt;/li&gt;
+&lt;li&gt;L：Logstash 数据采集、数据清洗、数据过滤；&lt;/li&gt;
+&lt;li&gt;K：Kibana 数据分析、数据展示；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;缺点&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1、Logstash 基于 Java 开发，内存消耗极高&lt;/li&gt;
+&lt;li&gt;2、Logstash 与 ElasticSerach 耦合度过紧，容易打爆 ES，造成数据丢失&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;22-什么是-efk&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#22-什么是-efk&#34;&gt;#&lt;/a&gt; 2.2 什么是 EFK&lt;/h3&gt;
+&lt;p&gt;简单来说就是将 Logstash 替换成了 Filebeat，那为什么要进行替换？&lt;br /&gt;
+因为 Logstash 是基于 JAVA 开发的，在收集日志时会大量的占用业务系统资源，从而影响正常线上业务。而替换成 filebeat 这种较为轻量的日志收集组件，会让业务系统的运行更加的稳定。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;缺点&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1、Filebeat 与 ElasticSearch 耦合度过紧，容易打爆 ES，造成数据丢失；&lt;/li&gt;
+&lt;li&gt;2、Filebeat 对日志格式的处理与转换，比较的弱；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;23-什么是-elfk&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#23-什么是-elfk&#34;&gt;#&lt;/a&gt; 2.3 什么是 ELFK&lt;/h3&gt;
+&lt;h3 id=&#34;24-elk-kafka&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#24-elk-kafka&#34;&gt;#&lt;/a&gt; 2.4 ELK + Kafka&lt;/h3&gt;
+&lt;p&gt;该解决方案可支持每日 1TB 级别的业务日志处理。若贵公司业务日志量达到每日 10 TB，建议根据业务系统进行横向拆分，部署多套独立 ELK 集群。&lt;/p&gt;
+&lt;p&gt;Kafka 消息队列 可以将 Filebeat 与 ElasticSearch 进行解耦，从而可以避免 ES 被打爆的现象；&lt;/p&gt;
+&lt;p&gt;Logstash&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1、可以从 Kafka 中获取数据，然后匀速写入 ElasticSearch 中：&lt;/li&gt;
+&lt;li&gt;2、能针对那些非结构化的数据，将其转为结构化数据，并可以对无用字段进行清洗；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;24-efk-收集哪些日志&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#24-efk-收集哪些日志&#34;&gt;#&lt;/a&gt; 2.4 EFK 收集哪些日志&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;代理：Haproxy、Nginx&lt;/li&gt;
+&lt;li&gt;Web：Nginx、Tomcat、Httpd、PHP&lt;/li&gt;
+&lt;li&gt;DB：mysql、redis、mongo、elasticsearch&lt;/li&gt;
+&lt;li&gt;存储：nfs、glusterfs、fastdfs&lt;/li&gt;
+&lt;li&gt;系统：message、security&lt;/li&gt;
+&lt;li&gt;业务：app&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;25-elk-软件下载地址&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#25-elk-软件下载地址&#34;&gt;#&lt;/a&gt; 2.5 ELK 软件下载地址&lt;/h3&gt;
+&lt;h4 id=&#34;251-redhat-系列&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#251-redhat-系列&#34;&gt;#&lt;/a&gt; 2.5.1 RedHat 系列&lt;/h4&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;软件名称&lt;/th&gt;
+&lt;th&gt;版本&lt;/th&gt;
+&lt;th&gt;下载地址&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ElasticSearch&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Logstash&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/logstash/logstash-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/logstash/logstash-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Kibana&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/kibana/kibana-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/kibana/kibana-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Filebeat&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;252-debian-系统&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#252-debian-系统&#34;&gt;#&lt;/a&gt; 2.5.2 Debian 系统&lt;/h4&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;软件名称&lt;/th&gt;
+&lt;th&gt;版本&lt;/th&gt;
+&lt;th&gt;下载地址&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ElasticSearch&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Logstash&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/logstash/logstash-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/logstash/logstash-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Kibana&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/kibana/kibana-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/kibana/kibana-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Filebeat&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</content>
+        <category term="ELK" />
+        <updated>2025-12-09T16:00:00.000Z</updated>
+    </entry>
+</feed>
