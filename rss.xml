@@ -14,7 +14,10 @@
             <link>http://blog.oldwang.site/posts/3825997150.html</link>
             <category>ELK</category>
             <pubDate>Wed, 10 Dec 2025 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;h1 id=&#34;ELK-相关技术介绍&#34;&gt;&lt;a href=&#34;#ELK-相关技术介绍&#34; class=&#34;headerlink&#34; title=&#34;ELK 相关技术介绍&#34;&gt;&lt;/a&gt;ELK 相关技术介绍&lt;/h1&gt;&lt;h2 id=&#34;1-ELK-诞生的背景&#34;&gt;&lt;a href=&#34;#1-ELK-诞生的背景&#34; class=&#34;headerlink&#34; title=&#34;1. ELK 诞生的背景&#34;&gt;&lt;/a&gt;1. ELK 诞生的背景&lt;/h2&gt;&lt;h3 id=&#34;1-1-没有-ELK-分析日志前&#34;&gt;&lt;a href=&#34;#1-1-没有-ELK-分析日志前&#34; class=&#34;headerlink&#34; title=&#34;1.1 没有 ELK 分析日志前&#34;&gt;&lt;/a&gt;1.1 没有 ELK 分析日志前&lt;/h3&gt;&lt;p&gt;没有日志分析工具之前，运维工作存在哪些痛点？&lt;/p&gt;
+            <description><![CDATA[ &lt;h1 id=&#34;elk-相关技术介绍&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#elk-相关技术介绍&#34;&gt;#&lt;/a&gt; ELK 相关技术介绍&lt;/h1&gt;
+&lt;h2 id=&#34;1-elk-诞生的背景&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-elk-诞生的背景&#34;&gt;#&lt;/a&gt; 1. ELK 诞生的背景&lt;/h2&gt;
+&lt;h3 id=&#34;11-没有-elk-分析日志前&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#11-没有-elk-分析日志前&#34;&gt;#&lt;/a&gt; 1.1 没有 ELK 分析日志前&lt;/h3&gt;
+&lt;p&gt;没有日志分析工具之前，运维工作存在哪些痛点？&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;痛点 1：生产出现故障后，运维需要不停的查看各种不同的日志进行分析？是不是毫无头绪？&lt;/li&gt;
 &lt;li&gt;痛点 2：项目上线出现错误，如何快速定位问题？如果后端节点过多、日志分散怎么办？&lt;/li&gt;
@@ -22,8 +25,12 @@
 &lt;li&gt;痛点 4：如何在海量的日志中快速的提取我们想要的数据？比如：PV、UV、TOP10 的 URL？如果分析的日志数据量大，那么势必会导致查询速度慢、难度增大，最终则会导致我们无法快速的获取到想要的指标。&lt;/li&gt;
 &lt;li&gt;痛点 5：CDN 公司需要不停的分析日志，那分析什么？主要分析命中率，为什么？因为我们给用户承诺的命中率是 90% 以上。如果没有达到 90%，我们就要去分析数据为什么没有被命中、为什么没有被缓存下来。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;1-2-使用-ELK-分析日志后&#34;&gt;&lt;a href=&#34;#1-2-使用-ELK-分析日志后&#34; class=&#34;headerlink&#34; title=&#34;1.2 使用 ELK 分析日志后&#34;&gt;&lt;/a&gt;1.2 使用 ELK 分析日志后&lt;/h3&gt;&lt;p&gt;如上所有的痛点都可以使用日志分析系统 ELK 解决，通过 ELK，将运维所有的服务器日志，业务系统日志都收集到一个平台下，然后提取想要的内容，比如错误信息，警告信息等，当过滤到这种信息，就马上告警，告警后，运维人员就能马上定位是哪台机器、哪个业务系统出现了问题，出现了什么问题。&lt;/p&gt;
-&lt;h2 id=&#34;2-ELK-技术栈是什么&#34;&gt;&lt;a href=&#34;#2-ELK-技术栈是什么&#34; class=&#34;headerlink&#34; title=&#34;2. ELK 技术栈是什么&#34;&gt;&lt;/a&gt;2. ELK 技术栈是什么&lt;/h2&gt;&lt;h3 id=&#34;2-1-什么是-ELK&#34;&gt;&lt;a href=&#34;#2-1-什么是-ELK&#34; class=&#34;headerlink&#34; title=&#34;2.1 什么是 ELK&#34;&gt;&lt;/a&gt;2.1 什么是 ELK&lt;/h3&gt;&lt;p&gt;其实 ELK 不是一个单独的技术，而是一套技术的组合，是由 Elasticsearch、Logstash、Kibana 组合而成的。&lt;br&gt;ELK 是一套开源免费、功能强大的日志分析管理系统。ELK 可以将我们的系统日志、网站日志、应用系统日志等各种日志进行收集、过滤、清洗，然后进行集中存放并可用于实时检索、分析。&lt;/p&gt;
+&lt;h3 id=&#34;12-使用-elk-分析日志后&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#12-使用-elk-分析日志后&#34;&gt;#&lt;/a&gt; 1.2 使用 ELK 分析日志后&lt;/h3&gt;
+&lt;p&gt;如上所有的痛点都可以使用日志分析系统 ELK 解决，通过 ELK，将运维所有的服务器日志，业务系统日志都收集到一个平台下，然后提取想要的内容，比如错误信息，警告信息等，当过滤到这种信息，就马上告警，告警后，运维人员就能马上定位是哪台机器、哪个业务系统出现了问题，出现了什么问题。&lt;/p&gt;
+&lt;h2 id=&#34;2-elk-技术栈是什么&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2-elk-技术栈是什么&#34;&gt;#&lt;/a&gt; 2. ELK 技术栈是什么&lt;/h2&gt;
+&lt;h3 id=&#34;21-什么是-elk&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#21-什么是-elk&#34;&gt;#&lt;/a&gt; 2.1 什么是 ELK&lt;/h3&gt;
+&lt;p&gt;其实 ELK 不是一个单独的技术，而是一套技术的组合，是由 Elasticsearch、Logstash、Kibana 组合而成的。&lt;br /&gt;
+ELK 是一套开源免费、功能强大的日志分析管理系统。ELK 可以将我们的系统日志、网站日志、应用系统日志等各种日志进行收集、过滤、清洗，然后进行集中存放并可用于实时检索、分析。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;E：Elasticsearch 数据存储；&lt;/li&gt;
 &lt;li&gt;L：Logstash 数据采集、数据清洗、数据过滤；&lt;/li&gt;
@@ -34,20 +41,25 @@
 &lt;li&gt;1、Logstash 基于 Java 开发，内存消耗极高&lt;/li&gt;
 &lt;li&gt;2、Logstash 与 ElasticSerach 耦合度过紧，容易打爆 ES，造成数据丢失&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;2-2-什么是-EFK&#34;&gt;&lt;a href=&#34;#2-2-什么是-EFK&#34; class=&#34;headerlink&#34; title=&#34;2.2 什么是 EFK&#34;&gt;&lt;/a&gt;2.2 什么是 EFK&lt;/h3&gt;&lt;p&gt;简单来说就是将 Logstash 替换成了 Filebeat，那为什么要进行替换？&lt;br&gt;因为 Logstash 是基于 JAVA 开发的，在收集日志时会大量的占用业务系统资源，从而影响正常线上业务。而替换成 filebeat 这种较为轻量的日志收集组件，会让业务系统的运行更加的稳定。&lt;/p&gt;
+&lt;h3 id=&#34;22-什么是-efk&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#22-什么是-efk&#34;&gt;#&lt;/a&gt; 2.2 什么是 EFK&lt;/h3&gt;
+&lt;p&gt;简单来说就是将 Logstash 替换成了 Filebeat，那为什么要进行替换？&lt;br /&gt;
+因为 Logstash 是基于 JAVA 开发的，在收集日志时会大量的占用业务系统资源，从而影响正常线上业务。而替换成 filebeat 这种较为轻量的日志收集组件，会让业务系统的运行更加的稳定。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;缺点&lt;/strong&gt;：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;1、Filebeat 与 ElasticSearch 耦合度过紧，容易打爆 ES，造成数据丢失；&lt;/li&gt;
 &lt;li&gt;2、Filebeat 对日志格式的处理与转换，比较的弱；&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;2-3-什么是-ELFK&#34;&gt;&lt;a href=&#34;#2-3-什么是-ELFK&#34; class=&#34;headerlink&#34; title=&#34;2.3 什么是 ELFK&#34;&gt;&lt;/a&gt;2.3 什么是 ELFK&lt;/h3&gt;&lt;h3 id=&#34;2-4-ELK-Kafka&#34;&gt;&lt;a href=&#34;#2-4-ELK-Kafka&#34; class=&#34;headerlink&#34; title=&#34;2.4 ELK + Kafka&#34;&gt;&lt;/a&gt;2.4 ELK + Kafka&lt;/h3&gt;&lt;p&gt;该解决方案可支持每日 1TB 级别的业务日志处理。若贵公司业务日志量达到每日 10 TB，建议根据业务系统进行横向拆分，部署多套独立 ELK 集群。&lt;/p&gt;
+&lt;h3 id=&#34;23-什么是-elfk&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#23-什么是-elfk&#34;&gt;#&lt;/a&gt; 2.3 什么是 ELFK&lt;/h3&gt;
+&lt;h3 id=&#34;24-elk-kafka&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#24-elk-kafka&#34;&gt;#&lt;/a&gt; 2.4 ELK + Kafka&lt;/h3&gt;
+&lt;p&gt;该解决方案可支持每日 1TB 级别的业务日志处理。若贵公司业务日志量达到每日 10 TB，建议根据业务系统进行横向拆分，部署多套独立 ELK 集群。&lt;/p&gt;
 &lt;p&gt;Kafka 消息队列 可以将 Filebeat 与 ElasticSearch 进行解耦，从而可以避免 ES 被打爆的现象；&lt;/p&gt;
 &lt;p&gt;Logstash&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;1、可以从 Kafka 中获取数据，然后匀速写入 ElasticSearch 中：&lt;/li&gt;
 &lt;li&gt;2、能针对那些非结构化的数据，将其转为结构化数据，并可以对无用字段进行清洗；&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;2-4-EFK-收集哪些日志&#34;&gt;&lt;a href=&#34;#2-4-EFK-收集哪些日志&#34; class=&#34;headerlink&#34; title=&#34;2.4 EFK 收集哪些日志&#34;&gt;&lt;/a&gt;2.4 EFK 收集哪些日志&lt;/h3&gt;&lt;ul&gt;
+&lt;h3 id=&#34;24-efk-收集哪些日志&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#24-efk-收集哪些日志&#34;&gt;#&lt;/a&gt; 2.4 EFK 收集哪些日志&lt;/h3&gt;
+&lt;ul&gt;
 &lt;li&gt;代理：Haproxy、Nginx&lt;/li&gt;
 &lt;li&gt;Web：Nginx、Tomcat、Httpd、PHP&lt;/li&gt;
 &lt;li&gt;DB：mysql、redis、mongo、elasticsearch&lt;/li&gt;
@@ -55,7 +67,9 @@
 &lt;li&gt;系统：message、security&lt;/li&gt;
 &lt;li&gt;业务：app&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;2-5-ELK-软件下载地址&#34;&gt;&lt;a href=&#34;#2-5-ELK-软件下载地址&#34; class=&#34;headerlink&#34; title=&#34;2.5 ELK 软件下载地址&#34;&gt;&lt;/a&gt;2.5 ELK 软件下载地址&lt;/h3&gt;&lt;h4 id=&#34;2-5-1-RedHat-系列&#34;&gt;&lt;a href=&#34;#2-5-1-RedHat-系列&#34; class=&#34;headerlink&#34; title=&#34;2.5.1 RedHat 系列&#34;&gt;&lt;/a&gt;2.5.1 RedHat 系列&lt;/h4&gt;&lt;table&gt;
+&lt;h3 id=&#34;25-elk-软件下载地址&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#25-elk-软件下载地址&#34;&gt;#&lt;/a&gt; 2.5 ELK 软件下载地址&lt;/h3&gt;
+&lt;h4 id=&#34;251-redhat-系列&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#251-redhat-系列&#34;&gt;#&lt;/a&gt; 2.5.1 RedHat 系列&lt;/h4&gt;
+&lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
 &lt;th&gt;软件名称&lt;/th&gt;
@@ -63,7 +77,8 @@
 &lt;th&gt;下载地址&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
-&lt;tbody&gt;&lt;tr&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
 &lt;td&gt;ElasticSearch&lt;/td&gt;
 &lt;td&gt;8.18.2&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
@@ -83,8 +98,10 @@
 &lt;td&gt;8.18.2&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;
-&lt;h4 id=&#34;2-5-2-Debian-系统&#34;&gt;&lt;a href=&#34;#2-5-2-Debian-系统&#34; class=&#34;headerlink&#34; title=&#34;2.5.2 Debian 系统&#34;&gt;&lt;/a&gt;2.5.2 Debian 系统&lt;/h4&gt;&lt;table&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;252-debian-系统&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#252-debian-系统&#34;&gt;#&lt;/a&gt; 2.5.2 Debian 系统&lt;/h4&gt;
+&lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
 &lt;th&gt;软件名称&lt;/th&gt;
@@ -92,7 +109,8 @@
 &lt;th&gt;下载地址&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
-&lt;tbody&gt;&lt;tr&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
 &lt;td&gt;ElasticSearch&lt;/td&gt;
 &lt;td&gt;8.18.2&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
@@ -112,7 +130,866 @@
 &lt;td&gt;8.18.2&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">http://blog.oldwang.site/posts/4103087246.html</guid>
+            <title>02 Elasticsearch 入门</title>
+            <link>http://blog.oldwang.site/posts/4103087246.html</link>
+            <category>ELK</category>
+            <pubDate>Wed, 10 Dec 2025 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;1、ES-基本概念介绍&#34;&gt;&lt;a href=&#34;#1、ES-基本概念介绍&#34; class=&#34;headerlink&#34; title=&#34;1、ES 基本概念介绍&#34;&gt;&lt;/a&gt;1、ES 基本概念介绍&lt;/h2&gt;&lt;h3 id=&#34;1-1-ES-是什么&#34;&gt;&lt;a href=&#34;#1-1-ES-是什么&#34; class=&#34;headerlink&#34; title=&#34;1.1 ES 是什么&#34;&gt;&lt;/a&gt;1.1 ES 是什么&lt;/h3&gt;&lt;p&gt;Elasticsearch 是一个分布式、RESTful 风格的搜索和数据分析引擎。&lt;/p&gt;
+&lt;h3 id=&#34;1-2-ES-主要功能&#34;&gt;&lt;a href=&#34;#1-2-ES-主要功能&#34; class=&#34;headerlink&#34; title=&#34;1.2 ES 主要功能&#34;&gt;&lt;/a&gt;1.2 ES 主要功能&lt;/h3&gt;&lt;p&gt;数据存储、数据搜索、数据分析。&lt;/p&gt;
+&lt;h2 id=&#34;2、ES-相关术语&#34;&gt;&lt;a href=&#34;#2、ES-相关术语&#34; class=&#34;headerlink&#34; title=&#34;2、ES 相关术语&#34;&gt;&lt;/a&gt;2、ES 相关术语&lt;/h2&gt;&lt;h3 id=&#34;2-1-文档-Document&#34;&gt;&lt;a href=&#34;#2-1-文档-Document&#34; class=&#34;headerlink&#34; title=&#34;2.1 文档 Document&#34;&gt;&lt;/a&gt;2.1 文档 Document&lt;/h3&gt;&lt;p&gt;Document 文档就是用户存在 es 中的数据，它是 es 中存储的最小单元。（类似于表中的一行数据）&lt;br&gt;&lt;strong&gt;注意&lt;/strong&gt;：每个文档都有一个唯一的 ID 表示，可以自行指定，如果不指定 es 会自动生成。&lt;/p&gt;
+&lt;h3 id=&#34;2-2-索引-Index&#34;&gt;&lt;a href=&#34;#2-2-索引-Index&#34; class=&#34;headerlink&#34; title=&#34;2.2 索引 Index&#34;&gt;&lt;/a&gt;2.2 索引 Index&lt;/h3&gt;&lt;p&gt;索引其实是一堆文档 Document 的集合。（它类似数据库的中的一个表）&lt;br&gt;在一个索引中，会有多个文档，而每个文档是由多个不同类型的字段拼接在一起的。&lt;/p&gt;
+&lt;h3 id=&#34;2-3-字段-Filed&#34;&gt;&lt;a href=&#34;#2-3-字段-Filed&#34; class=&#34;headerlink&#34; title=&#34;2.3 字段 Filed&#34;&gt;&lt;/a&gt;2.3 字段 Filed&lt;/h3&gt;&lt;p&gt;在 ES 中，Document 就是一个 Json Object，一个 Json Object 其实是由多个字段组成的，每个字段它有不同的数据类型。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;字符串：text、keyword。&lt;/li&gt;
+&lt;li&gt;数值型：long，integer，short，byte，double，float&lt;/li&gt;
+&lt;li&gt;布尔：boolean&lt;/li&gt;
+&lt;li&gt;二进制：binary&lt;/li&gt;
+&lt;li&gt;范围类型：integer_range，float_range，long_range，double_range，date_range&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-4-ES-术语总结&#34;&gt;&lt;a href=&#34;#2-4-ES-术语总结&#34; class=&#34;headerlink&#34; title=&#34;2.4 ES 术语总结&#34;&gt;&lt;/a&gt;2.4 ES 术语总结&lt;/h3&gt;&lt;p&gt;ES 索引、文档、字段关系小结：&lt;br&gt;一个索引里面存储了很多的 Document 文档，一个文档就是一个 Json Object，一个 Json Object 是由多个不同或相同的 filed 字段组成。&lt;/p&gt;
+&lt;h2 id=&#34;3、ES-操作方式&#34;&gt;&lt;a href=&#34;#3、ES-操作方式&#34; class=&#34;headerlink&#34; title=&#34;3、ES 操作方式&#34;&gt;&lt;/a&gt;3、ES 操作方式&lt;/h2&gt;&lt;p&gt;ES 的操作和我们传统的数据库操作不太一样，它是通过 Restful API 方式进行操作的，其实本质上就是通过 HTTP 的方式去变更我们的资源状态：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通过 URI 指定要操作的资源，比如 Index、Document；&lt;/li&gt;
+&lt;li&gt;通过 Http Method 指定要操作的方法，如 GET、POST、PUT、DELETE；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;常见操作 ES 的两种方式：Curl、Kibana DevTools&lt;/p&gt;
+&lt;h3 id=&#34;3-1-ES-单节点部署&#34;&gt;&lt;a href=&#34;#3-1-ES-单节点部署&#34; class=&#34;headerlink&#34; title=&#34;3.1 ES 单节点部署&#34;&gt;&lt;/a&gt;3.1 ES 单节点部署&lt;/h3&gt;&lt;h4 id=&#34;3-1-1-CentOS-系列&#34;&gt;&lt;a href=&#34;#3-1-1-CentOS-系列&#34; class=&#34;headerlink&#34; title=&#34;3.1.1 CentOS 系列&#34;&gt;&lt;/a&gt;3.1.1 CentOS 系列&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、安装 Java 环境
+[root@es-node1 ~]# yum install java-17-openjdk java-17-openjdk-devel
+
+# 2、安装 ES
+[root@es-node1 ~]# rpm -ivh elasticsearch-8.18.2-x86_64.rpm
+
+# 3、关闭 ES 默认开启的 Security 认证
+[root@es-node1 ~]# vim /etc/elasticsearch/elasticsearch.yml
+# Enable security features
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: false
+
+# 4、修改 ES 的 JVM 堆内存
+[root@es-node1 ~]# vim /etc/elasticsearch/jvm.options
+-Xms1g
+-Xmx1g
+
+# 5、启动 ES 单节点
+[root@es-node1 ~]# systemctl enable --now elasticsearch
+
+# 6. 端口验证
+[root@es-node1 ~]# netstat -nltp
+# 9200    &amp;lt;= HTTP 通信端口
+# 9300    &amp;lt;= 内部集群通信端口
+
+# 7、访问 ES
+[root@es-node1 ~]# curl localhost:9200
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;访问 ES 正常返回结果：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;&amp;#123;
+  &amp;quot;name&amp;quot; : &amp;quot;es-node01.oldwang.net&amp;quot;,
+  &amp;quot;cluster_name&amp;quot; : &amp;quot;elasticsearch&amp;quot;,
+  &amp;quot;cluster_uuid&amp;quot; : &amp;quot;HJlIqvnXQx2KfPzttxcA7A&amp;quot;,
+  &amp;quot;version&amp;quot; : &amp;#123;
+    &amp;quot;number&amp;quot; : &amp;quot;8.18.2&amp;quot;,
+    &amp;quot;build_flavor&amp;quot; : &amp;quot;default&amp;quot;,
+    &amp;quot;build_type&amp;quot; : &amp;quot;rpm&amp;quot;,
+    &amp;quot;build_hash&amp;quot; : &amp;quot;16cc90cd2d08a3147ce02b07e50894bc060a4cbf&amp;quot;,
+    &amp;quot;build_date&amp;quot; : &amp;quot;2099-04-05T14:45:26.420424304Z&amp;quot;,
+    &amp;quot;build_snapshot&amp;quot; : false,
+    &amp;quot;lucene_version&amp;quot; : &amp;quot;9.10.0&amp;quot;,
+    &amp;quot;minimum_wire_compatibility_version&amp;quot; : &amp;quot;7.17.0&amp;quot;,
+    &amp;quot;minimum_index_compatibility_version&amp;quot; : &amp;quot;7.0.0&amp;quot;
+  &amp;#125;,
+  &amp;quot;tagline&amp;quot; : &amp;quot;You Know, for Search&amp;quot;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;3-1-2-Ubuntu-系列&#34;&gt;&lt;a href=&#34;#3-1-2-Ubuntu-系列&#34; class=&#34;headerlink&#34; title=&#34;3.1.2 Ubuntu 系列&#34;&gt;&lt;/a&gt;3.1.2 Ubuntu 系列&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1. 安装 Java 环境
+[root@es-node1 ~] apt update
+[root@es-node1 ~] apt install -y openjdk-17-jdk
+
+# 2. 安装 Elasticsearch
+[root@es-node1 ~] wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-amd64.deb
+[root@es-node1 ~] dpkg -i elasticsearch-8.18.2-amd64.deb
+
+# 3. 关闭 ES 默认开启的 Security 认证
+[root@es-node1 ~] vim /etc/elasticsearch/elasticsearch.yml
+# 修改以下内容
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: false
+
+# 4. 修改 ES 的 JVM 堆内存
+[root@es-node1 ~] vim /etc/elasticsearch/jvm.options
+# 修改
+-Xms1g
+-Xmx1g
+
+# 5. 启动 ES 单节点
+[root@es-node1 ~] systemctl enable --now elasticsearch
+
+# 6. 端口验证
+[root@es-node1 ~] ss -nltp
+# 9200 &amp;lt;= HTTP 通信端口
+# 9300 &amp;lt;= 内部集群通信端口
+
+# 7. 访问 ES
+[root@es-node1 ~] curl localhost:9200
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;访问 ES 正常返回结果：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;&amp;#123;
+  &amp;quot;name&amp;quot; : &amp;quot;es-node1.wang.org&amp;quot;,
+  &amp;quot;cluster_name&amp;quot; : &amp;quot;elasticsearch&amp;quot;,
+  &amp;quot;cluster_uuid&amp;quot; : &amp;quot;xQUmZCMTQ7Ohi3TB25H0Yw&amp;quot;,
+  &amp;quot;version&amp;quot; : &amp;#123;
+    &amp;quot;number&amp;quot; : &amp;quot;8.18.2&amp;quot;,
+    &amp;quot;build_flavor&amp;quot; : &amp;quot;default&amp;quot;,
+    &amp;quot;build_type&amp;quot; : &amp;quot;deb&amp;quot;,
+    &amp;quot;build_hash&amp;quot; : &amp;quot;c6b8d8d951c631db715485edc1a74190cdce4189&amp;quot;,
+    &amp;quot;build_date&amp;quot; : &amp;quot;2025-05-23T10:07:06.210694702Z&amp;quot;,
+    &amp;quot;build_snapshot&amp;quot; : false,
+    &amp;quot;lucene_version&amp;quot; : &amp;quot;9.12.1&amp;quot;,
+    &amp;quot;minimum_wire_compatibility_version&amp;quot; : &amp;quot;7.17.0&amp;quot;,
+    &amp;quot;minimum_index_compatibility_version&amp;quot; : &amp;quot;7.0.0&amp;quot;
+  &amp;#125;,
+  &amp;quot;tagline&amp;quot; : &amp;quot;You Know, for Search&amp;quot;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;3-2-Curl-命令操作-ES&#34;&gt;&lt;a href=&#34;#3-2-Curl-命令操作-ES&#34; class=&#34;headerlink&#34; title=&#34;3.2 Curl 命令操作 ES&#34;&gt;&lt;/a&gt;3.2 Curl 命令操作 ES&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、使用 Curl 命令来创建索引, 录入一份文档
+[root@es-node1 ~]# curl -XPUT &amp;#39;http://localhost:9200/oldwang_index/_doc/1&amp;#39; \
+-H &amp;quot;Content-Type: application/json&amp;quot; \
+-d &amp;#39;&amp;#123;
+&amp;quot;name&amp;quot;:&amp;quot;oldwang&amp;quot;,
+&amp;quot;age&amp;quot;:18,
+&amp;quot;salary&amp;quot;: 1000000
+&amp;#125;&amp;#39;
+
+# 2、使用 Curl 命令来查看录入的数据
+[root@es-node1 ~]# curl -XGET &amp;#39;http://localhost:9200/oldwang_index/_doc/1&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查看数据返回结果：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;&amp;#123;&amp;quot;_index&amp;quot;:&amp;quot;oldwang_index&amp;quot;,&amp;quot;_id&amp;quot;:&amp;quot;1&amp;quot;,&amp;quot;_version&amp;quot;:1,&amp;quot;_seq_no&amp;quot;:0,&amp;quot;_primary_term&amp;quot;:1,&amp;quot;found&amp;quot;:true,&amp;quot;_source&amp;quot;:&amp;#123;
+  &amp;quot;username&amp;quot;: &amp;quot;oldwang&amp;quot;,
+  &amp;quot;age&amp;quot;: 18,
+  &amp;quot;salary&amp;quot;: 1000000
+&amp;#125;&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;3-3-安装-Kibana-操作-ES&#34;&gt;&lt;a href=&#34;#3-3-安装-Kibana-操作-ES&#34; class=&#34;headerlink&#34; title=&#34;3.3 安装 Kibana 操作 ES&#34;&gt;&lt;/a&gt;3.3 安装 Kibana 操作 ES&lt;/h3&gt;&lt;h4 id=&#34;3-3-1-CentOS-系列&#34;&gt;&lt;a href=&#34;#3-3-1-CentOS-系列&#34; class=&#34;headerlink&#34; title=&#34;3.3.1 CentOS 系列&#34;&gt;&lt;/a&gt;3.3.1 CentOS 系列&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、安装 kibana
+[root@es-node1 ~]# rpm -ivh kibana-8.18.2-x86_64.rpm
+
+# 2、配置 Kibana
+[root@es-node1 ~]# vim /etc/kibana/kibana.yml
+# 配置内容：
+server.port: 5601                                  # kibana 默认监听端口
+server.host: &amp;quot;0.0.0.0&amp;quot;                             # kibana 监听地址段
+server.name: &amp;quot;kibana-node&amp;quot;                         # kibana 实例名称
+server.publicBaseUrl: &amp;quot;http://kibana.oldwang.net&amp;quot;    # Kibana 的公共 URL, 例如分享链接、API 调用等都会使用该地址
+elasticsearch.hosts: [&amp;quot;http://localhost:9200&amp;quot;]     # kibana 从 coordinating 节点获取数据(此处 ES. Kibana 属同节点, 因此填写 localhost; 正常应该填写 ES 服务器地址)
+i18n.locale: &amp;quot;zh-CN&amp;quot;                               # kibana 汉化
+
+# 3、启动 kibana
+[root@es-node1 ~]# systemctl enable kibana --now
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;3-3-2-Ubuntu-系列&#34;&gt;&lt;a href=&#34;#3-3-2-Ubuntu-系列&#34; class=&#34;headerlink&#34; title=&#34;3.3.2 Ubuntu 系列&#34;&gt;&lt;/a&gt;3.3.2 Ubuntu 系列&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、安装 kibana
+[root@kibana ~]# dpkg -i kibana-8.18.2-amd64.deb
+
+# 2、配置 Kibana
+[root@kibana ~]# vim /etc/kibana/kibana.yml
+# 配置内容：
+server.port: 5601                                  # kibana 默认监听端口
+server.host: &amp;quot;0.0.0.0&amp;quot;                             # kibana 监听地址段
+server.name: &amp;quot;kibana-node&amp;quot;                         # kibana 实例名称
+server.publicBaseUrl: &amp;quot;http://192.168.80.150&amp;quot;      # Kibana 的公共 URL, 例如分享链接、API 调用等都会使用该地址 (推荐使用域名地址)
+elasticsearch.hosts: [&amp;quot;http://192.168.80.151:9200&amp;quot;] # 此处填写 ES 服务器地址, kibana 从 coordinating 节点获取数据
+i18n.locale: &amp;quot;zh-CN&amp;quot;                               # kibana 汉化
+
+# 3、启动 kibana
+[root@kibana ~]# systemctl enable kibana --now
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;3-4-访问-Kibana&#34;&gt;&lt;a href=&#34;#3-4-访问-Kibana&#34; class=&#34;headerlink&#34; title=&#34;3.4 访问 Kibana&#34;&gt;&lt;/a&gt;3.4 访问 Kibana&lt;/h3&gt;&lt;p&gt;访问地址：&lt;code&gt;http://192.168.80.150:5601&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3-5-启用堆栈监测（或-安装-Metricbeat-实现）&#34;&gt;&lt;a href=&#34;#3-5-启用堆栈监测（或-安装-Metricbeat-实现）&#34; class=&#34;headerlink&#34; title=&#34;3.5 启用堆栈监测（或 安装 Metricbeat 实现）&#34;&gt;&lt;/a&gt;3.5 启用堆栈监测（或 安装 Metricbeat 实现）&lt;/h3&gt;&lt;p&gt;操作路径：&lt;code&gt;Management &amp;gt; 堆栈监测 &amp;gt; 使用内部收集设置 &amp;gt; 打开 Monitoring&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;4、索引-API&#34;&gt;&lt;a href=&#34;#4、索引-API&#34; class=&#34;headerlink&#34; title=&#34;4、索引 API&#34;&gt;&lt;/a&gt;4、索引 API&lt;/h2&gt;&lt;p&gt;ES 有专门的 Index API，用于创建、更新、删除索引配置等。&lt;br&gt;操作入口：&lt;code&gt;Management &amp;gt; 开发工具&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;4-1-创建索引&#34;&gt;&lt;a href=&#34;#4-1-创建索引&#34; class=&#34;headerlink&#34; title=&#34;4.1 创建索引&#34;&gt;&lt;/a&gt;4.1 创建索引&lt;/h3&gt;&lt;p&gt;创建索引相关 API：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 创建索引
+PUT /oldwang_index
+
+# 查看所有已存在的索引
+GET _cat/indices
+
+# 查看健康状态
+GET _cat/health
+
+# 查看节点主机
+GET _cat/nodes
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;使用方式：在 Kibana 开发工具中输入需要运行的命令，单击运行发送请求。&lt;/p&gt;
+&lt;h3 id=&#34;4-2-删除索引&#34;&gt;&lt;a href=&#34;#4-2-删除索引&#34; class=&#34;headerlink&#34; title=&#34;4.2 删除索引&#34;&gt;&lt;/a&gt;4.2 删除索引&lt;/h3&gt;&lt;p&gt;删除索引 API：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 删除索引
+DELETE /oldwang_index
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;4-3-查看索引&#34;&gt;&lt;a href=&#34;#4-3-查看索引&#34; class=&#34;headerlink&#34; title=&#34;4.3 查看索引&#34;&gt;&lt;/a&gt;4.3 查看索引&lt;/h3&gt;&lt;p&gt;使用 Kibana 查看索引路径：&lt;code&gt;Stack Management &amp;gt; 索引管理 &amp;gt; 索引&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;5、文档-API&#34;&gt;&lt;a href=&#34;#5、文档-API&#34; class=&#34;headerlink&#34; title=&#34;5、文档 API&#34;&gt;&lt;/a&gt;5、文档 API&lt;/h2&gt;&lt;p&gt;ES 为索引添加文档，有专门的 Document API：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;创建文档&lt;/li&gt;
+&lt;li&gt;查询文档&lt;/li&gt;
+&lt;li&gt;更新文档&lt;/li&gt;
+&lt;li&gt;删除文档&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;5-1-创建文档&#34;&gt;&lt;a href=&#34;#5-1-创建文档&#34; class=&#34;headerlink&#34; title=&#34;5.1 创建文档&#34;&gt;&lt;/a&gt;5.1 创建文档&lt;/h3&gt;&lt;h4 id=&#34;创建文档（指定-ID）&#34;&gt;&lt;a href=&#34;#创建文档（指定-ID）&#34; class=&#34;headerlink&#34; title=&#34;创建文档（指定 ID）&#34;&gt;&lt;/a&gt;创建文档（指定 ID）&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 创建一个文档 (指定ID)
+POST /oldwang_index/_doc/1
+&amp;#123;
+  &amp;quot;username&amp;quot;: &amp;quot;oldwang&amp;quot;,
+  &amp;quot;age&amp;quot;: 18,
+  &amp;quot;salary&amp;quot;: 1000000
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;说明&lt;/strong&gt;：创建文档时，如果索引不存在，ES 会自动创建对应的 index 和 type。&lt;/p&gt;
+&lt;h4 id=&#34;创建文档（不指定-ID）&#34;&gt;&lt;a href=&#34;#创建文档（不指定-ID）&#34; class=&#34;headerlink&#34; title=&#34;创建文档（不指定 ID）&#34;&gt;&lt;/a&gt;创建文档（不指定 ID）&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 创建文档，不指定 ID（id 会生成随机字符串）
+POST /oldwang_index/_doc
+&amp;#123;
+  &amp;quot;username&amp;quot;: &amp;quot;oldwang&amp;quot;,
+  &amp;quot;age&amp;quot;: 18,
+  &amp;quot;salary&amp;quot;: 1000000
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;5-2-查询文档&#34;&gt;&lt;a href=&#34;#5-2-查询文档&#34; class=&#34;headerlink&#34; title=&#34;5.2 查询文档&#34;&gt;&lt;/a&gt;5.2 查询文档&lt;/h3&gt;&lt;h4 id=&#34;查询指定-ID-文档&#34;&gt;&lt;a href=&#34;#查询指定-ID-文档&#34; class=&#34;headerlink&#34; title=&#34;查询指定 ID 文档&#34;&gt;&lt;/a&gt;查询指定 ID 文档&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;GET /oldwang_index/_doc/1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;查询所有文档&#34;&gt;&lt;a href=&#34;#查询所有文档&#34; class=&#34;headerlink&#34; title=&#34;查询所有文档&#34;&gt;&lt;/a&gt;查询所有文档&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;GET /oldwang_index/_search
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;查询指定内容&#34;&gt;&lt;a href=&#34;#查询指定内容&#34; class=&#34;headerlink&#34; title=&#34;查询指定内容&#34;&gt;&lt;/a&gt;查询指定内容&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;GET /oldwang_index/_search
+&amp;#123;
+  &amp;quot;query&amp;quot;: &amp;#123;
+    &amp;quot;match&amp;quot;: &amp;#123;
+      &amp;quot;username&amp;quot;: &amp;quot;oldwang&amp;quot;    
+    &amp;#125;
+  &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;5-3-批量创建文档&#34;&gt;&lt;a href=&#34;#5-3-批量创建文档&#34; class=&#34;headerlink&#34; title=&#34;5.3 批量创建文档&#34;&gt;&lt;/a&gt;5.3 批量创建文档&lt;/h3&gt;&lt;p&gt;ES 允许通过 &lt;code&gt;_bulk&lt;/code&gt; 一次创建多个文档，从而减少网络传输开销，提升写入速率。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 批量创建 Document
+POST _bulk
+&amp;#123;&amp;quot;index&amp;quot;:&amp;#123;&amp;quot;_index&amp;quot;:&amp;quot;tt&amp;quot;,&amp;quot;_id&amp;quot;:&amp;quot;1&amp;quot;&amp;#125;&amp;#125;
+&amp;#123;&amp;quot;name&amp;quot;:&amp;quot;oldwang&amp;quot;,&amp;quot;age&amp;quot;:&amp;quot;18&amp;quot;&amp;#125;
+&amp;#123;&amp;quot;create&amp;quot;:&amp;#123;&amp;quot;_index&amp;quot;:&amp;quot;tt&amp;quot;,&amp;quot;_id&amp;quot;:&amp;quot;2&amp;quot;&amp;#125;&amp;#125;
+&amp;#123;&amp;quot;name&amp;quot;:&amp;quot;oldqiang&amp;quot;,&amp;quot;age&amp;quot;:&amp;quot;30&amp;quot;&amp;#125;
+&amp;#123;&amp;quot;delete&amp;quot;:&amp;#123;&amp;quot;_index&amp;quot;:&amp;quot;tt&amp;quot;,&amp;quot;_id&amp;quot;:&amp;quot;2&amp;quot;&amp;#125;&amp;#125;
+&amp;#123;&amp;quot;update&amp;quot;:&amp;#123;&amp;quot;_id&amp;quot;:&amp;quot;1&amp;quot;,&amp;quot;_index&amp;quot;:&amp;quot;tt&amp;quot;&amp;#125;&amp;#125;
+&amp;#123;&amp;quot;doc&amp;quot;:&amp;#123;&amp;quot;age&amp;quot;:&amp;quot;20&amp;quot;&amp;#125;&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;5-4-批量查询文档&#34;&gt;&lt;a href=&#34;#5-4-批量查询文档&#34; class=&#34;headerlink&#34; title=&#34;5.4 批量查询文档&#34;&gt;&lt;/a&gt;5.4 批量查询文档&lt;/h3&gt;&lt;p&gt;ES 允许通过 &lt;code&gt;_mget&lt;/code&gt; 一次查询多个文档。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 批量查询 Document
+GET _mget
+&amp;#123;
+  &amp;quot;docs&amp;quot;: [
+    &amp;#123;
+      &amp;quot;_index&amp;quot;: &amp;quot;tt&amp;quot;,
+      &amp;quot;_id&amp;quot;: &amp;quot;1&amp;quot;
+    &amp;#125;,
+    &amp;#123;
+      &amp;quot;_index&amp;quot;: &amp;quot;tt&amp;quot;,
+      &amp;quot;_id&amp;quot;: &amp;quot;2&amp;quot;
+    &amp;#125;
+  ]
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;总结&#34;&gt;&lt;a href=&#34;#总结&#34; class=&#34;headerlink&#34; title=&#34;总结&#34;&gt;&lt;/a&gt;总结&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;ES 核心概念：文档是最小存储单元（对应数据库行）、索引是文档集合（对应数据库表）、字段是文档的属性且有多种数据类型。&lt;/li&gt;
+&lt;li&gt;ES 操作核心：基于 RESTful API，可通过 Curl 命令行或 Kibana 可视化工具操作，核心 HTTP 方法包括 PUT&amp;#x2F;GET&amp;#x2F;POST&amp;#x2F;DELETE。&lt;/li&gt;
+&lt;li&gt;部署与使用：CentOS&amp;#x2F;Ubuntu 系统均支持 ES 和 Kibana 部署，Kibana 可汉化且提供友好的可视化操作界面，支持索引和文档的增删改查及批量操作。&lt;/li&gt;
+&lt;/ol&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">http://blog.oldwang.site/posts/3192084428.html</guid>
+            <title>03 Elasticsearch 集群</title>
+            <link>http://blog.oldwang.site/posts/3192084428.html</link>
+            <category>ELK</category>
+            <pubDate>Wed, 10 Dec 2025 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;1、ElasticSearch-集群&#34;&gt;&lt;a href=&#34;#1、ElasticSearch-集群&#34; class=&#34;headerlink&#34; title=&#34;1、ElasticSearch 集群&#34;&gt;&lt;/a&gt;1、ElasticSearch 集群&lt;/h2&gt;&lt;h3 id=&#34;1-1-ES-集群优势&#34;&gt;&lt;a href=&#34;#1-1-ES-集群优势&#34; class=&#34;headerlink&#34; title=&#34;1.1 ES 集群优势&#34;&gt;&lt;/a&gt;1.1 ES 集群优势&lt;/h3&gt;&lt;p&gt;Elasticsearch 集群是由多个节点组成的一个分布式系统。&lt;br&gt;使用 Elasticsearch 集群有以下几个优点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;扩展性&lt;/strong&gt;：Elasticsearch 集群将数据分布在多个节点，也就是可以使用更多的 CPU、内存、磁盘等。从而能够进行大规模的数据存储和处理工作。随着数据不断的增长，可以通过向集群添加更多的节点来应对。这样即使数据量达到 PB 级别，Elasticsearch 集群仍可以正常工作。&lt;br&gt;场景说明：应用程序每天生成数百万条日志。单个服务器可能很快就会被数据量压垮。使用 Elasticsearch 集群后，就可以将数据均匀分布到多个节点上，这样每个节点只需要负责处理一部分的数据，从而实现整体的扩展性，以应对大规模的数据增长。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;数据的容灾&lt;/strong&gt;：Elasticsearch 集群通过在多个节点上存储数据的副本，来实现数据的容灾。意味着，如果某个节点发生故障，数据仍然可以从其他节点的副本中快速恢复，无需人工干预，从而减少了业务中断的风险。从而保证了整个集群的正常运行。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;服务的高可用性&lt;/strong&gt;：Elasticsearch 集群具有自动检测节点故障的能力。当某个节点发生故障时，集群会将故障节点上的任务快速分配给其他正常运行的节点。这样，即使某个节点发生故障，整个集群仍可以继续正常运行。（用户几乎感觉不到任何影响。）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;1-2-ES-如何组集群&#34;&gt;&lt;a href=&#34;#1-2-ES-如何组集群&#34; class=&#34;headerlink&#34; title=&#34;1.2 ES 如何组集群&#34;&gt;&lt;/a&gt;1.2 ES 如何组集群&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;单节点 ES，如下图所示；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;如果单节点出现问题，服务就不可用了，新增一个 ES 节点加入集群&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Elasticsearch 集群是由多个节点组成的，通过 &lt;code&gt;cluster.name&lt;/code&gt; 定义集群名称，然后每个节点通过 &lt;code&gt;node.name&lt;/code&gt; 来标识在集群中的名称。&lt;br&gt;&lt;code&gt;cluster.name&lt;/code&gt; 相同则表示隶属于同一个集群。&lt;/p&gt;
+&lt;h2 id=&#34;2、ES-集群环境部署&#34;&gt;&lt;a href=&#34;#2、ES-集群环境部署&#34; class=&#34;headerlink&#34; title=&#34;2、ES 集群环境部署&#34;&gt;&lt;/a&gt;2、ES 集群环境部署&lt;/h2&gt;&lt;h3 id=&#34;2-0-环境地址规划&#34;&gt;&lt;a href=&#34;#2-0-环境地址规划&#34; class=&#34;headerlink&#34; title=&#34;2.0 环境地址规划&#34;&gt;&lt;/a&gt;2.0 环境地址规划&lt;/h3&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;系统版本&lt;/th&gt;
+&lt;th&gt;主机名称&lt;/th&gt;
+&lt;th&gt;IP 地址&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;RockyLinux9 | Ubuntu2204&lt;/td&gt;
+&lt;td&gt;kibana.wang.org&lt;/td&gt;
+&lt;td&gt;192.168.80.150&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;RockyLinux9 | Ubuntu2204&lt;/td&gt;
+&lt;td&gt;es-node1.wang.org&lt;/td&gt;
+&lt;td&gt;192.168.80.151&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;RockyLinux9 | Ubuntu2204&lt;/td&gt;
+&lt;td&gt;es-node2.wang.org&lt;/td&gt;
+&lt;td&gt;192.168.80.152&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;RockyLinux9 | Ubuntu2204&lt;/td&gt;
+&lt;td&gt;es-node3.wang.org&lt;/td&gt;
+&lt;td&gt;192.168.80.153&lt;/td&gt;
+&lt;/tr&gt;
 &lt;/tbody&gt;&lt;/table&gt;
+&lt;h3 id=&#34;2-1-node1-集群节点配置&#34;&gt;&lt;a href=&#34;#2-1-node1-集群节点配置&#34; class=&#34;headerlink&#34; title=&#34;2.1 node1 集群节点配置&#34;&gt;&lt;/a&gt;2.1 node1 集群节点配置&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、安装 elasticSearch
+[root@es-node1 ~]# yum install java-17-openjdk java-17-openjdk-devel -y
+[root@es-node1 ~]# rpm -ivh elasticsearch-8.18.2-x86_64.rpm
+[root@es-node1 ~]$ dpkg -i elasticsearch-8.18.2-amd64.deb
+
+# 2、配置 elasticSearch
+[root@es-node1 ~]# vim /etc/elasticsearch/elasticsearch.yml
+cluster.name: es-cluster                # 集群名称
+node.name: es-node1                     # 节点名称
+path.data: /var/lib/elasticsearch       # 数据存储路径
+path.logs: /var/log/elasticsearch       # 日志存储路径
+# bootstrap.memory_lock: true           # 内存锁定，避免 es 使用 swap
+network.host: 192.168.80.151            # 本机 IP 地址, 监听在本地哪个地址上
+http.port: 9200                         # 监听端口
+discovery.seed_hosts: [&amp;quot;192.168.80.151&amp;quot;, &amp;quot;192.168.80.152&amp;quot;, &amp;quot;192.168.80.153&amp;quot;]  # 集群主机列表
+cluster.initial_master_nodes: [&amp;quot;192.168.80.151&amp;quot;, &amp;quot;192.168.80.152&amp;quot;, &amp;quot;192.168.80.153&amp;quot;]  # 参与选举的主机, 仅第一次启动集群时进行选举 [可以填写 node.name 的名称]
+# 注释如下行重复配置 [重要]
+# cluster.initial_master_nodes: [&amp;quot;es-node1.wang.org&amp;quot;]
+
+# 关闭 Security
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: false
+
+# 3. 配置 JVM 内存
+[root@es-node1 ~]# vim /etc/elasticsearch/jvm.options
+-Xms512m
+-Xmx512m
+
+# 4. 重启 ES 服务
+[root@es-node1 ~]# rm -rf /var/log/elasticsearch/*
+[root@es-node1 ~]# systemctl restart elasticsearch
+[root@es-node1 ~]# systemctl enable --now elasticsearch
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;2-2-node2-集群节点配置&#34;&gt;&lt;a href=&#34;#2-2-node2-集群节点配置&#34; class=&#34;headerlink&#34; title=&#34;2.2 node2 集群节点配置&#34;&gt;&lt;/a&gt;2.2 node2 集群节点配置&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、安装 elasticSearch
+[root@es-node2 ~]# yum install java-17-openjdk java-17-openjdk-devel -y
+[root@es-node2 ~]# rpm -ivh elasticsearch-8.18.2-x86_64.rpm
+[root@es-node2 ~]$ dpkg -i elasticsearch-8.18.2-amd64.deb
+
+# 2、配置 elasticSearch
+[root@es-node2 ~]# vim /etc/elasticsearch/elasticsearch.yml
+cluster.name: es-cluster
+node.name: es-node2
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+network.host: 192.168.80.152            # 本机 IP 地址
+discovery.seed_hosts: [&amp;quot;192.168.80.151&amp;quot;, &amp;quot;192.168.80.152&amp;quot;, &amp;quot;192.168.80.153&amp;quot;]
+cluster.initial_master_nodes: [&amp;quot;192.168.80.151&amp;quot;, &amp;quot;192.168.80.152&amp;quot;, &amp;quot;192.168.80.153&amp;quot;]
+# 注释如下行重复配置 [重要]
+# cluster.initial_master_nodes: [&amp;quot;es-node2.wang.org&amp;quot;]
+
+# 关闭 Security
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: false
+
+# 3. 配置 JVM 内存
+[root@es-node2 ~]# vim /etc/elasticsearch/jvm.options
+-Xms512m
+-Xmx512m
+
+# 4. 重启 ES 服务
+[root@es-node2 ~]# rm -rf /var/log/elasticsearch/*
+[root@es-node2 ~]# systemctl restart elasticsearch
+[root@es-node2 ~]# systemctl enable --now elasticsearch
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;2-3-node3-集群节点配置&#34;&gt;&lt;a href=&#34;#2-3-node3-集群节点配置&#34; class=&#34;headerlink&#34; title=&#34;2.3 node3 集群节点配置&#34;&gt;&lt;/a&gt;2.3 node3 集群节点配置&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、安装 elasticSearch
+[root@es-node3 ~]# yum install java-17-openjdk java-17-openjdk-devel -y
+[root@es-node3 ~]# rpm -ivh elasticsearch-8.18.2-x86_64.rpm
+[root@es-node3 ~]$ dpkg -i elasticsearch-8.18.2-amd64.deb
+
+# 2、配置 elasticSearch
+[root@es-node3 ~]# vim /etc/elasticsearch/elasticsearch.yml
+cluster.name: es-cluster
+node.name: es-node3
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+network.host: 192.168.80.153        # 本机 IP 地址
+discovery.seed_hosts: [&amp;quot;192.168.80.151&amp;quot;, &amp;quot;192.168.80.152&amp;quot;, &amp;quot;192.168.80.153&amp;quot;]
+cluster.initial_master_nodes: [&amp;quot;192.168.80.151&amp;quot;, &amp;quot;192.168.80.152&amp;quot;, &amp;quot;192.168.80.153&amp;quot;]
+
+# 注释如下行重复配置 [重要]
+# cluster.initial_master_nodes: [&amp;quot;es-node3.wang.org&amp;quot;]
+
+# 关闭 Security
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: false
+
+# 3. 配置 JVM 内存
+[root@es-node3 ~]# vim /etc/elasticsearch/jvm.options
+-Xms512m
+-Xmx512m
+
+# 4. 重启 ES 服务
+[root@es-node3 ~]# rm -rf /var/log/elasticsearch/*
+[root@es-node3 ~]# systemctl restart elasticsearch
+[root@es-node3 ~]# systemctl enable --now elasticsearch
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;3、ES-集群状态检测&#34;&gt;&lt;a href=&#34;#3、ES-集群状态检测&#34; class=&#34;headerlink&#34; title=&#34;3、ES 集群状态检测&#34;&gt;&lt;/a&gt;3、ES 集群状态检测&lt;/h2&gt;&lt;h3 id=&#34;3-1-ES-集群指标状态&#34;&gt;&lt;a href=&#34;#3-1-ES-集群指标状态&#34; class=&#34;headerlink&#34; title=&#34;3.1 ES 集群指标状态&#34;&gt;&lt;/a&gt;3.1 ES 集群指标状态&lt;/h3&gt;&lt;p&gt;&lt;code&gt;Cluster Health&lt;/code&gt; 获取集群的健康状态，整个集群状态包括以下三种：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;green&lt;/strong&gt;：健康状态，指所有主副分片都正常分配&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;yellow&lt;/strong&gt;：所有主分片都正常分配，但是有副本分片未正常分配&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;red&lt;/strong&gt;：有主分片未分配，也就是索引不完备，写可能有问题。（但不代表不能读取数据）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;检查 ES 集群是否正常运行，可以通过 curl、Cerebro 两种方式。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;curl http://127.0.0.1:9200/_cat/health
+curl http://127.0.0.1:9200/_cat/nodes?v
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;3-2-Curl-命令检查集群状态&#34;&gt;&lt;a href=&#34;#3-2-Curl-命令检查集群状态&#34; class=&#34;headerlink&#34; title=&#34;3.2 Curl 命令检查集群状态&#34;&gt;&lt;/a&gt;3.2 Curl 命令检查集群状态&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、使用 curl 工具检查 ES 集群状态
+[root@es-node3 ~]# curl http://192.168.80.151:9200/_cluster/health?pretty=true
+&amp;#123;
+  &amp;quot;cluster_name&amp;quot; : &amp;quot;es-cluster&amp;quot;,
+  &amp;quot;status&amp;quot; : &amp;quot;green&amp;quot;,
+  &amp;quot;timed_out&amp;quot; : false,
+  &amp;quot;number_of_nodes&amp;quot; : 3,
+  &amp;quot;number_of_data_nodes&amp;quot; : 3,
+  &amp;quot;active_primary_shards&amp;quot; : 36,
+  &amp;quot;active_shards&amp;quot; : 72,
+  &amp;quot;relocating_shards&amp;quot; : 0,
+  &amp;quot;initializing_shards&amp;quot; : 0,
+  &amp;quot;unassigned_shards&amp;quot; : 0,
+  &amp;quot;unassigned_primary_shards&amp;quot; : 0,
+  &amp;quot;delayed_unassigned_shards&amp;quot; : 0,
+  &amp;quot;number_of_pending_tasks&amp;quot; : 0,
+  &amp;quot;number_of_in_flight_fetch&amp;quot; : 0,
+  &amp;quot;task_max_waiting_in_queue_millis&amp;quot; : 0,
+  &amp;quot;active_shards_percent_as_number&amp;quot; : 100.0
+&amp;#125;
+
+# 2、也可以编写脚本监控 ES 集群状态
+curl -s http://192.168.80.151:9200/_cluster/health?pretty=true | grep &amp;quot;status&amp;quot; | awk -F &amp;#39;&amp;quot;&amp;#39; &amp;#39;&amp;#123;print $4&amp;#125;&amp;#39;
+# 输出: green
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;3-3-安装-Cerebro-检查集群状态&#34;&gt;&lt;a href=&#34;#3-3-安装-Cerebro-检查集群状态&#34; class=&#34;headerlink&#34; title=&#34;3.3 安装 Cerebro 检查集群状态&#34;&gt;&lt;/a&gt;3.3 安装 Cerebro 检查集群状态&lt;/h3&gt;&lt;p&gt;cerebro 是可视化工具，用于检查 ES 集群状态。&lt;/p&gt;
+&lt;h4 id=&#34;RockyLinux9-部署-Cerebro&#34;&gt;&lt;a href=&#34;#RockyLinux9-部署-Cerebro&#34; class=&#34;headerlink&#34; title=&#34;RockyLinux9 部署 Cerebro&#34;&gt;&lt;/a&gt;RockyLinux9 部署 Cerebro&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、安装 java, 它目前仅支持 java1.8 版本
+# 并不支持较高的 java 版本, &amp;quot;因此不要与 ES 安装在同一节点上&amp;quot;
+[root@kibana ~]# yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel -y
+
+# 2、安装 Cerebro
+[root@kibana ~]# wget https://github.com/lmenezes/cerebro/releases/download/v0.9.4/cerebro-0.9.4-1.noarch.rpm
+[root@kibana ~]# rpm -ivh cerebro-0.9.4-1.noarch.rpm
+
+# 3、配置 Cerebro
+[root@kibana ~]# vim /etc/cerebro/application.conf
+data.path: &amp;quot;/var/lib/cerebro/cerebro.db&amp;quot;
+# data.path = &amp;quot;./cerebro.db&amp;quot;
+
+# 4、启动 Cerebro
+[root@kibana ~]# systemctl start cerebro
+
+# 查看端口
+[root@kibana ~]# netstat -lntp
+Proto Recv-Q Send-Q Local Address   Foreign Address     State       PID/Program name
+tcp6       0      0 :::9000         :::*                LISTEN     504/java
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;Ubuntu2204-部署-Cerebro&#34;&gt;&lt;a href=&#34;#Ubuntu2204-部署-Cerebro&#34; class=&#34;headerlink&#34; title=&#34;Ubuntu2204 部署 Cerebro&#34;&gt;&lt;/a&gt;Ubuntu2204 部署 Cerebro&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 可以将其安装在 Kibana 主机
+# 依赖 JDK-11
+[root@ubuntu2204 ~]# apt -y install openjdk-11-jdk
+
+# 下载包, 官方提供了 DEB 和 RPM 包
+[root@ubuntu2204 ~]# wget https://github.com/lmenezes/cerebro/releases/download/v0.9.4/cerebro_0.9.4_all.deb
+
+# 安装
+[root@ubuntu2204 ~]# dpkg -i cerebro_0.9.4_all.deb
+
+# 启动
+[root@ubuntu2204 ~]# systemctl start cerebro.service
+
+# 默认服务无法启动, 端口无法打开
+[root@ubuntu2204 ~]# ss -ntlp | grep 9000
+
+# 默认无法启动, 查看日志, 可以看到以下提示, 原因是默认 cerebro.db 文件所有目录没有权限导致
+[root@ubuntu2204 ~]# journalctl -u cerebro
+# 报错: Caused by: java.sql.SQLException: opening db: &amp;#39;./cerebro.db&amp;#39;: 权限不够
+
+# 修改配置文件
+[root@ubuntu2204 ~]# vim /etc/cerebro/application.conf
+data.path: &amp;quot;/var/lib/cerebro/cerebro.db&amp;quot;  # 取消此行注释
+# data.path = &amp;quot;./cerebro.db&amp;quot;              # 注释此行, 默认路径是 /usr/share/cerebro/cerebro.db
+
+# 此目录自动生成
+[root@ubuntu2204 ~]# ll -d /var/lib/cerebro
+drwxr-xr-x 2 cerebro cerebro 4096   4月 10     2021 /var/lib/cerebro/
+
+# 重启服务
+[root@ubuntu2204 ~]# systemctl restart cerebro.service
+[root@ubuntu2204 ~]# systemctl enable --now cerebro.service
+
+# 默认监听 9000 端口
+[root@ubuntu2204 ~]# ss -ntlp | grep 9000
+LISTEN   0   100   *:9000           *:*         users:((&amp;quot;java&amp;quot;,pid=26333,fd=155))
+
+# 访问下面链接地址
+http://192.168.80.150:9000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;访问-Cerebro-页面&#34;&gt;&lt;a href=&#34;#访问-Cerebro-页面&#34; class=&#34;headerlink&#34; title=&#34;访问 Cerebro 页面&#34;&gt;&lt;/a&gt;访问 Cerebro 页面&lt;/h4&gt;&lt;p&gt;在 &lt;code&gt;Node address&lt;/code&gt; 输入框中输入任意 ES 集群节点的地址：&lt;code&gt;http://192.168.80.151:9200&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;4、ES-集群节点类型&#34;&gt;&lt;a href=&#34;#4、ES-集群节点类型&#34; class=&#34;headerlink&#34; title=&#34;4、ES 集群节点类型&#34;&gt;&lt;/a&gt;4、ES 集群节点类型&lt;/h2&gt;&lt;p&gt;ES 集群中节点类型介绍：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Master&lt;/li&gt;
+&lt;li&gt;Data&lt;/li&gt;
+&lt;li&gt;Ingest&lt;/li&gt;
+&lt;li&gt;Coordinating&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;4-1-Cluster-State&#34;&gt;&lt;a href=&#34;#4-1-Cluster-State&#34; class=&#34;headerlink&#34; title=&#34;4.1 Cluster State&#34;&gt;&lt;/a&gt;4.1 Cluster State&lt;/h3&gt;&lt;p&gt;&lt;code&gt;Cluster State&lt;/code&gt; 是用来存储 Elasticsearch 集群相关的元数据信息。它存储在每个节点上，主要包含以下信息：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;节点信息：这部分信息包括节点名称或节点的IP、节点的 IP 地址或端口等。&lt;/li&gt;
+&lt;li&gt;索引元数据：这部分信息包括索引的名称、索引的配置设置（如分片数量、副本数量等）以及字段类型和属性等。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;4-2-Master-角色&#34;&gt;&lt;a href=&#34;#4-2-Master-角色&#34; class=&#34;headerlink&#34; title=&#34;4.2 Master 角色&#34;&gt;&lt;/a&gt;4.2 Master 角色&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;Elasticsearch 集群中只能有一个处于激活状态的 Master 节点。Master 节点负责管理和控制整个集群的操作；&lt;/li&gt;
+&lt;li&gt;Master 节点负责维护集群状态（Cluster State）。当集群状态发生变化（例如，新增或删除索引、修改索引设置等）时，Master 节点会将更新后的集群状态同步给其他节点，以保持整个集群的状态一致性。&lt;/li&gt;
+&lt;li&gt;Master 节点是通过选举产生的。集群中的节点可以设置 &lt;code&gt;node.master: true&lt;/code&gt; 来允许它成为 Master 节点的候选者（默认为 true）。如果当前的 Master 节点失效或不可用时，集群会自动触发选举过程，从候选者中选出一个新的 Master 节点。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;版本&lt;/th&gt;
+&lt;th&gt;角色配置&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;7.X 版本&lt;/td&gt;
+&lt;td&gt;Master 角色: &lt;br&gt; &lt;code&gt;node.master: true&lt;/code&gt; &lt;br&gt; &lt;code&gt;node.data: false&lt;/code&gt; &lt;br&gt; Data 角色: &lt;br&gt; &lt;code&gt;node.master: false&lt;/code&gt; &lt;br&gt; &lt;code&gt;node.data: true&lt;/code&gt; &lt;br&gt; Coordinating 角色: &lt;br&gt; &lt;code&gt;node.master: false&lt;/code&gt; &lt;br&gt; &lt;code&gt;node.data: false&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8.X 版本&lt;/td&gt;
+&lt;td&gt;Master 角色: &lt;br&gt; &lt;code&gt;node.roles: [&amp;quot;master&amp;quot;,&amp;quot;data&amp;quot;]&lt;/code&gt; (既当 master, 又当 data) &lt;br&gt; Data 角色: &lt;br&gt; &lt;code&gt;node.roles: [&amp;quot;data&amp;quot;]&lt;/code&gt; &lt;br&gt; Coordinating 角色: &lt;br&gt; &lt;code&gt;node.roles: []&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;h3 id=&#34;4-3-Data-角色&#34;&gt;&lt;a href=&#34;#4-3-Data-角色&#34; class=&#34;headerlink&#34; title=&#34;4.3 Data 角色&#34;&gt;&lt;/a&gt;4.3 Data 角色&lt;/h3&gt;&lt;p&gt;Data 节点是 Elasticsearch 集群中负责存储数据的节点。默认情况下，集群中的所有节点都是 Data 类型。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;可以通过设置 &lt;code&gt;node.data: true&lt;/code&gt;（默认为 true）来保持节点作为 Data 节点。&lt;/li&gt;
+&lt;li&gt;当创建索引后，索引中的数据会被存储在一个或多个 Data 节点上。这些能够存储索引数据的节点被称为 Data 节点。Data 节点负责处理数据查询、聚合和搜索等操作，它们直接影响整个集群的性能和存储能力。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;通过合理分配和管理 Data 节点，可以提高 Elasticsearch 集群的数据处理能力、查询性能和存储容量。在实际应用中，需要根据业务需求和硬件资源来调整 Data 节点的数量和配置。&lt;/p&gt;
+&lt;h3 id=&#34;4-4-Ingest-角色&#34;&gt;&lt;a href=&#34;#4-4-Ingest-角色&#34; class=&#34;headerlink&#34; title=&#34;4.4 Ingest 角色&#34;&gt;&lt;/a&gt;4.4 Ingest 角色&lt;/h3&gt;&lt;p&gt;Ingest 节点是 Elasticsearch 集群中负责预处理文档的过程，它允许文档在被写入到 Elasticsearch 之前，对其进行处理、清洗、或转换。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;假设你有一个包含日志数据的 JSON 文档，其中包含一个时间戳字段，但格式不符合标准。我们就可以在文档被写入之前，使用 date 处理器来转换时间戳字段的格式。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;node.ingest: true&lt;/code&gt; 表示该节点可以对文档进行预处理操作。如果你希望某个节点不处理 Ingest 任务，可以设置为 false。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;4-5-Coordinating-角色&#34;&gt;&lt;a href=&#34;#4-5-Coordinating-角色&#34; class=&#34;headerlink&#34; title=&#34;4.5 Coordinating 角色&#34;&gt;&lt;/a&gt;4.5 Coordinating 角色&lt;/h3&gt;&lt;p&gt;处理请求的节点被称为 Coordinating 节点。Coordinating 节点是 Elasticsearch 集群中所有节点的默认角色，无法取消。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Coordinating 节点主要负责将请求路由到正确的节点。例如，创建索引的请求会被 Coordinating 节点路由到 Master 节点进行处理，而数据查询或写入的请求会被路由到相应的 Data 节点上。&lt;/li&gt;
+&lt;li&gt;当一个节点同时设置 &lt;code&gt;node.master：false&lt;/code&gt;、&lt;code&gt;node.data：false&lt;/code&gt; 时，该节点仅充当 Coordinating 路由节点的角色。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;4-6-角色设定示例&#34;&gt;&lt;a href=&#34;#4-6-角色设定示例&#34; class=&#34;headerlink&#34; title=&#34;4.6 角色设定示例&#34;&gt;&lt;/a&gt;4.6 角色设定示例&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;如果希望节点只作为主节点&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;# ES7.X
+node.master: true
+node.data: false
+
+# ES8.X
+node.roles: [&amp;quot;master&amp;quot;, &amp;quot;ingest&amp;quot;]    # 只做 master, 不当 data
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;如果希望节点只作为数据节点&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;# ES7.X
+node.master: false
+node.data: true
+
+# ES8.X
+node.roles: [&amp;quot;data&amp;quot;, &amp;quot;ingest&amp;quot;]    # 只当 data, 不做 master
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;如果希望节点同时担任数据节点和主节点&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;# ES7.X
+node.master: true
+node.data: true
+
+# ES8.X
+node.roles: [&amp;quot;master&amp;quot;, &amp;quot;data&amp;quot;, &amp;quot;ingest&amp;quot;]    # 同时担任 master data
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;如果希望节点不担任任何特定角色（不推荐）&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;# ES7.X
+node.master: false
+node.data: false
+
+# ES8.X
+node.roles: []    # 不担任任何角色
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;5-案例演示&#34;&gt;&lt;a href=&#34;#5-案例演示&#34; class=&#34;headerlink&#34; title=&#34;5.案例演示&#34;&gt;&lt;/a&gt;5.案例演示&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 修改 ES 配置
+root@es-node1: vim /etc/elasticsearch/elasticsearch.yml
+node.roles: [&amp;quot;data&amp;quot;, &amp;quot;ingest&amp;quot;]    # 不做 master 节点 (默认每个节点都存在: master data ingest)
+
+# 重启 ES 服务
+root@es-node1: systemctl restart elasticsearch
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;5、ES-集群分片&#34;&gt;&lt;a href=&#34;#5、ES-集群分片&#34; class=&#34;headerlink&#34; title=&#34;5、ES 集群分片&#34;&gt;&lt;/a&gt;5、ES 集群分片&lt;/h2&gt;&lt;h3 id=&#34;5-1-什么是分片&#34;&gt;&lt;a href=&#34;#5-1-什么是分片&#34; class=&#34;headerlink&#34; title=&#34;5.1 什么是分片&#34;&gt;&lt;/a&gt;5.1 什么是分片&lt;/h3&gt;&lt;p&gt;分片是处理和存储 PB 级别数据的基础。在 Elasticsearch 中，分片是一种&lt;strong&gt;数据分区机制&lt;/strong&gt;，它允许将一份完整的数据分散存储到集群的多个不同服务器上。而每个分片只是索引的一个部分，这使得它们可以独立进行存储和查询。&lt;/p&gt;
+&lt;p&gt;在 Elasticsearch 中，分片又被分为了两种类型：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;主分片&lt;/strong&gt;：主要负责存储数据。创建后主分片的数量是固定的（不允许修改）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;副本分片&lt;/strong&gt;：每个主分片可以配置一个或多个副本分片，以增强数据的容错能力。副本分片从对应的主分片同步数据，确保在主分片出现问题时仍能提供服务。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;5-2-什么是副本分片&#34;&gt;&lt;a href=&#34;#5-2-什么是副本分片&#34; class=&#34;headerlink&#34; title=&#34;5.2 什么是副本分片&#34;&gt;&lt;/a&gt;5.2 什么是副本分片&lt;/h3&gt;&lt;p&gt;副本分片主要用于提高数据的可用性，这样即使某个节点发生故障，系统依然可以自动从其他节点上的副本分片中恢复，并继续提供数据访问服务。&lt;/p&gt;
+&lt;p&gt;如下图所示，node2 上是 oldxu_index 索引的一个完整副本数据。&lt;/p&gt;
+&lt;h3 id=&#34;5-3-ES-集群如何增大容量&#34;&gt;&lt;a href=&#34;#5-3-ES-集群如何增大容量&#34; class=&#34;headerlink&#34; title=&#34;5.3 ES 集群如何增大容量&#34;&gt;&lt;/a&gt;5.3 ES 集群如何增大容量&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;如下 3 个节点的 ES 集群，创建了一个 oldxu_index 索引，同时指定了 3 个分片，和 1 个副本&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 创建索引, 设定主分片和副本分片
+PUT /oldxu_index
+&amp;#123;
+    &amp;quot;settings&amp;quot;: &amp;#123;
+    &amp;quot;index&amp;quot;: &amp;#123;
+        &amp;quot;number_of_shards&amp;quot;: 3,    # 主分片
+        &amp;quot;number_of_replicas&amp;quot;: 1   # 副本分配
+    &amp;#125;
+&amp;#125;
+&amp;#125;
+
+# 动态修改副本分片
+PUT /oldxu_index/_settings
+&amp;#123;
+    &amp;quot;number_of_replicas&amp;quot;: 2    # 三节点,三分片. 因此最多只需要两副本就完全够了.
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;问题&lt;/strong&gt;：目前一共有 3 个 ES 节点，如果此时增加一个新节点 是否能提高 oldxu_index 索引数据容量？&lt;br&gt;&lt;strong&gt;答案&lt;/strong&gt;：不能，因为 oldxu_index 只有 3 个分片，已经分布在 3 台节点上，那么新增的第四个节点对于 oldxu_index 而言是无法使用到的。所以也无法带来数据容量的提升。&lt;/p&gt;
+&lt;h3 id=&#34;5-4-ES-集群如何增加读性能&#34;&gt;&lt;a href=&#34;#5-4-ES-集群如何增加读性能&#34; class=&#34;headerlink&#34; title=&#34;5.4 ES 集群如何增加读性能&#34;&gt;&lt;/a&gt;5.4 ES 集群如何增加读性能&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;问题&lt;/strong&gt;：目前一共有 3 个 ES 节点，如果增加副本数是否能提高 oldxu_index 索引的读性能？&lt;br&gt;&lt;strong&gt;答案&lt;/strong&gt;：不能，因为新增的副本还是会分布在这 node1、node2、node3 这三个节点上的，还是使用了相同的资源，也就意味着有读请求来时，这些请求还是会分配到 node1、node2、node3 上进行处理、也就意味着，还是利用了相同的硬件资源，所以不会提升读性能。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;问题&lt;/strong&gt;：如果需要增加读吞吐量性能，应该怎么来做？&lt;br&gt;&lt;strong&gt;答案&lt;/strong&gt;：增加读吞吐量还是需要添加节点，比如在增加三个节点 node4、node5、node6 那么将原来的 R0、R1、R2 分别迁移至新增的三个节点上，当有读请求来时会被分配 node4、node5、node6，也就意味着有新的 CPU、内存、IO，这样就不会在占用 node1、node2、node3 的硬件资源，那么这个时候读吞吐量才会得到真正的提升。&lt;/p&gt;
+&lt;h3 id=&#34;5-5-ES-副本与分片总结&#34;&gt;&lt;a href=&#34;#5-5-ES-副本与分片总结&#34; class=&#34;headerlink&#34; title=&#34;5.5 ES 副本与分片总结&#34;&gt;&lt;/a&gt;5.5 ES 副本与分片总结&lt;/h3&gt;&lt;p&gt;分片数和副本的设定非常重要，需要在集群部署前进行仔细规划：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;分片过小&lt;/strong&gt;：可能导致在后续需要水平扩容时无法通过增加节点来实现，因为数据已经在现有节点上达到了分布的极限。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;分片过大&lt;/strong&gt;：可能会导致单个节点上分布过多的分片，从而造成资源的浪费。此外，过多的分片也会影响 ES 的查询性能。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;6、ES-集群故障转移&#34;&gt;&lt;a href=&#34;#6、ES-集群故障转移&#34; class=&#34;headerlink&#34; title=&#34;6、ES 集群故障转移&#34;&gt;&lt;/a&gt;6、ES 集群故障转移&lt;/h2&gt;&lt;h3 id=&#34;6-1-什么是故障转移&#34;&gt;&lt;a href=&#34;#6-1-什么是故障转移&#34; class=&#34;headerlink&#34; title=&#34;6.1 什么是故障转移&#34;&gt;&lt;/a&gt;6.1 什么是故障转移&lt;/h3&gt;&lt;p&gt;所谓故障转移指的是，当集群中有节点发生故障时，这个集群是如何进行自动修复的。&lt;br&gt;ES 集群目前是由 3 个节点组成，此时集群状态是 green。&lt;/p&gt;
+&lt;h3 id=&#34;6-2-模拟节点故障案例&#34;&gt;&lt;a href=&#34;#6-2-模拟节点故障案例&#34; class=&#34;headerlink&#34; title=&#34;6.2 模拟节点故障案例&#34;&gt;&lt;/a&gt;6.2 模拟节点故障案例&lt;/h3&gt;&lt;p&gt;假设：node1 所在机器宕机导致服务终止，此时 ES 集群会如何处理；大体分为三个步骤：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;重新选举&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;主分片调整&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;副本分片调整&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;重新选举阶段&lt;/strong&gt;：node2 和 node3 发现 node1 无法响应；一段时间后会发起 master 选举。此时集群状态变为 Red 状态，假定选择 node2 为 master 节点；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;主分片调整阶段&lt;/strong&gt;：node2 发现主分片 P0 未分配，将 node3 上的 R0 提升为主分片。此时所有的主分片都正常分配，集群状态变为 Yellow 状态；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;副本分片调整阶段&lt;/strong&gt;：node2 将 P0 和 P1 主分片 重新生成新的副本分片 R0、R1。此时集群状态变为 Green；&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;7、ES-文档路由原理&#34;&gt;&lt;a href=&#34;#7、ES-文档路由原理&#34; class=&#34;headerlink&#34; title=&#34;7、ES 文档路由原理&#34;&gt;&lt;/a&gt;7、ES 文档路由原理&lt;/h2&gt;&lt;p&gt;ES 文档分布式存储，当一个文档存储至 ES 集群时，存储的原理是什么样的？&lt;br&gt;如图所示，当我们想在一个集群保存文档时，Document1 是如何存储到分片 P1 的？选择 P1 的依据是什么？&lt;/p&gt;
+&lt;p&gt;其实是有一个 &lt;strong&gt;文档到分片的映射算法&lt;/strong&gt;，其目的是使所有文档均匀分布在所有的分片上。ES 既不使用随机算法，也不使用轮询算法，而是通过以下公式计算文档对应的分片：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;shard = hash(routing) % number_of_primary_shards
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;hash&lt;/code&gt;：算法保证将数据均匀分散在分片中&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;routing&lt;/code&gt;：是一个关键参数, 默认是文档 id, 也可以自定义。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;number_of_primary_shards&lt;/code&gt;：主分片数（与主分片取模）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;：该算法与主分片数相关，一旦确定后便不能更改主分片。因为一旦修改主分片数量，&lt;code&gt;shard&lt;/code&gt; 的计算结果就会完全不一样，会导致无法定位到原有数据。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;总结&lt;/strong&gt;：ES 用 &lt;code&gt;hash(routing) % 主分片数&lt;/code&gt; 来把文档分配到对应分片，确保分布均衡且可定位，因此主分片数不能改，否则找不到数据。&lt;/p&gt;
+&lt;h3 id=&#34;7-1-文档的创建流程&#34;&gt;&lt;a href=&#34;#7-1-文档的创建流程&#34; class=&#34;headerlink&#34; title=&#34;7.1 文档的创建流程&#34;&gt;&lt;/a&gt;7.1 文档的创建流程&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;客户端发送请求：请求发送到任意节点（协调节点）。&lt;/li&gt;
+&lt;li&gt;路由计算：协调节点 根据文档 ID 计算分片号：&lt;code&gt;shard = hash(document_id) % 主分片数量&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;定位主分片：找到对应的主分片所在节点。&lt;/li&gt;
+&lt;li&gt;主分片写入：写入内存 + translog，同时转发给副本分片。&lt;/li&gt;
+&lt;li&gt;副本写入：副本分片完成相同写入操作。&lt;/li&gt;
+&lt;li&gt;写入成功：所有副本确认后，最终返回成功响应给客户端。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;7-2-文档的读取流程&#34;&gt;&lt;a href=&#34;#7-2-文档的读取流程&#34; class=&#34;headerlink&#34; title=&#34;7.2 文档的读取流程&#34;&gt;&lt;/a&gt;7.2 文档的读取流程&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;客户端发起查询请求：发送到任意节点（协调节点）。&lt;/li&gt;
+&lt;li&gt;协调节点分发请求到所有分片：查询是并行的，包括主分片和副本分片中任选一个。&lt;/li&gt;
+&lt;li&gt;每个分片独立查询：每个分片返回自己的匹配结果（文档 + 分数等）。&lt;/li&gt;
+&lt;li&gt;协调节点合并结果：统一排序、分页等，生成最终结果。&lt;/li&gt;
+&lt;li&gt;返回客户端：查询结果发送回客户端。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;7-3-文档批量创建的流程&#34;&gt;&lt;a href=&#34;#7-3-文档批量创建的流程&#34; class=&#34;headerlink&#34; title=&#34;7.3 文档批量创建的流程&#34;&gt;&lt;/a&gt;7.3 文档批量创建的流程&lt;/h3&gt;&lt;p&gt;（原文未补充内容）&lt;/p&gt;
+&lt;h3 id=&#34;7-4-文档批量读取的流程&#34;&gt;&lt;a href=&#34;#7-4-文档批量读取的流程&#34; class=&#34;headerlink&#34; title=&#34;7.4 文档批量读取的流程&#34;&gt;&lt;/a&gt;7.4 文档批量读取的流程&lt;/h3&gt;&lt;p&gt;（原文未补充内容）&lt;/p&gt;
+&lt;h2 id=&#34;8、ES-集群节点扩展&#34;&gt;&lt;a href=&#34;#8、ES-集群节点扩展&#34; class=&#34;headerlink&#34; title=&#34;8、ES 集群节点扩展&#34;&gt;&lt;/a&gt;8、ES 集群节点扩展&lt;/h2&gt;&lt;h3 id=&#34;8-1-环境准备&#34;&gt;&lt;a href=&#34;#8-1-环境准备&#34; class=&#34;headerlink&#34; title=&#34;8.1 环境准备&#34;&gt;&lt;/a&gt;8.1 环境准备&lt;/h3&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;系统版本&lt;/th&gt;
+&lt;th&gt;主机名称&lt;/th&gt;
+&lt;th&gt;IP 地址&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;RockyLinux9&lt;/td&gt;
+&lt;td&gt;es-node4&lt;/td&gt;
+&lt;td&gt;192.168.80.154&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;RockyLinux9&lt;/td&gt;
+&lt;td&gt;es-node5&lt;/td&gt;
+&lt;td&gt;192.168.80.155&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;h3 id=&#34;8-2-ES-扩展-Data-节点&#34;&gt;&lt;a href=&#34;#8-2-ES-扩展-Data-节点&#34; class=&#34;headerlink&#34; title=&#34;8.2 ES 扩展 Data 节点&#34;&gt;&lt;/a&gt;8.2 ES 扩展 Data 节点&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[root@node4 ~]# grep &amp;quot;^[a-Z]&amp;quot; /etc/elasticsearch/elasticsearch.yml
+cluster.name: es-cluster            # 集群名称
+node.name: es-node4                 # 节点名称
+node.roles: [&amp;quot;data&amp;quot;, &amp;quot;ingest&amp;quot;]      # ES8.x 配置 Data 节点, 不参与 Master 选举
+http.port: 9200
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+network.host: 192.168.80.154        # 内网 IP 地址
+# bootstrap.memory_lock: true
+discovery.seed_hosts: [&amp;quot;192.168.80.151&amp;quot;, &amp;quot;192.168.80.152&amp;quot;, &amp;quot;192.168.80.153&amp;quot;]
+
+# Enable security features
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: false
+
+# ES7.X 配置方式
+# node.data: true          # Data 节点
+# node.master: false       # 不参与 Master 选举
+
+[root@node4 ~]# systemctl restart elasticsearch
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;访问 CereBro 验证节点，路径：&lt;code&gt;Nodes &amp;gt; Data 角色&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;8-3-ES-扩展-Coordinating-节点&#34;&gt;&lt;a href=&#34;#8-3-ES-扩展-Coordinating-节点&#34; class=&#34;headerlink&#34; title=&#34;8.3 ES 扩展 Coordinating 节点&#34;&gt;&lt;/a&gt;8.3 ES 扩展 Coordinating 节点&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[root@node5 ~]# grep &amp;quot;^[a-Z]&amp;quot; /etc/elasticsearch/elasticsearch.yml
+cluster.name: es-cluster                # 集群名称
+node.name: es-node5                     # 节点名称
+node.roles: []                          # ES8 配置 Coordinating 节点
+http.port: 9200
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+# bootstrap.memory_lock: true
+network.host: 192.168.80.155             # 内网 IP 地址
+discovery.seed_hosts: [&amp;quot;192.168.80.151&amp;quot;, &amp;quot;192.168.80.152&amp;quot;, &amp;quot;192.168.80.153&amp;quot;]
+# Enable security features
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: false
+
+# ES7.X 配置方式
+# node.data: false     # 不参与 Data 节点
+# node.master: false   # 不参与 Master 选举
+
+[root@node5 ~]# systemctl restart elasticsearch
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;8-4-节点扩展检查&#34;&gt;&lt;a href=&#34;#8-4-节点扩展检查&#34; class=&#34;headerlink&#34; title=&#34;8.4 节点扩展检查&#34;&gt;&lt;/a&gt;8.4 节点扩展检查&lt;/h3&gt;&lt;p&gt;通过 cerebro 检查集群扩展后的状态。&lt;br&gt;如果出现集群无法加入、或者加入集群被拒绝，尝试删除 &lt;code&gt;/var/lib/elasticsearch&lt;/code&gt; 下的文件，然后重启 ES：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[root@node5 ~]# rm -rf /var/lib/elasticsearch/*
+[root@node5 ~]# systemctl restart elasticsearch
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果将 data 节点修改为 Coordinating 节点，需要清理数据，否则无法启动：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# repurpose 重新调整
+[root@node5 ~]# /usr/share/elasticsearch/bin/elasticsearch-node repurpose
+------------------------------------------------------------------------
+WARNING: Elasticsearch MUST be stopped before running this tool.
+
+Found 1 indices (1 shards and 1 index meta data) to clean up
+Use -v to see list of paths and indices affected
+Node is being re-purposed as no-master and no-data. Clean-up of index data will be performed.
+Do you want to proceed?
+Confirm [y/N] y
+Node successfully repurposed to no-master and no-data.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;访问 CereBro 验证节点，路径：&lt;code&gt;Nodes &amp;gt; Coordinating 角色&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;9、ES-集群调优建议&#34;&gt;&lt;a href=&#34;#9、ES-集群调优建议&#34; class=&#34;headerlink&#34; title=&#34;9、ES 集群调优建议&#34;&gt;&lt;/a&gt;9、ES 集群调优建议&lt;/h2&gt;&lt;h3 id=&#34;9-1-内核参数优化&#34;&gt;&lt;a href=&#34;#9-1-内核参数优化&#34; class=&#34;headerlink&#34; title=&#34;9.1 内核参数优化&#34;&gt;&lt;/a&gt;9.1 内核参数优化&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;内核参数优化&lt;/strong&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[root@node ~]# vim /etc/sysctl.conf
+fs.file-max=655360                        # 设定系统最大打开文件描述符数, 建议修改为 655360 或者更高;
+vm.max_map_count = 262144                 # 用于限制一个进程可以拥有的虚拟内存大小, 建议修改成 262144或更高。
+net.core.somaxconn = 32768                # 设置系统允许的最大套接字监听（TCP SYN）队列长度；
+net.ipv4.tcp_tw_reuse = 1                 # 启用 TCP TIME-WAIT 状态的套接字重用。
+# net.ipv4.ip_local_port_range = 1000 65535 # 设置本地端口范围, 即操作系统分配给本地套接字的端口号范围。
+net.ipv4.tcp_max_tw_buckets = 400000      # 表示操作系统允许 TIME_WAIT 数量的最大值, 如果超过这个数字，TIME_WAIT套接字将立刻被清除
+
+[root@node ~]# sysctl -p
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;调整用户最大进程数（nproc），调整进程最大打开的文件描述符（nofile）&lt;/strong&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[root@node ~]# rm -f /etc/security/limits.d/20-nproc.conf     # 删除默认 nproc 设定文件
+[root@node ~]# vim /etc/security/limits.conf
+*                soft    core           unlimited
+*                hard    core           unlimited
+*                soft    nproc          1000000
+*                hard    nproc          1000000
+*                soft    nofile         1000000
+*                hard    nofile         1000000
+*                soft    memlock        32000
+*                hard    memlock        32000
+*                soft    msgqueue       8192000
+*                hard    msgqueue       8192000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;9-2-配置参数优化&#34;&gt;&lt;a href=&#34;#9-2-配置参数优化&#34; class=&#34;headerlink&#34; title=&#34;9.2 配置参数优化&#34;&gt;&lt;/a&gt;9.2 配置参数优化&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1. 启用内存锁定, 避免 ES 使用 swap 交换分区, 频繁的交换, 会导致 IOPS 变高.
+[root@es-node ~]# vim /etc/elasticsearch/elasticsearch.yml
+bootstrap.memory_lock: true
+
+# 2. 当 ES 配置内存锁定后, 需要确保操作系统允许 Elasticsearch 进程锁定足够的内存.
+[root@es-node ~]# sed -i &amp;#39;/\[Service\]/a LimitMEMLOCK=infinity&amp;#39; /usr/lib/systemd/system/elasticsearch.service
+
+# 3. 重新启动 elasticSearch
+[root@es-node ~]# systemctl daemon-reload
+[root@es-node ~]# systemctl restart elasticsearch
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;9-3-JVM-参数优化&#34;&gt;&lt;a href=&#34;#9-3-JVM-参数优化&#34; class=&#34;headerlink&#34; title=&#34;9.3 JVM 参数优化&#34;&gt;&lt;/a&gt;9.3 JVM 参数优化&lt;/h3&gt;&lt;h4 id=&#34;9-3-1-基础原则&#34;&gt;&lt;a href=&#34;#9-3-1-基础原则&#34; class=&#34;headerlink&#34; title=&#34;9.3.1 基础原则&#34;&gt;&lt;/a&gt;9.3.1 基础原则&lt;/h4&gt;&lt;p&gt;要估算 JVM 内存配置，主要看两点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;要存多少数据&lt;/li&gt;
+&lt;li&gt;有多少个节点（服务器）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;经验公式：&lt;strong&gt;1GB 内存 可以支持 48GB ~ 96GB 的数据量&lt;/strong&gt;（通常按 1:48 来算最保险）&lt;br&gt;单个主分片大小最好控制在 &lt;strong&gt;30GB~50GB&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id=&#34;9-3-2-怎么估算内存和分片？&#34;&gt;&lt;a href=&#34;#9-3-2-怎么估算内存和分片？&#34; class=&#34;headerlink&#34; title=&#34;9.3.2 怎么估算内存和分片？&#34;&gt;&lt;/a&gt;9.3.2 怎么估算内存和分片？&lt;/h4&gt;&lt;p&gt;&lt;strong&gt;第一步&lt;/strong&gt;：算出实际需要存储的数据量&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;实际存储量 = 总数据量 × (副本数 + 1)    // 因为副本也要占空间
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;例如：总数据量 1TB + 副本数据 → 实际存储数据量 2TB&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第二步&lt;/strong&gt;：算每个节点要存多少数据&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;每节点存储 = 实际数据量 ÷ 节点数    // 再加上 20% 预留空间
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;示例：实际存储量 2TB &amp;#x2F; 3 节点 + 20% 预留空间 → 每节点存储 850G&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第三步&lt;/strong&gt;：算每个节点需要多少内存&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;节点内存 ≈ 每节点存储量 ÷ 48（按1:48比例来算）
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;示例：每节点存储量 850G ÷ 48 → 节点内存 17 G&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第四步&lt;/strong&gt;：算分片数量（用于 ES）&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;主分片数量 = 总数据量 ÷ 30GB（建议一个分片控制在 30GB 左右）
+总分片数 = 主分片数 × (副本数 + 1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;示例：主分片数量 ≈ 33 → 总分片数 ≈ 66&lt;/p&gt;
+&lt;h4 id=&#34;9-3-3-两个简单例子&#34;&gt;&lt;a href=&#34;#9-3-3-两个简单例子&#34; class=&#34;headerlink&#34; title=&#34;9.3.3 两个简单例子&#34;&gt;&lt;/a&gt;9.3.3 两个简单例子&lt;/h4&gt;&lt;p&gt;&lt;strong&gt;示例 1&lt;/strong&gt;：1TB 数据，3 个节点，1 个副本&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;实际要存：1TB × (1 + 1) &amp;#x3D; 2 TB&lt;/li&gt;
+&lt;li&gt;每节点：2TB ÷ 3 ≈ 700GB → 加 20% ≈ 850GB    &amp;#x2F;&amp;#x2F; 单节点实际存储&lt;/li&gt;
+&lt;li&gt;内存需求：850GB ÷ 48 ≈ 17GB                &amp;#x2F;&amp;#x2F; 单节点建议内存 17 * 2 ≈ 34G&lt;/li&gt;
+&lt;li&gt;JVM 配置：每个节点内存 17GB&lt;/li&gt;
+&lt;li&gt;分片数量：1TB ÷ 30GB ≈ 33 个主分片&lt;/li&gt;
+&lt;li&gt;总分片数 &amp;#x3D; 33 × 2 &amp;#x3D; 66 个&lt;/li&gt;
+&lt;li&gt;单个索引分片数&lt;br&gt;a. 每日数据量 ÷ 30G &amp;#x3D; （总数据量 ÷ 保留天数）÷ 30G&lt;br&gt;b. 100 ÷ 30G &amp;#x3D; 3 分片            &amp;#x2F;&amp;#x2F; 每天 100G 日志&lt;br&gt;c. 1024 ÷ 30G &amp;#x3D; 33 分片      &amp;#x2F;&amp;#x2F; 每天 1024G 日志&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;示例 2&lt;/strong&gt;：2TB 数据，3 个节点，1 个副本&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;实际要存：2TB × 2 &amp;#x3D; 4TB&lt;/li&gt;
+&lt;li&gt;每节点：4TB ÷ 3 ≈ 1.4TB → 加 20% ≈ 1.7TB            &amp;#x2F;&amp;#x2F; 单节点存储&lt;/li&gt;
+&lt;li&gt;内存需求：1.7TB ÷ 48 ≈ 35GB → 超过建议上限（31GB）→ ⚠️ 不够用，得加节点！&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;增加到 4 个节点&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;每节点：4TB ÷ 4 &amp;#x3D; 1TB → 加 20% ≈ 1.2TB&lt;/li&gt;
+&lt;li&gt;内存需求：1.2TB ÷ 48 ≈ 25GB → 合理！&lt;/li&gt;
+&lt;li&gt;分片数量：2TB ÷ 30GB &amp;#x3D; 60 个主分片 → 总分片数 &amp;#x3D; 60 × 2 &amp;#x3D; 120个&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;结论&lt;/strong&gt;：用 4 个节点，内存控制在 31GB 以内，刚刚好！&lt;/p&gt;
+&lt;h4 id=&#34;9-3-4-生产环境建议&#34;&gt;&lt;a href=&#34;#9-3-4-生产环境建议&#34; class=&#34;headerlink&#34; title=&#34;9.3.4 生产环境建议&#34;&gt;&lt;/a&gt;9.3.4 生产环境建议&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;每天数据量：约 1TB&lt;/li&gt;
+&lt;li&gt;机器配置：16 核，64GB 内存，6TB 磁盘（3 台 ECS）&lt;/li&gt;
+&lt;li&gt;JVM 设置：最大和最小内存都设为 31GB&lt;/li&gt;
+&lt;li&gt;最好不要超过 32GB（超过后 JVM 的内存优化会失效）&lt;/li&gt;
+&lt;li&gt;ES 清理策略：只保留最近 1~2 周的数据，避免磁盘被撑爆。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;✅ &lt;strong&gt;结论&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;每天数据约 1TB，建议单分片控制在 30~50GB，1TB &amp;#x2F; 30GB ≈ 每天 33 个主分片。&lt;/li&gt;
+&lt;li&gt;实际存储量 &amp;#x3D; 日志量 × (副本数 + 1)，估算内存按 1:48 比例。&lt;/li&gt;
+&lt;li&gt;JVM 不建议超过 31GB，超过后 G1 GC 优化失效。&lt;/li&gt;
+&lt;li&gt;索引清理建议使用 ILM，仅保留最近 1~2 周数据，避免磁盘撑满。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
  ]]></description>
         </item>
     </channel>
