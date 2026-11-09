@@ -7,6 +7,379 @@
     <category term="ELK" />
     <category term="Prometheus" />
     <entry>
+        <id>http://blog.jaxxwang.cn/posts/3825997150.html</id>
+        <title>01 ELK 日志收集系统概述</title>
+        <link rel="alternate" href="http://blog.jaxxwang.cn/posts/3825997150.html"/>
+        <content type="html">&lt;h1 id=&#34;ELK-相关技术介绍&#34;&gt;&lt;a href=&#34;#ELK-相关技术介绍&#34; class=&#34;headerlink&#34; title=&#34;ELK 相关技术介绍&#34;&gt;&lt;/a&gt;ELK 相关技术介绍&lt;/h1&gt;&lt;h2 id=&#34;1-ELK-诞生的背景&#34;&gt;&lt;a href=&#34;#1-ELK-诞生的背景&#34; class=&#34;headerlink&#34; title=&#34;1. ELK 诞生的背景&#34;&gt;&lt;/a&gt;1. ELK 诞生的背景&lt;/h2&gt;&lt;h3 id=&#34;1-1-没有-ELK-分析日志前&#34;&gt;&lt;a href=&#34;#1-1-没有-ELK-分析日志前&#34; class=&#34;headerlink&#34; title=&#34;1.1 没有 ELK 分析日志前&#34;&gt;&lt;/a&gt;1.1 没有 ELK 分析日志前&lt;/h3&gt;&lt;p&gt;没有日志分析工具之前，运维工作存在哪些痛点？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;痛点 1：生产出现故障后，运维需要不停的查看各种不同的日志进行分析？是不是毫无头绪？&lt;/li&gt;
+&lt;li&gt;痛点 2：项目上线出现错误，如何快速定位问题？如果后端节点过多、日志分散怎么办？&lt;/li&gt;
+&lt;li&gt;痛点 3：开发人员需要实时查看日志但又不想给服务器的登陆权限，怎么办？难道每天帮开发取日志？&lt;/li&gt;
+&lt;li&gt;痛点 4：如何在海量的日志中快速的提取我们想要的数据？比如：PV、UV、TOP10 的 URL？如果分析的日志数据量大，那么势必会导致查询速度慢、难度增大，最终则会导致我们无法快速的获取到想要的指标。&lt;/li&gt;
+&lt;li&gt;痛点 5：CDN 公司需要不停的分析日志，那分析什么？主要分析命中率，为什么？因为我们给用户承诺的命中率是 90% 以上。如果没有达到 90%，我们就要去分析数据为什么没有被命中、为什么没有被缓存下来。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1-2-使用-ELK-分析日志后&#34;&gt;&lt;a href=&#34;#1-2-使用-ELK-分析日志后&#34; class=&#34;headerlink&#34; title=&#34;1.2 使用 ELK 分析日志后&#34;&gt;&lt;/a&gt;1.2 使用 ELK 分析日志后&lt;/h3&gt;&lt;p&gt;如上所有的痛点都可以使用日志分析系统 ELK 解决，通过 ELK，将运维所有的服务器日志，业务系统日志都收集到一个平台下，然后提取想要的内容，比如错误信息，警告信息等，当过滤到这种信息，就马上告警，告警后，运维人员就能马上定位是哪台机器、哪个业务系统出现了问题，出现了什么问题。&lt;/p&gt;
+&lt;h2 id=&#34;2-ELK-技术栈是什么&#34;&gt;&lt;a href=&#34;#2-ELK-技术栈是什么&#34; class=&#34;headerlink&#34; title=&#34;2. ELK 技术栈是什么&#34;&gt;&lt;/a&gt;2. ELK 技术栈是什么&lt;/h2&gt;&lt;h3 id=&#34;2-1-什么是-ELK&#34;&gt;&lt;a href=&#34;#2-1-什么是-ELK&#34; class=&#34;headerlink&#34; title=&#34;2.1 什么是 ELK&#34;&gt;&lt;/a&gt;2.1 什么是 ELK&lt;/h3&gt;&lt;p&gt;其实 ELK 不是一个单独的技术，而是一套技术的组合，是由 Elasticsearch、Logstash、Kibana 组合而成的。&lt;br&gt;ELK 是一套开源免费、功能强大的日志分析管理系统。ELK 可以将我们的系统日志、网站日志、应用系统日志等各种日志进行收集、过滤、清洗，然后进行集中存放并可用于实时检索、分析。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;E：Elasticsearch 数据存储；&lt;/li&gt;
+&lt;li&gt;L：Logstash 数据采集、数据清洗、数据过滤；&lt;/li&gt;
+&lt;li&gt;K：Kibana 数据分析、数据展示；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;缺点&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1、Logstash 基于 Java 开发，内存消耗极高&lt;/li&gt;
+&lt;li&gt;2、Logstash 与 ElasticSerach 耦合度过紧，容易打爆 ES，造成数据丢失&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-2-什么是-EFK&#34;&gt;&lt;a href=&#34;#2-2-什么是-EFK&#34; class=&#34;headerlink&#34; title=&#34;2.2 什么是 EFK&#34;&gt;&lt;/a&gt;2.2 什么是 EFK&lt;/h3&gt;&lt;p&gt;简单来说就是将 Logstash 替换成了 Filebeat，那为什么要进行替换？&lt;br&gt;因为 Logstash 是基于 JAVA 开发的，在收集日志时会大量的占用业务系统资源，从而影响正常线上业务。而替换成 filebeat 这种较为轻量的日志收集组件，会让业务系统的运行更加的稳定。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;缺点&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1、Filebeat 与 ElasticSearch 耦合度过紧，容易打爆 ES，造成数据丢失；&lt;/li&gt;
+&lt;li&gt;2、Filebeat 对日志格式的处理与转换，比较的弱；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-3-什么是-ELFK&#34;&gt;&lt;a href=&#34;#2-3-什么是-ELFK&#34; class=&#34;headerlink&#34; title=&#34;2.3 什么是 ELFK&#34;&gt;&lt;/a&gt;2.3 什么是 ELFK&lt;/h3&gt;&lt;h3 id=&#34;2-4-ELK-Kafka&#34;&gt;&lt;a href=&#34;#2-4-ELK-Kafka&#34; class=&#34;headerlink&#34; title=&#34;2.4 ELK + Kafka&#34;&gt;&lt;/a&gt;2.4 ELK + Kafka&lt;/h3&gt;&lt;p&gt;该解决方案可支持每日 1TB 级别的业务日志处理。若贵公司业务日志量达到每日 10 TB，建议根据业务系统进行横向拆分，部署多套独立 ELK 集群。&lt;/p&gt;
+&lt;p&gt;Kafka 消息队列 可以将 Filebeat 与 ElasticSearch 进行解耦，从而可以避免 ES 被打爆的现象；&lt;/p&gt;
+&lt;p&gt;Logstash&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1、可以从 Kafka 中获取数据，然后匀速写入 ElasticSearch 中：&lt;/li&gt;
+&lt;li&gt;2、能针对那些非结构化的数据，将其转为结构化数据，并可以对无用字段进行清洗；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-4-EFK-收集哪些日志&#34;&gt;&lt;a href=&#34;#2-4-EFK-收集哪些日志&#34; class=&#34;headerlink&#34; title=&#34;2.4 EFK 收集哪些日志&#34;&gt;&lt;/a&gt;2.4 EFK 收集哪些日志&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;代理：Haproxy、Nginx&lt;/li&gt;
+&lt;li&gt;Web：Nginx、Tomcat、Httpd、PHP&lt;/li&gt;
+&lt;li&gt;DB：mysql、redis、mongo、elasticsearch&lt;/li&gt;
+&lt;li&gt;存储：nfs、glusterfs、fastdfs&lt;/li&gt;
+&lt;li&gt;系统：message、security&lt;/li&gt;
+&lt;li&gt;业务：app&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-5-ELK-软件下载地址&#34;&gt;&lt;a href=&#34;#2-5-ELK-软件下载地址&#34; class=&#34;headerlink&#34; title=&#34;2.5 ELK 软件下载地址&#34;&gt;&lt;/a&gt;2.5 ELK 软件下载地址&lt;/h3&gt;&lt;h4 id=&#34;2-5-1-RedHat-系列&#34;&gt;&lt;a href=&#34;#2-5-1-RedHat-系列&#34; class=&#34;headerlink&#34; title=&#34;2.5.1 RedHat 系列&#34;&gt;&lt;/a&gt;2.5.1 RedHat 系列&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;软件名称&lt;/th&gt;
+&lt;th&gt;版本&lt;/th&gt;
+&lt;th&gt;下载地址&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;ElasticSearch&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Logstash&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/logstash/logstash-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/logstash/logstash-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Kibana&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/kibana/kibana-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/kibana/kibana-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Filebeat&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;h4 id=&#34;2-5-2-Debian-系统&#34;&gt;&lt;a href=&#34;#2-5-2-Debian-系统&#34; class=&#34;headerlink&#34; title=&#34;2.5.2 Debian 系统&#34;&gt;&lt;/a&gt;2.5.2 Debian 系统&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;软件名称&lt;/th&gt;
+&lt;th&gt;版本&lt;/th&gt;
+&lt;th&gt;下载地址&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;ElasticSearch&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Logstash&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/logstash/logstash-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/logstash/logstash-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Kibana&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/kibana/kibana-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/kibana/kibana-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Filebeat&lt;/td&gt;
+&lt;td&gt;8.18.2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+</content>
+        <category term="ELK" />
+        <updated>2025-12-09T16:00:00.000Z</updated>
+    </entry>
+    <entry>
+        <id>http://blog.jaxxwang.cn/posts/4103087246.html</id>
+        <title>02 Elasticsearch 入门</title>
+        <link rel="alternate" href="http://blog.jaxxwang.cn/posts/4103087246.html"/>
+        <content type="html">&lt;h2 id=&#34;1、ES-基本概念介绍&#34;&gt;&lt;a href=&#34;#1、ES-基本概念介绍&#34; class=&#34;headerlink&#34; title=&#34;1、ES 基本概念介绍&#34;&gt;&lt;/a&gt;1、ES 基本概念介绍&lt;/h2&gt;&lt;h3 id=&#34;1-1-ES-是什么&#34;&gt;&lt;a href=&#34;#1-1-ES-是什么&#34; class=&#34;headerlink&#34; title=&#34;1.1 ES 是什么&#34;&gt;&lt;/a&gt;1.1 ES 是什么&lt;/h3&gt;&lt;p&gt;Elasticsearch 是一个分布式、RESTful 风格的搜索和数据分析引擎。&lt;/p&gt;
+&lt;h3 id=&#34;1-2-ES-主要功能&#34;&gt;&lt;a href=&#34;#1-2-ES-主要功能&#34; class=&#34;headerlink&#34; title=&#34;1.2 ES 主要功能&#34;&gt;&lt;/a&gt;1.2 ES 主要功能&lt;/h3&gt;&lt;p&gt;数据存储、数据搜索、数据分析。&lt;/p&gt;
+&lt;h2 id=&#34;2、ES-相关术语&#34;&gt;&lt;a href=&#34;#2、ES-相关术语&#34; class=&#34;headerlink&#34; title=&#34;2、ES 相关术语&#34;&gt;&lt;/a&gt;2、ES 相关术语&lt;/h2&gt;&lt;h3 id=&#34;2-1-文档-Document&#34;&gt;&lt;a href=&#34;#2-1-文档-Document&#34; class=&#34;headerlink&#34; title=&#34;2.1 文档 Document&#34;&gt;&lt;/a&gt;2.1 文档 Document&lt;/h3&gt;&lt;p&gt;Document 文档就是用户存在 es 中的数据，它是 es 中存储的最小单元。（类似于表中的一行数据）&lt;br&gt;&lt;strong&gt;注意&lt;/strong&gt;：每个文档都有一个唯一的 ID 表示，可以自行指定，如果不指定 es 会自动生成。&lt;/p&gt;
+&lt;h3 id=&#34;2-2-索引-Index&#34;&gt;&lt;a href=&#34;#2-2-索引-Index&#34; class=&#34;headerlink&#34; title=&#34;2.2 索引 Index&#34;&gt;&lt;/a&gt;2.2 索引 Index&lt;/h3&gt;&lt;p&gt;索引其实是一堆文档 Document 的集合。（它类似数据库的中的一个表）&lt;br&gt;在一个索引中，会有多个文档，而每个文档是由多个不同类型的字段拼接在一起的。&lt;/p&gt;
+&lt;h3 id=&#34;2-3-字段-Filed&#34;&gt;&lt;a href=&#34;#2-3-字段-Filed&#34; class=&#34;headerlink&#34; title=&#34;2.3 字段 Filed&#34;&gt;&lt;/a&gt;2.3 字段 Filed&lt;/h3&gt;&lt;p&gt;在 ES 中，Document 就是一个 Json Object，一个 Json Object 其实是由多个字段组成的，每个字段它有不同的数据类型。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;字符串：text、keyword。&lt;/li&gt;
+&lt;li&gt;数值型：long，integer，short，byte，double，float&lt;/li&gt;
+&lt;li&gt;布尔：boolean&lt;/li&gt;
+&lt;li&gt;二进制：binary&lt;/li&gt;
+&lt;li&gt;范围类型：integer_range，float_range，long_range，double_range，date_range&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-4-ES-术语总结&#34;&gt;&lt;a href=&#34;#2-4-ES-术语总结&#34; class=&#34;headerlink&#34; title=&#34;2.4 ES 术语总结&#34;&gt;&lt;/a&gt;2.4 ES 术语总结&lt;/h3&gt;&lt;p&gt;ES 索引、文档、字段关系小结：&lt;br&gt;一个索引里面存储了很多的 Document 文档，一个文档就是一个 Json Object，一个 Json Object 是由多个不同或相同的 filed 字段组成。&lt;/p&gt;
+&lt;h2 id=&#34;3、ES-操作方式&#34;&gt;&lt;a href=&#34;#3、ES-操作方式&#34; class=&#34;headerlink&#34; title=&#34;3、ES 操作方式&#34;&gt;&lt;/a&gt;3、ES 操作方式&lt;/h2&gt;&lt;p&gt;ES 的操作和我们传统的数据库操作不太一样，它是通过 Restful API 方式进行操作的，其实本质上就是通过 HTTP 的方式去变更我们的资源状态：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通过 URI 指定要操作的资源，比如 Index、Document；&lt;/li&gt;
+&lt;li&gt;通过 Http Method 指定要操作的方法，如 GET、POST、PUT、DELETE；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;常见操作 ES 的两种方式：Curl、Kibana DevTools&lt;/p&gt;
+&lt;h3 id=&#34;3-1-ES-单节点部署&#34;&gt;&lt;a href=&#34;#3-1-ES-单节点部署&#34; class=&#34;headerlink&#34; title=&#34;3.1 ES 单节点部署&#34;&gt;&lt;/a&gt;3.1 ES 单节点部署&lt;/h3&gt;&lt;h4 id=&#34;3-1-1-CentOS-系列&#34;&gt;&lt;a href=&#34;#3-1-1-CentOS-系列&#34; class=&#34;headerlink&#34; title=&#34;3.1.1 CentOS 系列&#34;&gt;&lt;/a&gt;3.1.1 CentOS 系列&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、安装 Java 环境
+[root@es-node1 ~]# yum install java-17-openjdk java-17-openjdk-devel
+
+# 2、安装 ES
+[root@es-node1 ~]# rpm -ivh elasticsearch-8.18.2-x86_64.rpm
+
+# 3、关闭 ES 默认开启的 Security 认证
+[root@es-node1 ~]# vim /etc/elasticsearch/elasticsearch.yml
+# Enable security features
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: false
+
+# 4、修改 ES 的 JVM 堆内存
+[root@es-node1 ~]# vim /etc/elasticsearch/jvm.options
+-Xms1g
+-Xmx1g
+
+# 5、启动 ES 单节点
+[root@es-node1 ~]# systemctl enable --now elasticsearch
+
+# 6. 端口验证
+[root@es-node1 ~]# netstat -nltp
+# 9200    &amp;lt;= HTTP 通信端口
+# 9300    &amp;lt;= 内部集群通信端口
+
+# 7、访问 ES
+[root@es-node1 ~]# curl localhost:9200
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;访问 ES 正常返回结果：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;&amp;#123;
+  &amp;quot;name&amp;quot; : &amp;quot;es-node01.oldwang.net&amp;quot;,
+  &amp;quot;cluster_name&amp;quot; : &amp;quot;elasticsearch&amp;quot;,
+  &amp;quot;cluster_uuid&amp;quot; : &amp;quot;HJlIqvnXQx2KfPzttxcA7A&amp;quot;,
+  &amp;quot;version&amp;quot; : &amp;#123;
+    &amp;quot;number&amp;quot; : &amp;quot;8.18.2&amp;quot;,
+    &amp;quot;build_flavor&amp;quot; : &amp;quot;default&amp;quot;,
+    &amp;quot;build_type&amp;quot; : &amp;quot;rpm&amp;quot;,
+    &amp;quot;build_hash&amp;quot; : &amp;quot;16cc90cd2d08a3147ce02b07e50894bc060a4cbf&amp;quot;,
+    &amp;quot;build_date&amp;quot; : &amp;quot;2099-04-05T14:45:26.420424304Z&amp;quot;,
+    &amp;quot;build_snapshot&amp;quot; : false,
+    &amp;quot;lucene_version&amp;quot; : &amp;quot;9.10.0&amp;quot;,
+    &amp;quot;minimum_wire_compatibility_version&amp;quot; : &amp;quot;7.17.0&amp;quot;,
+    &amp;quot;minimum_index_compatibility_version&amp;quot; : &amp;quot;7.0.0&amp;quot;
+  &amp;#125;,
+  &amp;quot;tagline&amp;quot; : &amp;quot;You Know, for Search&amp;quot;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;3-1-2-Ubuntu-系列&#34;&gt;&lt;a href=&#34;#3-1-2-Ubuntu-系列&#34; class=&#34;headerlink&#34; title=&#34;3.1.2 Ubuntu 系列&#34;&gt;&lt;/a&gt;3.1.2 Ubuntu 系列&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1. 安装 Java 环境
+[root@es-node1 ~] apt update
+[root@es-node1 ~] apt install -y openjdk-17-jdk
+
+# 2. 安装 Elasticsearch
+[root@es-node1 ~] wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-amd64.deb
+[root@es-node1 ~] dpkg -i elasticsearch-8.18.2-amd64.deb
+
+# 3. 关闭 ES 默认开启的 Security 认证
+[root@es-node1 ~] vim /etc/elasticsearch/elasticsearch.yml
+# 修改以下内容
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: false
+
+# 4. 修改 ES 的 JVM 堆内存
+[root@es-node1 ~] vim /etc/elasticsearch/jvm.options
+# 修改
+-Xms1g
+-Xmx1g
+
+# 5. 启动 ES 单节点
+[root@es-node1 ~] systemctl enable --now elasticsearch
+
+# 6. 端口验证
+[root@es-node1 ~] ss -nltp
+# 9200 &amp;lt;= HTTP 通信端口
+# 9300 &amp;lt;= 内部集群通信端口
+
+# 7. 访问 ES
+[root@es-node1 ~] curl localhost:9200
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;访问 ES 正常返回结果：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;&amp;#123;
+  &amp;quot;name&amp;quot; : &amp;quot;es-node1.wang.org&amp;quot;,
+  &amp;quot;cluster_name&amp;quot; : &amp;quot;elasticsearch&amp;quot;,
+  &amp;quot;cluster_uuid&amp;quot; : &amp;quot;xQUmZCMTQ7Ohi3TB25H0Yw&amp;quot;,
+  &amp;quot;version&amp;quot; : &amp;#123;
+    &amp;quot;number&amp;quot; : &amp;quot;8.18.2&amp;quot;,
+    &amp;quot;build_flavor&amp;quot; : &amp;quot;default&amp;quot;,
+    &amp;quot;build_type&amp;quot; : &amp;quot;deb&amp;quot;,
+    &amp;quot;build_hash&amp;quot; : &amp;quot;c6b8d8d951c631db715485edc1a74190cdce4189&amp;quot;,
+    &amp;quot;build_date&amp;quot; : &amp;quot;2025-05-23T10:07:06.210694702Z&amp;quot;,
+    &amp;quot;build_snapshot&amp;quot; : false,
+    &amp;quot;lucene_version&amp;quot; : &amp;quot;9.12.1&amp;quot;,
+    &amp;quot;minimum_wire_compatibility_version&amp;quot; : &amp;quot;7.17.0&amp;quot;,
+    &amp;quot;minimum_index_compatibility_version&amp;quot; : &amp;quot;7.0.0&amp;quot;
+  &amp;#125;,
+  &amp;quot;tagline&amp;quot; : &amp;quot;You Know, for Search&amp;quot;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;3-2-Curl-命令操作-ES&#34;&gt;&lt;a href=&#34;#3-2-Curl-命令操作-ES&#34; class=&#34;headerlink&#34; title=&#34;3.2 Curl 命令操作 ES&#34;&gt;&lt;/a&gt;3.2 Curl 命令操作 ES&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、使用 Curl 命令来创建索引, 录入一份文档
+[root@es-node1 ~]# curl -XPUT &amp;#39;http://localhost:9200/oldwang_index/_doc/1&amp;#39; \
+-H &amp;quot;Content-Type: application/json&amp;quot; \
+-d &amp;#39;&amp;#123;
+&amp;quot;name&amp;quot;:&amp;quot;oldwang&amp;quot;,
+&amp;quot;age&amp;quot;:18,
+&amp;quot;salary&amp;quot;: 1000000
+&amp;#125;&amp;#39;
+
+# 2、使用 Curl 命令来查看录入的数据
+[root@es-node1 ~]# curl -XGET &amp;#39;http://localhost:9200/oldwang_index/_doc/1&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查看数据返回结果：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;&amp;#123;&amp;quot;_index&amp;quot;:&amp;quot;oldwang_index&amp;quot;,&amp;quot;_id&amp;quot;:&amp;quot;1&amp;quot;,&amp;quot;_version&amp;quot;:1,&amp;quot;_seq_no&amp;quot;:0,&amp;quot;_primary_term&amp;quot;:1,&amp;quot;found&amp;quot;:true,&amp;quot;_source&amp;quot;:&amp;#123;
+  &amp;quot;username&amp;quot;: &amp;quot;oldwang&amp;quot;,
+  &amp;quot;age&amp;quot;: 18,
+  &amp;quot;salary&amp;quot;: 1000000
+&amp;#125;&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;3-3-安装-Kibana-操作-ES&#34;&gt;&lt;a href=&#34;#3-3-安装-Kibana-操作-ES&#34; class=&#34;headerlink&#34; title=&#34;3.3 安装 Kibana 操作 ES&#34;&gt;&lt;/a&gt;3.3 安装 Kibana 操作 ES&lt;/h3&gt;&lt;h4 id=&#34;3-3-1-CentOS-系列&#34;&gt;&lt;a href=&#34;#3-3-1-CentOS-系列&#34; class=&#34;headerlink&#34; title=&#34;3.3.1 CentOS 系列&#34;&gt;&lt;/a&gt;3.3.1 CentOS 系列&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、安装 kibana
+[root@es-node1 ~]# rpm -ivh kibana-8.18.2-x86_64.rpm
+
+# 2、配置 Kibana
+[root@es-node1 ~]# vim /etc/kibana/kibana.yml
+# 配置内容：
+server.port: 5601                                  # kibana 默认监听端口
+server.host: &amp;quot;0.0.0.0&amp;quot;                             # kibana 监听地址段
+server.name: &amp;quot;kibana-node&amp;quot;                         # kibana 实例名称
+server.publicBaseUrl: &amp;quot;http://kibana.oldwang.net&amp;quot;    # Kibana 的公共 URL, 例如分享链接、API 调用等都会使用该地址
+elasticsearch.hosts: [&amp;quot;http://localhost:9200&amp;quot;]     # kibana 从 coordinating 节点获取数据(此处 ES. Kibana 属同节点, 因此填写 localhost; 正常应该填写 ES 服务器地址)
+i18n.locale: &amp;quot;zh-CN&amp;quot;                               # kibana 汉化
+
+# 3、启动 kibana
+[root@es-node1 ~]# systemctl enable kibana --now
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;3-3-2-Ubuntu-系列&#34;&gt;&lt;a href=&#34;#3-3-2-Ubuntu-系列&#34; class=&#34;headerlink&#34; title=&#34;3.3.2 Ubuntu 系列&#34;&gt;&lt;/a&gt;3.3.2 Ubuntu 系列&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、安装 kibana
+[root@kibana ~]# dpkg -i kibana-8.18.2-amd64.deb
+
+# 2、配置 Kibana
+[root@kibana ~]# vim /etc/kibana/kibana.yml
+# 配置内容：
+server.port: 5601                                  # kibana 默认监听端口
+server.host: &amp;quot;0.0.0.0&amp;quot;                             # kibana 监听地址段
+server.name: &amp;quot;kibana-node&amp;quot;                         # kibana 实例名称
+server.publicBaseUrl: &amp;quot;http://192.168.80.150&amp;quot;      # Kibana 的公共 URL, 例如分享链接、API 调用等都会使用该地址 (推荐使用域名地址)
+elasticsearch.hosts: [&amp;quot;http://192.168.80.151:9200&amp;quot;] # 此处填写 ES 服务器地址, kibana 从 coordinating 节点获取数据
+i18n.locale: &amp;quot;zh-CN&amp;quot;                               # kibana 汉化
+
+# 3、启动 kibana
+[root@kibana ~]# systemctl enable kibana --now
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;3-4-访问-Kibana&#34;&gt;&lt;a href=&#34;#3-4-访问-Kibana&#34; class=&#34;headerlink&#34; title=&#34;3.4 访问 Kibana&#34;&gt;&lt;/a&gt;3.4 访问 Kibana&lt;/h3&gt;&lt;p&gt;访问地址：&lt;code&gt;http://192.168.80.150:5601&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3-5-启用堆栈监测（或-安装-Metricbeat-实现）&#34;&gt;&lt;a href=&#34;#3-5-启用堆栈监测（或-安装-Metricbeat-实现）&#34; class=&#34;headerlink&#34; title=&#34;3.5 启用堆栈监测（或 安装 Metricbeat 实现）&#34;&gt;&lt;/a&gt;3.5 启用堆栈监测（或 安装 Metricbeat 实现）&lt;/h3&gt;&lt;p&gt;操作路径：&lt;code&gt;Management &amp;gt; 堆栈监测 &amp;gt; 使用内部收集设置 &amp;gt; 打开 Monitoring&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;4、索引-API&#34;&gt;&lt;a href=&#34;#4、索引-API&#34; class=&#34;headerlink&#34; title=&#34;4、索引 API&#34;&gt;&lt;/a&gt;4、索引 API&lt;/h2&gt;&lt;p&gt;ES 有专门的 Index API，用于创建、更新、删除索引配置等。&lt;br&gt;操作入口：&lt;code&gt;Management &amp;gt; 开发工具&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;4-1-创建索引&#34;&gt;&lt;a href=&#34;#4-1-创建索引&#34; class=&#34;headerlink&#34; title=&#34;4.1 创建索引&#34;&gt;&lt;/a&gt;4.1 创建索引&lt;/h3&gt;&lt;p&gt;创建索引相关 API：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 创建索引
+PUT /oldwang_index
+
+# 查看所有已存在的索引
+GET _cat/indices
+
+# 查看健康状态
+GET _cat/health
+
+# 查看节点主机
+GET _cat/nodes
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;使用方式：在 Kibana 开发工具中输入需要运行的命令，单击运行发送请求。&lt;/p&gt;
+&lt;h3 id=&#34;4-2-删除索引&#34;&gt;&lt;a href=&#34;#4-2-删除索引&#34; class=&#34;headerlink&#34; title=&#34;4.2 删除索引&#34;&gt;&lt;/a&gt;4.2 删除索引&lt;/h3&gt;&lt;p&gt;删除索引 API：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 删除索引
+DELETE /oldwang_index
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;4-3-查看索引&#34;&gt;&lt;a href=&#34;#4-3-查看索引&#34; class=&#34;headerlink&#34; title=&#34;4.3 查看索引&#34;&gt;&lt;/a&gt;4.3 查看索引&lt;/h3&gt;&lt;p&gt;使用 Kibana 查看索引路径：&lt;code&gt;Stack Management &amp;gt; 索引管理 &amp;gt; 索引&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;5、文档-API&#34;&gt;&lt;a href=&#34;#5、文档-API&#34; class=&#34;headerlink&#34; title=&#34;5、文档 API&#34;&gt;&lt;/a&gt;5、文档 API&lt;/h2&gt;&lt;p&gt;ES 为索引添加文档，有专门的 Document API：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;创建文档&lt;/li&gt;
+&lt;li&gt;查询文档&lt;/li&gt;
+&lt;li&gt;更新文档&lt;/li&gt;
+&lt;li&gt;删除文档&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;5-1-创建文档&#34;&gt;&lt;a href=&#34;#5-1-创建文档&#34; class=&#34;headerlink&#34; title=&#34;5.1 创建文档&#34;&gt;&lt;/a&gt;5.1 创建文档&lt;/h3&gt;&lt;h4 id=&#34;创建文档（指定-ID）&#34;&gt;&lt;a href=&#34;#创建文档（指定-ID）&#34; class=&#34;headerlink&#34; title=&#34;创建文档（指定 ID）&#34;&gt;&lt;/a&gt;创建文档（指定 ID）&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 创建一个文档 (指定ID)
+POST /oldwang_index/_doc/1
+&amp;#123;
+  &amp;quot;username&amp;quot;: &amp;quot;oldwang&amp;quot;,
+  &amp;quot;age&amp;quot;: 18,
+  &amp;quot;salary&amp;quot;: 1000000
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;说明&lt;/strong&gt;：创建文档时，如果索引不存在，ES 会自动创建对应的 index 和 type。&lt;/p&gt;
+&lt;h4 id=&#34;创建文档（不指定-ID）&#34;&gt;&lt;a href=&#34;#创建文档（不指定-ID）&#34; class=&#34;headerlink&#34; title=&#34;创建文档（不指定 ID）&#34;&gt;&lt;/a&gt;创建文档（不指定 ID）&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 创建文档，不指定 ID（id 会生成随机字符串）
+POST /oldwang_index/_doc
+&amp;#123;
+  &amp;quot;username&amp;quot;: &amp;quot;oldwang&amp;quot;,
+  &amp;quot;age&amp;quot;: 18,
+  &amp;quot;salary&amp;quot;: 1000000
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;5-2-查询文档&#34;&gt;&lt;a href=&#34;#5-2-查询文档&#34; class=&#34;headerlink&#34; title=&#34;5.2 查询文档&#34;&gt;&lt;/a&gt;5.2 查询文档&lt;/h3&gt;&lt;h4 id=&#34;查询指定-ID-文档&#34;&gt;&lt;a href=&#34;#查询指定-ID-文档&#34; class=&#34;headerlink&#34; title=&#34;查询指定 ID 文档&#34;&gt;&lt;/a&gt;查询指定 ID 文档&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;GET /oldwang_index/_doc/1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;查询所有文档&#34;&gt;&lt;a href=&#34;#查询所有文档&#34; class=&#34;headerlink&#34; title=&#34;查询所有文档&#34;&gt;&lt;/a&gt;查询所有文档&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;GET /oldwang_index/_search
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;查询指定内容&#34;&gt;&lt;a href=&#34;#查询指定内容&#34; class=&#34;headerlink&#34; title=&#34;查询指定内容&#34;&gt;&lt;/a&gt;查询指定内容&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;GET /oldwang_index/_search
+&amp;#123;
+  &amp;quot;query&amp;quot;: &amp;#123;
+    &amp;quot;match&amp;quot;: &amp;#123;
+      &amp;quot;username&amp;quot;: &amp;quot;oldwang&amp;quot;    
+    &amp;#125;
+  &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;5-3-批量创建文档&#34;&gt;&lt;a href=&#34;#5-3-批量创建文档&#34; class=&#34;headerlink&#34; title=&#34;5.3 批量创建文档&#34;&gt;&lt;/a&gt;5.3 批量创建文档&lt;/h3&gt;&lt;p&gt;ES 允许通过 &lt;code&gt;_bulk&lt;/code&gt; 一次创建多个文档，从而减少网络传输开销，提升写入速率。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 批量创建 Document
+POST _bulk
+&amp;#123;&amp;quot;index&amp;quot;:&amp;#123;&amp;quot;_index&amp;quot;:&amp;quot;tt&amp;quot;,&amp;quot;_id&amp;quot;:&amp;quot;1&amp;quot;&amp;#125;&amp;#125;
+&amp;#123;&amp;quot;name&amp;quot;:&amp;quot;oldwang&amp;quot;,&amp;quot;age&amp;quot;:&amp;quot;18&amp;quot;&amp;#125;
+&amp;#123;&amp;quot;create&amp;quot;:&amp;#123;&amp;quot;_index&amp;quot;:&amp;quot;tt&amp;quot;,&amp;quot;_id&amp;quot;:&amp;quot;2&amp;quot;&amp;#125;&amp;#125;
+&amp;#123;&amp;quot;name&amp;quot;:&amp;quot;oldqiang&amp;quot;,&amp;quot;age&amp;quot;:&amp;quot;30&amp;quot;&amp;#125;
+&amp;#123;&amp;quot;delete&amp;quot;:&amp;#123;&amp;quot;_index&amp;quot;:&amp;quot;tt&amp;quot;,&amp;quot;_id&amp;quot;:&amp;quot;2&amp;quot;&amp;#125;&amp;#125;
+&amp;#123;&amp;quot;update&amp;quot;:&amp;#123;&amp;quot;_id&amp;quot;:&amp;quot;1&amp;quot;,&amp;quot;_index&amp;quot;:&amp;quot;tt&amp;quot;&amp;#125;&amp;#125;
+&amp;#123;&amp;quot;doc&amp;quot;:&amp;#123;&amp;quot;age&amp;quot;:&amp;quot;20&amp;quot;&amp;#125;&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;5-4-批量查询文档&#34;&gt;&lt;a href=&#34;#5-4-批量查询文档&#34; class=&#34;headerlink&#34; title=&#34;5.4 批量查询文档&#34;&gt;&lt;/a&gt;5.4 批量查询文档&lt;/h3&gt;&lt;p&gt;ES 允许通过 &lt;code&gt;_mget&lt;/code&gt; 一次查询多个文档。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 批量查询 Document
+GET _mget
+&amp;#123;
+  &amp;quot;docs&amp;quot;: [
+    &amp;#123;
+      &amp;quot;_index&amp;quot;: &amp;quot;tt&amp;quot;,
+      &amp;quot;_id&amp;quot;: &amp;quot;1&amp;quot;
+    &amp;#125;,
+    &amp;#123;
+      &amp;quot;_index&amp;quot;: &amp;quot;tt&amp;quot;,
+      &amp;quot;_id&amp;quot;: &amp;quot;2&amp;quot;
+    &amp;#125;
+  ]
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;总结&#34;&gt;&lt;a href=&#34;#总结&#34; class=&#34;headerlink&#34; title=&#34;总结&#34;&gt;&lt;/a&gt;总结&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;ES 核心概念：文档是最小存储单元（对应数据库行）、索引是文档集合（对应数据库表）、字段是文档的属性且有多种数据类型。&lt;/li&gt;
+&lt;li&gt;ES 操作核心：基于 RESTful API，可通过 Curl 命令行或 Kibana 可视化工具操作，核心 HTTP 方法包括 PUT&amp;#x2F;GET&amp;#x2F;POST&amp;#x2F;DELETE。&lt;/li&gt;
+&lt;li&gt;部署与使用：CentOS&amp;#x2F;Ubuntu 系统均支持 ES 和 Kibana 部署，Kibana 可汉化且提供友好的可视化操作界面，支持索引和文档的增删改查及批量操作。&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+        <category term="ELK" />
+        <updated>2025-12-09T16:00:00.000Z</updated>
+    </entry>
+    <entry>
         <id>http://blog.jaxxwang.cn/posts/2265425726.html</id>
         <title>04 Filebeat 日志收集入门</title>
         <link rel="alternate" href="http://blog.jaxxwang.cn/posts/2265425726.html"/>
@@ -925,379 +1298,6 @@ echo &amp;quot;Hello filebeat&amp;quot; &amp;gt;&amp;gt; /var/log/test.log
   &amp;#125;
 &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-</content>
-        <category term="ELK" />
-        <updated>2025-12-09T16:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>http://blog.jaxxwang.cn/posts/4103087246.html</id>
-        <title>02 Elasticsearch 入门</title>
-        <link rel="alternate" href="http://blog.jaxxwang.cn/posts/4103087246.html"/>
-        <content type="html">&lt;h2 id=&#34;1、ES-基本概念介绍&#34;&gt;&lt;a href=&#34;#1、ES-基本概念介绍&#34; class=&#34;headerlink&#34; title=&#34;1、ES 基本概念介绍&#34;&gt;&lt;/a&gt;1、ES 基本概念介绍&lt;/h2&gt;&lt;h3 id=&#34;1-1-ES-是什么&#34;&gt;&lt;a href=&#34;#1-1-ES-是什么&#34; class=&#34;headerlink&#34; title=&#34;1.1 ES 是什么&#34;&gt;&lt;/a&gt;1.1 ES 是什么&lt;/h3&gt;&lt;p&gt;Elasticsearch 是一个分布式、RESTful 风格的搜索和数据分析引擎。&lt;/p&gt;
-&lt;h3 id=&#34;1-2-ES-主要功能&#34;&gt;&lt;a href=&#34;#1-2-ES-主要功能&#34; class=&#34;headerlink&#34; title=&#34;1.2 ES 主要功能&#34;&gt;&lt;/a&gt;1.2 ES 主要功能&lt;/h3&gt;&lt;p&gt;数据存储、数据搜索、数据分析。&lt;/p&gt;
-&lt;h2 id=&#34;2、ES-相关术语&#34;&gt;&lt;a href=&#34;#2、ES-相关术语&#34; class=&#34;headerlink&#34; title=&#34;2、ES 相关术语&#34;&gt;&lt;/a&gt;2、ES 相关术语&lt;/h2&gt;&lt;h3 id=&#34;2-1-文档-Document&#34;&gt;&lt;a href=&#34;#2-1-文档-Document&#34; class=&#34;headerlink&#34; title=&#34;2.1 文档 Document&#34;&gt;&lt;/a&gt;2.1 文档 Document&lt;/h3&gt;&lt;p&gt;Document 文档就是用户存在 es 中的数据，它是 es 中存储的最小单元。（类似于表中的一行数据）&lt;br&gt;&lt;strong&gt;注意&lt;/strong&gt;：每个文档都有一个唯一的 ID 表示，可以自行指定，如果不指定 es 会自动生成。&lt;/p&gt;
-&lt;h3 id=&#34;2-2-索引-Index&#34;&gt;&lt;a href=&#34;#2-2-索引-Index&#34; class=&#34;headerlink&#34; title=&#34;2.2 索引 Index&#34;&gt;&lt;/a&gt;2.2 索引 Index&lt;/h3&gt;&lt;p&gt;索引其实是一堆文档 Document 的集合。（它类似数据库的中的一个表）&lt;br&gt;在一个索引中，会有多个文档，而每个文档是由多个不同类型的字段拼接在一起的。&lt;/p&gt;
-&lt;h3 id=&#34;2-3-字段-Filed&#34;&gt;&lt;a href=&#34;#2-3-字段-Filed&#34; class=&#34;headerlink&#34; title=&#34;2.3 字段 Filed&#34;&gt;&lt;/a&gt;2.3 字段 Filed&lt;/h3&gt;&lt;p&gt;在 ES 中，Document 就是一个 Json Object，一个 Json Object 其实是由多个字段组成的，每个字段它有不同的数据类型。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;字符串：text、keyword。&lt;/li&gt;
-&lt;li&gt;数值型：long，integer，short，byte，double，float&lt;/li&gt;
-&lt;li&gt;布尔：boolean&lt;/li&gt;
-&lt;li&gt;二进制：binary&lt;/li&gt;
-&lt;li&gt;范围类型：integer_range，float_range，long_range，double_range，date_range&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;2-4-ES-术语总结&#34;&gt;&lt;a href=&#34;#2-4-ES-术语总结&#34; class=&#34;headerlink&#34; title=&#34;2.4 ES 术语总结&#34;&gt;&lt;/a&gt;2.4 ES 术语总结&lt;/h3&gt;&lt;p&gt;ES 索引、文档、字段关系小结：&lt;br&gt;一个索引里面存储了很多的 Document 文档，一个文档就是一个 Json Object，一个 Json Object 是由多个不同或相同的 filed 字段组成。&lt;/p&gt;
-&lt;h2 id=&#34;3、ES-操作方式&#34;&gt;&lt;a href=&#34;#3、ES-操作方式&#34; class=&#34;headerlink&#34; title=&#34;3、ES 操作方式&#34;&gt;&lt;/a&gt;3、ES 操作方式&lt;/h2&gt;&lt;p&gt;ES 的操作和我们传统的数据库操作不太一样，它是通过 Restful API 方式进行操作的，其实本质上就是通过 HTTP 的方式去变更我们的资源状态：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;通过 URI 指定要操作的资源，比如 Index、Document；&lt;/li&gt;
-&lt;li&gt;通过 Http Method 指定要操作的方法，如 GET、POST、PUT、DELETE；&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;常见操作 ES 的两种方式：Curl、Kibana DevTools&lt;/p&gt;
-&lt;h3 id=&#34;3-1-ES-单节点部署&#34;&gt;&lt;a href=&#34;#3-1-ES-单节点部署&#34; class=&#34;headerlink&#34; title=&#34;3.1 ES 单节点部署&#34;&gt;&lt;/a&gt;3.1 ES 单节点部署&lt;/h3&gt;&lt;h4 id=&#34;3-1-1-CentOS-系列&#34;&gt;&lt;a href=&#34;#3-1-1-CentOS-系列&#34; class=&#34;headerlink&#34; title=&#34;3.1.1 CentOS 系列&#34;&gt;&lt;/a&gt;3.1.1 CentOS 系列&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、安装 Java 环境
-[root@es-node1 ~]# yum install java-17-openjdk java-17-openjdk-devel
-
-# 2、安装 ES
-[root@es-node1 ~]# rpm -ivh elasticsearch-8.18.2-x86_64.rpm
-
-# 3、关闭 ES 默认开启的 Security 认证
-[root@es-node1 ~]# vim /etc/elasticsearch/elasticsearch.yml
-# Enable security features
-xpack.security.enabled: false
-xpack.security.enrollment.enabled: false
-
-# 4、修改 ES 的 JVM 堆内存
-[root@es-node1 ~]# vim /etc/elasticsearch/jvm.options
--Xms1g
--Xmx1g
-
-# 5、启动 ES 单节点
-[root@es-node1 ~]# systemctl enable --now elasticsearch
-
-# 6. 端口验证
-[root@es-node1 ~]# netstat -nltp
-# 9200    &amp;lt;= HTTP 通信端口
-# 9300    &amp;lt;= 内部集群通信端口
-
-# 7、访问 ES
-[root@es-node1 ~]# curl localhost:9200
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;访问 ES 正常返回结果：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;&amp;#123;
-  &amp;quot;name&amp;quot; : &amp;quot;es-node01.oldwang.net&amp;quot;,
-  &amp;quot;cluster_name&amp;quot; : &amp;quot;elasticsearch&amp;quot;,
-  &amp;quot;cluster_uuid&amp;quot; : &amp;quot;HJlIqvnXQx2KfPzttxcA7A&amp;quot;,
-  &amp;quot;version&amp;quot; : &amp;#123;
-    &amp;quot;number&amp;quot; : &amp;quot;8.18.2&amp;quot;,
-    &amp;quot;build_flavor&amp;quot; : &amp;quot;default&amp;quot;,
-    &amp;quot;build_type&amp;quot; : &amp;quot;rpm&amp;quot;,
-    &amp;quot;build_hash&amp;quot; : &amp;quot;16cc90cd2d08a3147ce02b07e50894bc060a4cbf&amp;quot;,
-    &amp;quot;build_date&amp;quot; : &amp;quot;2099-04-05T14:45:26.420424304Z&amp;quot;,
-    &amp;quot;build_snapshot&amp;quot; : false,
-    &amp;quot;lucene_version&amp;quot; : &amp;quot;9.10.0&amp;quot;,
-    &amp;quot;minimum_wire_compatibility_version&amp;quot; : &amp;quot;7.17.0&amp;quot;,
-    &amp;quot;minimum_index_compatibility_version&amp;quot; : &amp;quot;7.0.0&amp;quot;
-  &amp;#125;,
-  &amp;quot;tagline&amp;quot; : &amp;quot;You Know, for Search&amp;quot;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id=&#34;3-1-2-Ubuntu-系列&#34;&gt;&lt;a href=&#34;#3-1-2-Ubuntu-系列&#34; class=&#34;headerlink&#34; title=&#34;3.1.2 Ubuntu 系列&#34;&gt;&lt;/a&gt;3.1.2 Ubuntu 系列&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1. 安装 Java 环境
-[root@es-node1 ~] apt update
-[root@es-node1 ~] apt install -y openjdk-17-jdk
-
-# 2. 安装 Elasticsearch
-[root@es-node1 ~] wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-amd64.deb
-[root@es-node1 ~] dpkg -i elasticsearch-8.18.2-amd64.deb
-
-# 3. 关闭 ES 默认开启的 Security 认证
-[root@es-node1 ~] vim /etc/elasticsearch/elasticsearch.yml
-# 修改以下内容
-xpack.security.enabled: false
-xpack.security.enrollment.enabled: false
-
-# 4. 修改 ES 的 JVM 堆内存
-[root@es-node1 ~] vim /etc/elasticsearch/jvm.options
-# 修改
--Xms1g
--Xmx1g
-
-# 5. 启动 ES 单节点
-[root@es-node1 ~] systemctl enable --now elasticsearch
-
-# 6. 端口验证
-[root@es-node1 ~] ss -nltp
-# 9200 &amp;lt;= HTTP 通信端口
-# 9300 &amp;lt;= 内部集群通信端口
-
-# 7. 访问 ES
-[root@es-node1 ~] curl localhost:9200
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;访问 ES 正常返回结果：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;&amp;#123;
-  &amp;quot;name&amp;quot; : &amp;quot;es-node1.wang.org&amp;quot;,
-  &amp;quot;cluster_name&amp;quot; : &amp;quot;elasticsearch&amp;quot;,
-  &amp;quot;cluster_uuid&amp;quot; : &amp;quot;xQUmZCMTQ7Ohi3TB25H0Yw&amp;quot;,
-  &amp;quot;version&amp;quot; : &amp;#123;
-    &amp;quot;number&amp;quot; : &amp;quot;8.18.2&amp;quot;,
-    &amp;quot;build_flavor&amp;quot; : &amp;quot;default&amp;quot;,
-    &amp;quot;build_type&amp;quot; : &amp;quot;deb&amp;quot;,
-    &amp;quot;build_hash&amp;quot; : &amp;quot;c6b8d8d951c631db715485edc1a74190cdce4189&amp;quot;,
-    &amp;quot;build_date&amp;quot; : &amp;quot;2025-05-23T10:07:06.210694702Z&amp;quot;,
-    &amp;quot;build_snapshot&amp;quot; : false,
-    &amp;quot;lucene_version&amp;quot; : &amp;quot;9.12.1&amp;quot;,
-    &amp;quot;minimum_wire_compatibility_version&amp;quot; : &amp;quot;7.17.0&amp;quot;,
-    &amp;quot;minimum_index_compatibility_version&amp;quot; : &amp;quot;7.0.0&amp;quot;
-  &amp;#125;,
-  &amp;quot;tagline&amp;quot; : &amp;quot;You Know, for Search&amp;quot;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;3-2-Curl-命令操作-ES&#34;&gt;&lt;a href=&#34;#3-2-Curl-命令操作-ES&#34; class=&#34;headerlink&#34; title=&#34;3.2 Curl 命令操作 ES&#34;&gt;&lt;/a&gt;3.2 Curl 命令操作 ES&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、使用 Curl 命令来创建索引, 录入一份文档
-[root@es-node1 ~]# curl -XPUT &amp;#39;http://localhost:9200/oldwang_index/_doc/1&amp;#39; \
--H &amp;quot;Content-Type: application/json&amp;quot; \
--d &amp;#39;&amp;#123;
-&amp;quot;name&amp;quot;:&amp;quot;oldwang&amp;quot;,
-&amp;quot;age&amp;quot;:18,
-&amp;quot;salary&amp;quot;: 1000000
-&amp;#125;&amp;#39;
-
-# 2、使用 Curl 命令来查看录入的数据
-[root@es-node1 ~]# curl -XGET &amp;#39;http://localhost:9200/oldwang_index/_doc/1&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;查看数据返回结果：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;&amp;#123;&amp;quot;_index&amp;quot;:&amp;quot;oldwang_index&amp;quot;,&amp;quot;_id&amp;quot;:&amp;quot;1&amp;quot;,&amp;quot;_version&amp;quot;:1,&amp;quot;_seq_no&amp;quot;:0,&amp;quot;_primary_term&amp;quot;:1,&amp;quot;found&amp;quot;:true,&amp;quot;_source&amp;quot;:&amp;#123;
-  &amp;quot;username&amp;quot;: &amp;quot;oldwang&amp;quot;,
-  &amp;quot;age&amp;quot;: 18,
-  &amp;quot;salary&amp;quot;: 1000000
-&amp;#125;&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;3-3-安装-Kibana-操作-ES&#34;&gt;&lt;a href=&#34;#3-3-安装-Kibana-操作-ES&#34; class=&#34;headerlink&#34; title=&#34;3.3 安装 Kibana 操作 ES&#34;&gt;&lt;/a&gt;3.3 安装 Kibana 操作 ES&lt;/h3&gt;&lt;h4 id=&#34;3-3-1-CentOS-系列&#34;&gt;&lt;a href=&#34;#3-3-1-CentOS-系列&#34; class=&#34;headerlink&#34; title=&#34;3.3.1 CentOS 系列&#34;&gt;&lt;/a&gt;3.3.1 CentOS 系列&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、安装 kibana
-[root@es-node1 ~]# rpm -ivh kibana-8.18.2-x86_64.rpm
-
-# 2、配置 Kibana
-[root@es-node1 ~]# vim /etc/kibana/kibana.yml
-# 配置内容：
-server.port: 5601                                  # kibana 默认监听端口
-server.host: &amp;quot;0.0.0.0&amp;quot;                             # kibana 监听地址段
-server.name: &amp;quot;kibana-node&amp;quot;                         # kibana 实例名称
-server.publicBaseUrl: &amp;quot;http://kibana.oldwang.net&amp;quot;    # Kibana 的公共 URL, 例如分享链接、API 调用等都会使用该地址
-elasticsearch.hosts: [&amp;quot;http://localhost:9200&amp;quot;]     # kibana 从 coordinating 节点获取数据(此处 ES. Kibana 属同节点, 因此填写 localhost; 正常应该填写 ES 服务器地址)
-i18n.locale: &amp;quot;zh-CN&amp;quot;                               # kibana 汉化
-
-# 3、启动 kibana
-[root@es-node1 ~]# systemctl enable kibana --now
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id=&#34;3-3-2-Ubuntu-系列&#34;&gt;&lt;a href=&#34;#3-3-2-Ubuntu-系列&#34; class=&#34;headerlink&#34; title=&#34;3.3.2 Ubuntu 系列&#34;&gt;&lt;/a&gt;3.3.2 Ubuntu 系列&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1、安装 kibana
-[root@kibana ~]# dpkg -i kibana-8.18.2-amd64.deb
-
-# 2、配置 Kibana
-[root@kibana ~]# vim /etc/kibana/kibana.yml
-# 配置内容：
-server.port: 5601                                  # kibana 默认监听端口
-server.host: &amp;quot;0.0.0.0&amp;quot;                             # kibana 监听地址段
-server.name: &amp;quot;kibana-node&amp;quot;                         # kibana 实例名称
-server.publicBaseUrl: &amp;quot;http://192.168.80.150&amp;quot;      # Kibana 的公共 URL, 例如分享链接、API 调用等都会使用该地址 (推荐使用域名地址)
-elasticsearch.hosts: [&amp;quot;http://192.168.80.151:9200&amp;quot;] # 此处填写 ES 服务器地址, kibana 从 coordinating 节点获取数据
-i18n.locale: &amp;quot;zh-CN&amp;quot;                               # kibana 汉化
-
-# 3、启动 kibana
-[root@kibana ~]# systemctl enable kibana --now
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;3-4-访问-Kibana&#34;&gt;&lt;a href=&#34;#3-4-访问-Kibana&#34; class=&#34;headerlink&#34; title=&#34;3.4 访问 Kibana&#34;&gt;&lt;/a&gt;3.4 访问 Kibana&lt;/h3&gt;&lt;p&gt;访问地址：&lt;code&gt;http://192.168.80.150:5601&lt;/code&gt;&lt;/p&gt;
-&lt;h3 id=&#34;3-5-启用堆栈监测（或-安装-Metricbeat-实现）&#34;&gt;&lt;a href=&#34;#3-5-启用堆栈监测（或-安装-Metricbeat-实现）&#34; class=&#34;headerlink&#34; title=&#34;3.5 启用堆栈监测（或 安装 Metricbeat 实现）&#34;&gt;&lt;/a&gt;3.5 启用堆栈监测（或 安装 Metricbeat 实现）&lt;/h3&gt;&lt;p&gt;操作路径：&lt;code&gt;Management &amp;gt; 堆栈监测 &amp;gt; 使用内部收集设置 &amp;gt; 打开 Monitoring&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id=&#34;4、索引-API&#34;&gt;&lt;a href=&#34;#4、索引-API&#34; class=&#34;headerlink&#34; title=&#34;4、索引 API&#34;&gt;&lt;/a&gt;4、索引 API&lt;/h2&gt;&lt;p&gt;ES 有专门的 Index API，用于创建、更新、删除索引配置等。&lt;br&gt;操作入口：&lt;code&gt;Management &amp;gt; 开发工具&lt;/code&gt;&lt;/p&gt;
-&lt;h3 id=&#34;4-1-创建索引&#34;&gt;&lt;a href=&#34;#4-1-创建索引&#34; class=&#34;headerlink&#34; title=&#34;4.1 创建索引&#34;&gt;&lt;/a&gt;4.1 创建索引&lt;/h3&gt;&lt;p&gt;创建索引相关 API：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 创建索引
-PUT /oldwang_index
-
-# 查看所有已存在的索引
-GET _cat/indices
-
-# 查看健康状态
-GET _cat/health
-
-# 查看节点主机
-GET _cat/nodes
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;使用方式：在 Kibana 开发工具中输入需要运行的命令，单击运行发送请求。&lt;/p&gt;
-&lt;h3 id=&#34;4-2-删除索引&#34;&gt;&lt;a href=&#34;#4-2-删除索引&#34; class=&#34;headerlink&#34; title=&#34;4.2 删除索引&#34;&gt;&lt;/a&gt;4.2 删除索引&lt;/h3&gt;&lt;p&gt;删除索引 API：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 删除索引
-DELETE /oldwang_index
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;4-3-查看索引&#34;&gt;&lt;a href=&#34;#4-3-查看索引&#34; class=&#34;headerlink&#34; title=&#34;4.3 查看索引&#34;&gt;&lt;/a&gt;4.3 查看索引&lt;/h3&gt;&lt;p&gt;使用 Kibana 查看索引路径：&lt;code&gt;Stack Management &amp;gt; 索引管理 &amp;gt; 索引&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id=&#34;5、文档-API&#34;&gt;&lt;a href=&#34;#5、文档-API&#34; class=&#34;headerlink&#34; title=&#34;5、文档 API&#34;&gt;&lt;/a&gt;5、文档 API&lt;/h2&gt;&lt;p&gt;ES 为索引添加文档，有专门的 Document API：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;创建文档&lt;/li&gt;
-&lt;li&gt;查询文档&lt;/li&gt;
-&lt;li&gt;更新文档&lt;/li&gt;
-&lt;li&gt;删除文档&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;5-1-创建文档&#34;&gt;&lt;a href=&#34;#5-1-创建文档&#34; class=&#34;headerlink&#34; title=&#34;5.1 创建文档&#34;&gt;&lt;/a&gt;5.1 创建文档&lt;/h3&gt;&lt;h4 id=&#34;创建文档（指定-ID）&#34;&gt;&lt;a href=&#34;#创建文档（指定-ID）&#34; class=&#34;headerlink&#34; title=&#34;创建文档（指定 ID）&#34;&gt;&lt;/a&gt;创建文档（指定 ID）&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 创建一个文档 (指定ID)
-POST /oldwang_index/_doc/1
-&amp;#123;
-  &amp;quot;username&amp;quot;: &amp;quot;oldwang&amp;quot;,
-  &amp;quot;age&amp;quot;: 18,
-  &amp;quot;salary&amp;quot;: 1000000
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;strong&gt;说明&lt;/strong&gt;：创建文档时，如果索引不存在，ES 会自动创建对应的 index 和 type。&lt;/p&gt;
-&lt;h4 id=&#34;创建文档（不指定-ID）&#34;&gt;&lt;a href=&#34;#创建文档（不指定-ID）&#34; class=&#34;headerlink&#34; title=&#34;创建文档（不指定 ID）&#34;&gt;&lt;/a&gt;创建文档（不指定 ID）&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 创建文档，不指定 ID（id 会生成随机字符串）
-POST /oldwang_index/_doc
-&amp;#123;
-  &amp;quot;username&amp;quot;: &amp;quot;oldwang&amp;quot;,
-  &amp;quot;age&amp;quot;: 18,
-  &amp;quot;salary&amp;quot;: 1000000
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;5-2-查询文档&#34;&gt;&lt;a href=&#34;#5-2-查询文档&#34; class=&#34;headerlink&#34; title=&#34;5.2 查询文档&#34;&gt;&lt;/a&gt;5.2 查询文档&lt;/h3&gt;&lt;h4 id=&#34;查询指定-ID-文档&#34;&gt;&lt;a href=&#34;#查询指定-ID-文档&#34; class=&#34;headerlink&#34; title=&#34;查询指定 ID 文档&#34;&gt;&lt;/a&gt;查询指定 ID 文档&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;GET /oldwang_index/_doc/1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id=&#34;查询所有文档&#34;&gt;&lt;a href=&#34;#查询所有文档&#34; class=&#34;headerlink&#34; title=&#34;查询所有文档&#34;&gt;&lt;/a&gt;查询所有文档&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;GET /oldwang_index/_search
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id=&#34;查询指定内容&#34;&gt;&lt;a href=&#34;#查询指定内容&#34; class=&#34;headerlink&#34; title=&#34;查询指定内容&#34;&gt;&lt;/a&gt;查询指定内容&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;GET /oldwang_index/_search
-&amp;#123;
-  &amp;quot;query&amp;quot;: &amp;#123;
-    &amp;quot;match&amp;quot;: &amp;#123;
-      &amp;quot;username&amp;quot;: &amp;quot;oldwang&amp;quot;    
-    &amp;#125;
-  &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;5-3-批量创建文档&#34;&gt;&lt;a href=&#34;#5-3-批量创建文档&#34; class=&#34;headerlink&#34; title=&#34;5.3 批量创建文档&#34;&gt;&lt;/a&gt;5.3 批量创建文档&lt;/h3&gt;&lt;p&gt;ES 允许通过 &lt;code&gt;_bulk&lt;/code&gt; 一次创建多个文档，从而减少网络传输开销，提升写入速率。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 批量创建 Document
-POST _bulk
-&amp;#123;&amp;quot;index&amp;quot;:&amp;#123;&amp;quot;_index&amp;quot;:&amp;quot;tt&amp;quot;,&amp;quot;_id&amp;quot;:&amp;quot;1&amp;quot;&amp;#125;&amp;#125;
-&amp;#123;&amp;quot;name&amp;quot;:&amp;quot;oldwang&amp;quot;,&amp;quot;age&amp;quot;:&amp;quot;18&amp;quot;&amp;#125;
-&amp;#123;&amp;quot;create&amp;quot;:&amp;#123;&amp;quot;_index&amp;quot;:&amp;quot;tt&amp;quot;,&amp;quot;_id&amp;quot;:&amp;quot;2&amp;quot;&amp;#125;&amp;#125;
-&amp;#123;&amp;quot;name&amp;quot;:&amp;quot;oldqiang&amp;quot;,&amp;quot;age&amp;quot;:&amp;quot;30&amp;quot;&amp;#125;
-&amp;#123;&amp;quot;delete&amp;quot;:&amp;#123;&amp;quot;_index&amp;quot;:&amp;quot;tt&amp;quot;,&amp;quot;_id&amp;quot;:&amp;quot;2&amp;quot;&amp;#125;&amp;#125;
-&amp;#123;&amp;quot;update&amp;quot;:&amp;#123;&amp;quot;_id&amp;quot;:&amp;quot;1&amp;quot;,&amp;quot;_index&amp;quot;:&amp;quot;tt&amp;quot;&amp;#125;&amp;#125;
-&amp;#123;&amp;quot;doc&amp;quot;:&amp;#123;&amp;quot;age&amp;quot;:&amp;quot;20&amp;quot;&amp;#125;&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;5-4-批量查询文档&#34;&gt;&lt;a href=&#34;#5-4-批量查询文档&#34; class=&#34;headerlink&#34; title=&#34;5.4 批量查询文档&#34;&gt;&lt;/a&gt;5.4 批量查询文档&lt;/h3&gt;&lt;p&gt;ES 允许通过 &lt;code&gt;_mget&lt;/code&gt; 一次查询多个文档。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 批量查询 Document
-GET _mget
-&amp;#123;
-  &amp;quot;docs&amp;quot;: [
-    &amp;#123;
-      &amp;quot;_index&amp;quot;: &amp;quot;tt&amp;quot;,
-      &amp;quot;_id&amp;quot;: &amp;quot;1&amp;quot;
-    &amp;#125;,
-    &amp;#123;
-      &amp;quot;_index&amp;quot;: &amp;quot;tt&amp;quot;,
-      &amp;quot;_id&amp;quot;: &amp;quot;2&amp;quot;
-    &amp;#125;
-  ]
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;总结&#34;&gt;&lt;a href=&#34;#总结&#34; class=&#34;headerlink&#34; title=&#34;总结&#34;&gt;&lt;/a&gt;总结&lt;/h3&gt;&lt;ol&gt;
-&lt;li&gt;ES 核心概念：文档是最小存储单元（对应数据库行）、索引是文档集合（对应数据库表）、字段是文档的属性且有多种数据类型。&lt;/li&gt;
-&lt;li&gt;ES 操作核心：基于 RESTful API，可通过 Curl 命令行或 Kibana 可视化工具操作，核心 HTTP 方法包括 PUT&amp;#x2F;GET&amp;#x2F;POST&amp;#x2F;DELETE。&lt;/li&gt;
-&lt;li&gt;部署与使用：CentOS&amp;#x2F;Ubuntu 系统均支持 ES 和 Kibana 部署，Kibana 可汉化且提供友好的可视化操作界面，支持索引和文档的增删改查及批量操作。&lt;/li&gt;
-&lt;/ol&gt;
-</content>
-        <category term="ELK" />
-        <updated>2025-12-09T16:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>http://blog.jaxxwang.cn/posts/3825997150.html</id>
-        <title>01 ELK 日志收集系统概述</title>
-        <link rel="alternate" href="http://blog.jaxxwang.cn/posts/3825997150.html"/>
-        <content type="html">&lt;h1 id=&#34;ELK-相关技术介绍&#34;&gt;&lt;a href=&#34;#ELK-相关技术介绍&#34; class=&#34;headerlink&#34; title=&#34;ELK 相关技术介绍&#34;&gt;&lt;/a&gt;ELK 相关技术介绍&lt;/h1&gt;&lt;h2 id=&#34;1-ELK-诞生的背景&#34;&gt;&lt;a href=&#34;#1-ELK-诞生的背景&#34; class=&#34;headerlink&#34; title=&#34;1. ELK 诞生的背景&#34;&gt;&lt;/a&gt;1. ELK 诞生的背景&lt;/h2&gt;&lt;h3 id=&#34;1-1-没有-ELK-分析日志前&#34;&gt;&lt;a href=&#34;#1-1-没有-ELK-分析日志前&#34; class=&#34;headerlink&#34; title=&#34;1.1 没有 ELK 分析日志前&#34;&gt;&lt;/a&gt;1.1 没有 ELK 分析日志前&lt;/h3&gt;&lt;p&gt;没有日志分析工具之前，运维工作存在哪些痛点？&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;痛点 1：生产出现故障后，运维需要不停的查看各种不同的日志进行分析？是不是毫无头绪？&lt;/li&gt;
-&lt;li&gt;痛点 2：项目上线出现错误，如何快速定位问题？如果后端节点过多、日志分散怎么办？&lt;/li&gt;
-&lt;li&gt;痛点 3：开发人员需要实时查看日志但又不想给服务器的登陆权限，怎么办？难道每天帮开发取日志？&lt;/li&gt;
-&lt;li&gt;痛点 4：如何在海量的日志中快速的提取我们想要的数据？比如：PV、UV、TOP10 的 URL？如果分析的日志数据量大，那么势必会导致查询速度慢、难度增大，最终则会导致我们无法快速的获取到想要的指标。&lt;/li&gt;
-&lt;li&gt;痛点 5：CDN 公司需要不停的分析日志，那分析什么？主要分析命中率，为什么？因为我们给用户承诺的命中率是 90% 以上。如果没有达到 90%，我们就要去分析数据为什么没有被命中、为什么没有被缓存下来。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;1-2-使用-ELK-分析日志后&#34;&gt;&lt;a href=&#34;#1-2-使用-ELK-分析日志后&#34; class=&#34;headerlink&#34; title=&#34;1.2 使用 ELK 分析日志后&#34;&gt;&lt;/a&gt;1.2 使用 ELK 分析日志后&lt;/h3&gt;&lt;p&gt;如上所有的痛点都可以使用日志分析系统 ELK 解决，通过 ELK，将运维所有的服务器日志，业务系统日志都收集到一个平台下，然后提取想要的内容，比如错误信息，警告信息等，当过滤到这种信息，就马上告警，告警后，运维人员就能马上定位是哪台机器、哪个业务系统出现了问题，出现了什么问题。&lt;/p&gt;
-&lt;h2 id=&#34;2-ELK-技术栈是什么&#34;&gt;&lt;a href=&#34;#2-ELK-技术栈是什么&#34; class=&#34;headerlink&#34; title=&#34;2. ELK 技术栈是什么&#34;&gt;&lt;/a&gt;2. ELK 技术栈是什么&lt;/h2&gt;&lt;h3 id=&#34;2-1-什么是-ELK&#34;&gt;&lt;a href=&#34;#2-1-什么是-ELK&#34; class=&#34;headerlink&#34; title=&#34;2.1 什么是 ELK&#34;&gt;&lt;/a&gt;2.1 什么是 ELK&lt;/h3&gt;&lt;p&gt;其实 ELK 不是一个单独的技术，而是一套技术的组合，是由 Elasticsearch、Logstash、Kibana 组合而成的。&lt;br&gt;ELK 是一套开源免费、功能强大的日志分析管理系统。ELK 可以将我们的系统日志、网站日志、应用系统日志等各种日志进行收集、过滤、清洗，然后进行集中存放并可用于实时检索、分析。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;E：Elasticsearch 数据存储；&lt;/li&gt;
-&lt;li&gt;L：Logstash 数据采集、数据清洗、数据过滤；&lt;/li&gt;
-&lt;li&gt;K：Kibana 数据分析、数据展示；&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;缺点&lt;/strong&gt;：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;1、Logstash 基于 Java 开发，内存消耗极高&lt;/li&gt;
-&lt;li&gt;2、Logstash 与 ElasticSerach 耦合度过紧，容易打爆 ES，造成数据丢失&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;2-2-什么是-EFK&#34;&gt;&lt;a href=&#34;#2-2-什么是-EFK&#34; class=&#34;headerlink&#34; title=&#34;2.2 什么是 EFK&#34;&gt;&lt;/a&gt;2.2 什么是 EFK&lt;/h3&gt;&lt;p&gt;简单来说就是将 Logstash 替换成了 Filebeat，那为什么要进行替换？&lt;br&gt;因为 Logstash 是基于 JAVA 开发的，在收集日志时会大量的占用业务系统资源，从而影响正常线上业务。而替换成 filebeat 这种较为轻量的日志收集组件，会让业务系统的运行更加的稳定。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;缺点&lt;/strong&gt;：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;1、Filebeat 与 ElasticSearch 耦合度过紧，容易打爆 ES，造成数据丢失；&lt;/li&gt;
-&lt;li&gt;2、Filebeat 对日志格式的处理与转换，比较的弱；&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;2-3-什么是-ELFK&#34;&gt;&lt;a href=&#34;#2-3-什么是-ELFK&#34; class=&#34;headerlink&#34; title=&#34;2.3 什么是 ELFK&#34;&gt;&lt;/a&gt;2.3 什么是 ELFK&lt;/h3&gt;&lt;h3 id=&#34;2-4-ELK-Kafka&#34;&gt;&lt;a href=&#34;#2-4-ELK-Kafka&#34; class=&#34;headerlink&#34; title=&#34;2.4 ELK + Kafka&#34;&gt;&lt;/a&gt;2.4 ELK + Kafka&lt;/h3&gt;&lt;p&gt;该解决方案可支持每日 1TB 级别的业务日志处理。若贵公司业务日志量达到每日 10 TB，建议根据业务系统进行横向拆分，部署多套独立 ELK 集群。&lt;/p&gt;
-&lt;p&gt;Kafka 消息队列 可以将 Filebeat 与 ElasticSearch 进行解耦，从而可以避免 ES 被打爆的现象；&lt;/p&gt;
-&lt;p&gt;Logstash&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;1、可以从 Kafka 中获取数据，然后匀速写入 ElasticSearch 中：&lt;/li&gt;
-&lt;li&gt;2、能针对那些非结构化的数据，将其转为结构化数据，并可以对无用字段进行清洗；&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;2-4-EFK-收集哪些日志&#34;&gt;&lt;a href=&#34;#2-4-EFK-收集哪些日志&#34; class=&#34;headerlink&#34; title=&#34;2.4 EFK 收集哪些日志&#34;&gt;&lt;/a&gt;2.4 EFK 收集哪些日志&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;代理：Haproxy、Nginx&lt;/li&gt;
-&lt;li&gt;Web：Nginx、Tomcat、Httpd、PHP&lt;/li&gt;
-&lt;li&gt;DB：mysql、redis、mongo、elasticsearch&lt;/li&gt;
-&lt;li&gt;存储：nfs、glusterfs、fastdfs&lt;/li&gt;
-&lt;li&gt;系统：message、security&lt;/li&gt;
-&lt;li&gt;业务：app&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;2-5-ELK-软件下载地址&#34;&gt;&lt;a href=&#34;#2-5-ELK-软件下载地址&#34; class=&#34;headerlink&#34; title=&#34;2.5 ELK 软件下载地址&#34;&gt;&lt;/a&gt;2.5 ELK 软件下载地址&lt;/h3&gt;&lt;h4 id=&#34;2-5-1-RedHat-系列&#34;&gt;&lt;a href=&#34;#2-5-1-RedHat-系列&#34; class=&#34;headerlink&#34; title=&#34;2.5.1 RedHat 系列&#34;&gt;&lt;/a&gt;2.5.1 RedHat 系列&lt;/h4&gt;&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;软件名称&lt;/th&gt;
-&lt;th&gt;版本&lt;/th&gt;
-&lt;th&gt;下载地址&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;&lt;tr&gt;
-&lt;td&gt;ElasticSearch&lt;/td&gt;
-&lt;td&gt;8.18.2&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Logstash&lt;/td&gt;
-&lt;td&gt;8.18.2&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/logstash/logstash-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/logstash/logstash-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Kibana&lt;/td&gt;
-&lt;td&gt;8.18.2&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/kibana/kibana-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/kibana/kibana-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Filebeat&lt;/td&gt;
-&lt;td&gt;8.18.2&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-x86_64.rpm&#34;&gt;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-x86_64.rpm&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;
-&lt;h4 id=&#34;2-5-2-Debian-系统&#34;&gt;&lt;a href=&#34;#2-5-2-Debian-系统&#34; class=&#34;headerlink&#34; title=&#34;2.5.2 Debian 系统&#34;&gt;&lt;/a&gt;2.5.2 Debian 系统&lt;/h4&gt;&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;软件名称&lt;/th&gt;
-&lt;th&gt;版本&lt;/th&gt;
-&lt;th&gt;下载地址&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;&lt;tr&gt;
-&lt;td&gt;ElasticSearch&lt;/td&gt;
-&lt;td&gt;8.18.2&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Logstash&lt;/td&gt;
-&lt;td&gt;8.18.2&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/logstash/logstash-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/logstash/logstash-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Kibana&lt;/td&gt;
-&lt;td&gt;8.18.2&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/kibana/kibana-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/kibana/kibana-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Filebeat&lt;/td&gt;
-&lt;td&gt;8.18.2&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-amd64.deb&#34;&gt;https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.18.2-amd64.deb&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;
 </content>
         <category term="ELK" />
         <updated>2025-12-09T16:00:00.000Z</updated>

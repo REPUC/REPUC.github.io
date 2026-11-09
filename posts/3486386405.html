@@ -1,0 +1,701 @@
+<!-- build time:Mon Nov 09 2026 08:58:14 GMT+0800 (中国标准时间) --><!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#222"><meta http-equiv="X-UA-COMPATIBLE" content="IE=edge,chrome=1"><meta name="renderer" content="webkit"><link rel="icon" type="image/ico" sizes="32x32" href="/assets/favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon.ico"><link rel="alternate" href="/rss.xml" title="老王的个人博客" type="application/rss+xml"><link rel="alternate" href="/atom.xml" title="老王的个人博客" type="application/atom+xml"><link rel="alternate" type="application/json" title="老王的个人博客" href="http://blog.jaxxwang.cn/feed.json"><link rel="preconnect" href="https://s4.zstatic.net"><link rel="preconnect" href="https://at.alicdn.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CFredericka%20the%20Great:400,400italic,700,700italic%7CNoto%20Serif%20JP:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CInconsolata:400,400italic,700,700italic&display=swap&subset=latin,latin-ext" media="none" onload="this.media&#x3D;&#39;all&#39;"><link rel="stylesheet" href="/css/app.css?v=0.4.17"><link rel="modulepreload" href="/js/chunk-A7FSY3NN.js"><link rel="modulepreload" href="/js/chunk-CNGKS6A6.js"><link rel="modulepreload" href="/js/chunk-SY7K25GS.js"><link rel="modulepreload" href="/js/chunk-UN4EFDUC.js"><link rel="modulepreload" href="/js/chunk-WIQECBEN.js"><link rel="modulepreload" href="/js/comments-MLIDK7MY.js"><link rel="modulepreload" href="/js/copy-tex-4FS63M5I.js"><link rel="modulepreload" href="/js/post-DXGCHWUS.js"><link rel="modulepreload" href="/js/quicklink-TQVDIJJK.js"><link rel="modulepreload" href="/js/search-EJUYTNZ3.js"><link rel="modulepreload" href="/js/siteInit.js"><link rel="modulepreload" href="/js/waline-GMI427H3.js"><link rel="stylesheet" href="/css/comments-5V2DVD2M.css" media="none" onload="this.media&#x3D;&#39;all&#39;"><link rel="stylesheet" href="/css/siteInit.css" media="none" onload="this.media&#x3D;&#39;all&#39;"><link rel="stylesheet" href="/css/waline-33R7XUCB.css" media="none" onload="this.media&#x3D;&#39;all&#39;"><link rel="preload" href="assets/beijing.png" as="image" fetchpriority="high"><meta name="keywords" content="Prometheus"><meta name="description" content="这是一个 LinuxSre 相关的技术播客"><link rel="canonical" href="http://blog.jaxxwang.cn/posts/3486386405.html"><title>02 部署与点亮：让 Prometheus 真正跑起来</title><meta name="generator" content="Hexo 7.3.0"></head><body itemscope itemtype="http://schema.org/WebPage"><div id="loading"><div class="cat"><div class="body"></div><div class="head"><div class="face"></div></div><div class="foot"><div class="tummy-end"></div><div class="bottom"></div><div class="legs left"></div><div class="legs right"></div></div><div class="paw"><div class="hands left"></div><div class="hands right"></div></div></div></div><div id="container"><header id="header" itemscope itemtype="http://schema.org/WPHeader"><div class="inner"><div id="brand"><div class="pjax"><h1 itemprop="name headline">02 部署与点亮：让 Prometheus 真正跑起来</h1><div class="meta"><span class="item" title="创建时间：2026-10-24 00:00:00"><span class="icon"><i class="ic i-calendar"></i></span><span class="text">发表于</span><time itemprop="dateCreated datePublished" datetime="2026-10-24T00:00:00+08:00">2026-10-24</time></span><span class="item" title="本文字数"><span class="icon"><i class="ic i-pen"></i></span><span class="text">本文字数</span><span>53k</span><span class="text">字</span></span><span class="item" title="阅读时长"><span class="icon"><i class="ic i-clock"></i></span><span class="text">阅读时长</span><span>48 分钟</span></span></div></div></div><nav id="nav"><div class="inner"><div class="toggle"><div class="lines" aria-label="切换导航栏"><span class="line"></span><span class="line"></span><span class="line"></span></div></div><ul class="menu"><li class="item title"><a href="/" rel="start">Jaxx.Wang</a></li></ul><ul class="right" id="rightNav"><li class="item theme"><i class="ic i-sun"></i></li><li class="item search"><i class="ic i-search"></i></li></ul></div></nav></div><div class="pjax" id="imgs"><img src="assets/beijing.png" loading="eager" decoding="async" fetchpriority="high" alt="老王的个人博客"></div></header><div id="waves"><svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path></defs><g class="parallax"><use xlink:href="#gentle-wave" x="48" y="0"></use><use xlink:href="#gentle-wave" x="48" y="3"></use><use xlink:href="#gentle-wave" x="48" y="5"></use><use xlink:href="#gentle-wave" x="48" y="7"></use></g></svg></div><main><div class="inner"><div class="pjax" id="main"><div class="article wrap"><div class="breadcrumb" itemlistelement itemscope itemtype="https://schema.org/BreadcrumbList"><i class="ic i-home"></i><span><a href="/">首页</a></span><i class="ic i-angle-right"></i><span class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Prometheus/" itemprop="item" rel="index" title="分类于Prometheus"><span itemprop="name">Prometheus<meta itemprop="position" content="0"></span></a></span></div><article class="post block" itemscope itemtype="http://schema.org/Article" lang="zh-CN"><link itemprop="mainEntityOfPage" href="http://blog.jaxxwang.cn/posts/3486386405.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/assets/avatar.jpg"><meta itemprop="name" content="Jaxx.Wang"><meta itemprop="description" content=", 这是一个 LinuxSre 相关的技术播客"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="老王的个人博客"></span><div class="body md" itemprop="articleBody"><h1 id="第-2-章-部署与点亮：让-Prometheus-真正跑起来"><a href="#第-2-章-部署与点亮：让-Prometheus-真正跑起来" class="headerlink" title="第 2 章　部署与点亮：让 Prometheus 真正跑起来"></a>第 2 章　部署与点亮：让 Prometheus 真正跑起来</h1><blockquote><p><strong>本章导读</strong></p><p>第 1 章我们讲了架构，但架构是”纸上的图”。本章开始动手，把图上的每一个方框都变成一台机器上的一个进程。</p><p>这一章信息密度很高，涉及五个软件的安装、一份配置文件的逐行讲解、以及<strong>六个真实踩过的坑</strong>。请务必不要跳过”故障现场”这类小节——<strong>面试官不问你装成功过什么，只问你出过错之后怎么定位的。</strong></p><p>一句话总结本章目标：<strong>把 9090（Prometheus）、9100（Node Exporter）、3000（Grafana）、9091（Pushgateway）这四个端口全部点亮，并且能在 Grafana 上看到四台主机的 CPU 曲线。</strong></p></blockquote><p><strong>学习目标</strong></p><table><thead><tr><th align="left">序号</th><th align="left">学完本章，你应当能够</th></tr></thead><tbody><tr><td align="left">1</td><td align="left">独立完成 Prometheus Server 的二进制安装，并写出规范的 systemd 服务单元</td></tr><tr><td align="left">2</td><td align="left">解释 <code>--web.enable-lifecycle</code> 的作用与<strong>安全风险</strong>，说明生产环境为何要禁用</td></tr><tr><td align="left">3</td><td align="left">逐行读懂 <code>prometheus.yml</code> 的四段式结构，独立新增一个采集 job</td></tr><tr><td align="left">4</td><td align="left">用 <code>promtool</code> 做配置语法检查，并说清”不重启生效”的三种方式</td></tr><tr><td align="left">5</td><td align="left">用 Docker &#x2F; Docker Compose 跑起 Prometheus，并正确处理配置与数据两个持久化问题</td></tr><tr><td align="left">6</td><td align="left">在任意节点上部署 Node Exporter，并让 Prometheus 采集到它</td></tr><tr><td align="left">7</td><td align="left">用”五步法”排查”目标抓不到数据”的故障</td></tr><tr><td align="left">8</td><td align="left">完成 Grafana 的数据源配置与社区 Dashboard 导入，并解释”监控 Grafana 自己为什么绕一圈”</td></tr><tr><td align="left">9</td><td align="left">说清 Pushgateway 的适用场景、工作原理与四个固有缺陷</td></tr></tbody></table><hr><h2 id="2-1-开工之前：先把拼图摆好"><a href="#2-1-开工之前：先把拼图摆好" class="headerlink" title="2.1　开工之前：先把拼图摆好"></a>2.1　开工之前：先把拼图摆好</h2><h3 id="2-1-1-五个软件，各管一段"><a href="#2-1-1-五个软件，各管一段" class="headerlink" title="2.1.1　五个软件，各管一段"></a>2.1.1　五个软件，各管一段</h3><p>第 1 章我们列过组件职责表，现在把它落成”要装什么”：</p><table><thead><tr><th align="left">软件</th><th align="left">默认端口</th><th align="left">一句话职责</th><th align="left">类比 Zabbix</th></tr></thead><tbody><tr><td align="left"><strong>Prometheus Server</strong></td><td align="left">9090</td><td align="left">拉取指标 + 内置 TSDB 存储 + 规则计算</td><td align="left"><code>zabbix-server</code> + 数据库</td></tr><tr><td align="left"><strong>Node Exporter</strong></td><td align="left">9100</td><td align="left">把本机的 CPU &#x2F; 内存 &#x2F; 磁盘 &#x2F; 网络指标用 HTTP 暴露出来</td><td align="left"><strong><code>zabbix-agent</code></strong></td></tr><tr><td align="left"><strong>Grafana</strong></td><td align="left">3000</td><td align="left">把数据画成漂亮的图</td><td align="left"><code>zabbix-web</code>（但强太多）</td></tr><tr><td align="left"><strong>Alertmanager</strong></td><td align="left">9093</td><td align="left">接收告警、去重、分组、路由、发送</td><td align="left">内置告警动作（本章不展开）</td></tr><tr><td align="left"><strong>Pushgateway</strong></td><td align="left">9091</td><td align="left">给”抓不到”的瞬时指标当<strong>中转代理</strong></td><td align="left"><strong><code>zabbix-proxy</code></strong>（角色相近）</td></tr></tbody></table><blockquote><p>📌 <strong>一个重要认知</strong>：Prometheus Server <strong>只做两件事</strong>——采集、存储。它自带的那个 Web 界面（9090）<strong>只用于调试查询</strong>，从来没打算让你拿它当监控大屏。所以”要装 Grafana”不是可选项，而是必选项。</p></blockquote><h3 id="2-1-2-部署拓扑：谁装在哪"><a href="#2-1-2-部署拓扑：谁装在哪" class="headerlink" title="2.1.2　部署拓扑：谁装在哪"></a>2.1.2　部署拓扑：谁装在哪</h3><pre><code class="language-mermaid">flowchart TB
+    subgraph MON[&quot;监控服务器（可合设，也可分离部署）&quot;]
+        direction LR
+        P[&quot;Prometheus Server&lt;br/&gt;:9090&quot;]
+        G[&quot;Grafana&lt;br/&gt;:3000&quot;]
+        PG[&quot;Pushgateway&lt;br/&gt;:9091&quot;]
+        P &lt;--&gt;|PromQL 查询| G
+        PG --&gt;|被 Pull| P
+    end
+
+    subgraph NODES[&quot;被监控节点&quot;]
+        direction LR
+        N1[&quot;node101&lt;br/&gt;Node Exporter :9100&quot;]
+        N2[&quot;node102&lt;br/&gt;Node Exporter :9100&quot;]
+        N3[&quot;node103&lt;br/&gt;Node Exporter :9100&quot;]
+        N4[&quot;监控服务器自己&lt;br/&gt;Node Exporter :9100&quot;]
+    end
+
+    N1 --&gt;|Pull /metrics| P
+    N2 --&gt;|Pull /metrics| P
+    N3 --&gt;|Pull /metrics| P
+    N4 --&gt;|Pull /metrics| P
+</code></pre><p><strong>三条部署原则</strong>（经验，不是规定）：</p><ol><li><strong>Prometheus &#x2F; Grafana &#x2F; Pushgateway 可以装在同一台</strong>（实验环境、小规模环境），也可以分开装。分开装的好处是<strong>性能互不干扰</strong>、故障不连带。</li><li><strong>Node Exporter 必须装在被监控的每一台机器上</strong>，一台不能少——包括 Prometheus 自己那台，因为<strong>监控系统本身也需要被监控</strong>。</li><li>生产环境请把 <code>--storage.tsdb.path</code>（数据目录）<strong>独立挂一个分区</strong>，避免数据把根分区写满导致整机不可用。</li></ol><h3 id="2-1-3-版本怎么选：先看兼容性"><a href="#2-1-3-版本怎么选：先看兼容性" class="headerlink" title="2.1.3　版本怎么选：先看兼容性"></a>2.1.3　版本怎么选：先看兼容性</h3><p>监控栈是”多组件协同”，版本乱配最容易出问题。下面是一套经过验证、兼容性良好的企业级组合：</p><table><thead><tr><th align="left">组件</th><th align="left">推荐版本</th><th align="left">示例文件</th></tr></thead><tbody><tr><td align="left">Prometheus</td><td align="left"><strong>2.53.x</strong></td><td align="left"><code>prometheus-2.53.2.linux-amd64.tar.gz</code></td></tr><tr><td align="left">Alertmanager</td><td align="left">0.27.x</td><td align="left"><code>alertmanager-0.27.0.linux-amd64.tar.gz</code></td></tr><tr><td align="left">Node Exporter</td><td align="left">1.8.x</td><td align="left"><code>node_exporter-1.8.2.linux-amd64.tar.gz</code></td></tr><tr><td align="left">Grafana</td><td align="left"><strong>11.x</strong></td><td align="left"><code>grafana-enterprise_11.2.0_amd64.deb</code></td></tr><tr><td align="left">Pushgateway</td><td align="left">1.10.x</td><td align="left"><code>pushgateway-1.10.0.linux-amd64.tar.gz</code></td></tr></tbody></table><blockquote><p>⚠️ <strong>关于 2.x 还是 3.x</strong></p><p>Prometheus 已经发布了 3.x，并且提供了 <strong>LTS（长期支持）</strong> 版本。课程的演示环境用的是 <strong>3.5.0 LTS</strong>，功能上比 2.x 多了些改进。<br>但要注意：<strong>大量企业存量环境仍然是 2.53.x</strong>，生态里的部分 Exporter、Dashboard、规则文件是按 2.x 写的。所以：</p><ul><li><strong>新环境可以上 3.x LTS</strong>；</li><li><strong>接手老环境时不要手贱升级主版本</strong>；</li><li><strong>预发布版（rc &#x2F; beta &#x2F; 带 -rc 后缀）一律不要装到生产</strong>，它不是给生产用的。</li></ul></blockquote><h3 id="2-1-4-六种部署方式"><a href="#2-1-4-六种部署方式" class="headerlink" title="2.1.4　六种部署方式"></a>2.1.4　六种部署方式</h3><p>官方文档：<a target="_blank" rel="noopener" href="https://prometheus.io/docs/prometheus/latest/installation/">https://prometheus.io/docs/prometheus/latest/installation/</a></p><table><thead><tr><th align="left">方式</th><th align="left">适用场景</th><th align="left">一句评价</th></tr></thead><tbody><tr><td align="left"><strong>包安装</strong>（apt &#x2F; yum）</td><td align="left">快速验证、小规模</td><td align="left">最省事，但版本由仓库决定，往往偏旧</td></tr><tr><td align="left"><strong>二进制安装</strong></td><td align="left"><strong>生产主力</strong>（学完再看第 4 行）</td><td align="left">版本可控、零依赖，<strong>必须掌握</strong></td></tr><tr><td align="left"><strong>Ansible</strong></td><td align="left">批量部署几十上百台</td><td align="left">有现成 Role，改改变量就行</td></tr><tr><td align="left"><strong>Docker</strong></td><td align="left">快速起、CI 环境</td><td align="left">一条命令，注意挂载</td></tr><tr><td align="left"><strong>Docker Compose</strong></td><td align="left">一键起整套监控栈</td><td align="left">适合实验与中小规模</td></tr><tr><td align="left"><strong>Kubernetes</strong></td><td align="left">云原生环境</td><td align="left">用 kube-prometheus &#x2F; Operator &#x2F; Helm</td></tr></tbody></table><blockquote><p>💡 <strong>学习路径建议</strong>：<strong>先二进制，再容器。</strong><br>你只有先在裸机上手动装过一遍，才知道容器里那个 <code>-v</code> 到底在挂什么、那个 <code>--config.file</code> 到底指向哪。反过来学，你会永远停留在”复制粘贴能跑，坏了不会修”的层次。</p></blockquote><hr><h2 id="2-2-方式一：包安装（5-分钟上手）"><a href="#2-2-方式一：包安装（5-分钟上手）" class="headerlink" title="2.2　方式一：包安装（5 分钟上手）"></a>2.2　方式一：包安装（5 分钟上手）</h2><h3 id="2-2-1-Ubuntu-Debian"><a href="#2-2-1-Ubuntu-Debian" class="headerlink" title="2.2.1　Ubuntu &#x2F; Debian"></a>2.2.1　Ubuntu &#x2F; Debian</h3><p>Ubuntu 的官方仓库里<strong>直接带 Prometheus 包</strong>：</p><pre><code class="language-bash"># 先看看仓库里有哪个版本
+apt list prometheus
+
+# ubuntu 22.04
+# prometheus/jammy 2.31.2+ds1-1ubuntu1 amd64
+# ubuntu 24.04
+# prometheus/noble-security 2.45.3+ds-2ubuntu0.2 amd64
+
+apt -y install prometheus
+</code></pre><p>装完<strong>服务自动启动</strong>，并且——这是很多人不知道的一点——<strong>包里自带了一个 Node Exporter</strong>：</p><pre><code class="language-bash">systemctl status prometheus
+systemctl status prometheus-node-exporter.service
+
+ss -ntlp | grep prometheus
+# LISTEN 0 4096 *:9090 users:((&quot;prometheus&quot;,pid=2969,fd=4))
+# LISTEN 0 4096 *:9100 users:((&quot;prometheus-node&quot;,pid=2195,fd=3))
+</code></pre><p>所以你会看到 <strong>9090 和 9100 同时被监听</strong>，进程名分别是 <code>/usr/bin/prometheus</code> 和 <code>/usr/bin/prometheus-node-exporter</code>。</p><blockquote><p>💡 <strong>包安装的价值</strong>：适合”我今天就想看一眼 Prometheus 长啥样”。它的配置文件在 <code>/etc/prometheus/prometheus.yml</code>，数据目录在 <code>/var/lib/prometheus</code>，都由打包者安排好了，你不用操心。</p></blockquote><h3 id="2-2-2-RHEL-Rocky-CentOS"><a href="#2-2-2-RHEL-Rocky-CentOS" class="headerlink" title="2.2.2　RHEL &#x2F; Rocky &#x2F; CentOS"></a>2.2.2　RHEL &#x2F; Rocky &#x2F; CentOS</h3><p>RHEL 系<strong>默认没有</strong> Prometheus 仓库，需要自己配 <code>yum</code> repo（packagecloud 提供）：</p><pre><code class="language-ini">[prometheus]
+name=prometheus
+baseurl=https://packagecloud.io/prometheus-rpm/release/el/$releasever/$basearch
+repo_gpgcheck=1
+enabled=1
+gpgkey=https://packagecloud.io/prometheus-rpm/release/gpgkey
+       https://raw.githubusercontent.com/lest/prometheus-rpm/master/RPM-GPG-KEY-prometheus-rpm
+gpgcheck=1
+metadata_expire=300
+</code></pre><blockquote><p>⚠️ <strong>包安装的两大局限</strong>（也正是生产偏爱二进制的原因）：</p><ol><li><strong>版本被仓库锁死</strong>，仓库里是什么版本你就用什么版本，通常落后官方好几个小版本，甚至大版本；</li><li><strong>目录布局固定</strong>，想自定义数据目录、想和别的实例并存，就很别扭。</li></ol></blockquote><hr><h2 id="2-3-方式二：二进制安装（生产标准做法）"><a href="#2-3-方式二：二进制安装（生产标准做法）" class="headerlink" title="2.3　方式二：二进制安装（生产标准做法）"></a>2.3　方式二：二进制安装（生产标准做法）</h2><h3 id="2-3-1-为什么-Go-程序装起来这么简单"><a href="#2-3-1-为什么-Go-程序装起来这么简单" class="headerlink" title="2.3.1　为什么 Go 程序装起来这么简单"></a>2.3.1　为什么 Go 程序装起来这么简单</h3><p>Prometheus 全套组件都是 <strong>Go</strong> 写的，编译产物是<strong>静态链接的单一二进制文件</strong>。这意味着：</p><ul><li><strong>零运行时依赖</strong>——不需要 Python、不需要 JDK、不需要 libc 的某个版本；</li><li><strong>拷到任何 Linux 上都能跑</strong>——Ubuntu、Rocky、Alpine 都一样；</li><li><strong>镜像可以做得很小</strong>——甚至可以 <code>FROM scratch</code>。</li></ul><p>验证一下就明白了：</p><pre><code class="language-bash">ldd prometheus promtool
+# prometheus:
+#     不是动态可执行文件
+# promtool:
+#     不是动态可执行文件
+</code></pre><p>“不是动态可执行文件”，就是<strong>静态编译</strong>的意思。</p><h3 id="2-3-2-下载与解压"><a href="#2-3-2-下载与解压" class="headerlink" title="2.3.2　下载与解压"></a>2.3.2　下载与解压</h3><p>官方下载：<a target="_blank" rel="noopener" href="https://prometheus.io/download/">https://prometheus.io/download/</a><br>历史版本：<a target="_blank" rel="noopener" href="https://github.com/prometheus/prometheus/releases">https://github.com/prometheus/prometheus/releases</a></p><pre><code class="language-bash">cd /usr/local
+
+wget https://github.com/prometheus/prometheus/releases/download/v2.53.2/prometheus-2.53.2.linux-amd64.tar.gz
+tar xf prometheus-2.53.2.linux-amd64.tar.gz
+
+# 建软链接，去掉版本号，将来升级只改软链
+ln -s prometheus-2.53.2.linux-amd64 prometheus
+</code></pre><blockquote><p>💡 <strong>软链接的价值</strong>：以后从 2.53.2 升级到 2.53.3，只需要解压新目录、把软链指过去、重启服务。所有配置和 systemd 单元里的路径<strong>一个字都不用改</strong>。这是运维的标准习惯。</p></blockquote><blockquote><p>⚠️ <strong>国内下载慢的老问题</strong>：GitHub 直连经常断。稳妥做法是<strong>一次性把安装包下载好，随安装脚本一起分发，做离线安装</strong>——生产环境装东西，永远不要指望”现场 wget 能成功”。</p></blockquote><p>解压后目录内容：</p><pre><code class="language-text">/usr/local/prometheus/
+├── console_libraries/      # 内置控制台模板的库
+├── consoles/               # 内置控制台模板
+├── LICENSE                 # 可以删
+├── NOTICE                  # 可以删
+├── prometheus              # ★ 主程序
+├── prometheus.yml          # ★ 默认配置
+└── promtool                # ★ 运维神器（语法检查/查询调试/TSDB 工具）
+</code></pre><h3 id="2-3-3-目录规划与权限"><a href="#2-3-3-目录规划与权限" class="headerlink" title="2.3.3　目录规划与权限"></a>2.3.3　目录规划与权限</h3><p>原始包里的文件平铺在一起，不够规整。按”程序 &#x2F; 配置 &#x2F; 数据”分离：</p><pre><code class="language-bash">cd /usr/local/prometheus
+mkdir bin conf data
+
+mv prometheus promtool bin/
+mv prometheus.yml conf/
+
+# 创建专用的服务账号：不要用 root，也不要让它能登录 shell
+useradd -r -s /sbin/nologin prometheus
+
+# 统一属主属组
+chown -R prometheus:prometheus /usr/local/prometheus/
+</code></pre><p>最终结构：</p><pre><code class="language-text">/usr/local/prometheus/
+├── bin/       prometheus, promtool
+├── conf/      prometheus.yml
+└── data/      ← TSDB 数据（不建也行，首次启动会自动创建）
+</code></pre><blockquote><p>📌 <code>-r</code> 表示<strong>系统账号</strong>（UID 较小、默认不建家目录），<code>-s /sbin/nologin</code> 表示<strong>禁止交互登录</strong>。服务账号就该是这种”只存在、不登录”的形态，安全上更干净。</p></blockquote><p>再把 <code>bin</code> 加到 PATH，省得每次写全路径：</p><pre><code class="language-bash">cat &gt; /etc/profile.d/prometheus.sh &lt;&lt;&#39;EOF&#39;
+export PROMETHEUS_HOME=/usr/local/prometheus
+export PATH=$&#123;PROMETHEUS_HOME&#125;/bin:$PATH
+EOF
+source /etc/profile
+</code></pre><h3 id="2-3-4-第一次启动：先让它”裸跑”一下"><a href="#2-3-4-第一次启动：先让它”裸跑”一下" class="headerlink" title="2.3.4　第一次启动：先让它”裸跑”一下"></a>2.3.4　第一次启动：先让它”裸跑”一下</h3><p>主程序参数很多，但初始化阶段只需要关心两个：</p><pre><code class="language-bash">prometheus --help | head -20
+</code></pre><table><thead><tr><th align="left">参数</th><th align="left">含义</th><th align="left">默认值</th></tr></thead><tbody><tr><td align="left"><code>--config.file</code></td><td align="left">配置文件路径</td><td align="left"><code>prometheus.yml</code>（<strong>相对于当前工作目录</strong>）</td></tr><tr><td align="left"><code>--web.listen-address</code></td><td align="left">UI &#x2F; API 监听地址</td><td align="left"><code>0.0.0.0:9090</code></td></tr><tr><td align="left"><code>--storage.tsdb.path</code></td><td align="left">TSDB 数据目录</td><td align="left"><code>data/</code></td></tr></tbody></table><p><strong>先什么都不带，直接跑一次</strong>，你会看到报错：</p><pre><code class="language-bash">cd /usr/local/prometheus/bin
+./prometheus
+# level=error msg=&quot;Error loading config&quot; err=&quot;open prometheus.yml: no such file or directory&quot;
+</code></pre><blockquote><p>🧠 <strong>为什么？</strong> 因为默认配置文件名是<strong>相对路径</strong> <code>prometheus.yml</code>，它在<strong>当前工作目录</strong>下找。而我们刚把配置文件挪到了 <code>conf/</code>。</p></blockquote><p>那就在上层的<strong>工作目录</strong>里启动，把配置路径指过去：</p><pre><code class="language-bash">cd /usr/local/prometheus
+./bin/prometheus --config.file=conf/prometheus.yml
+</code></pre><p>起来了。此时浏览器访问 <code>http://&lt;IP&gt;:9090</code> 就能看到那个”简陋但够用”的 Web 界面。</p><h3 id="2-3-5-⭐-故障现场一：以-root-启动过一次，之后再也起不来"><a href="#2-3-5-⭐-故障现场一：以-root-启动过一次，之后再也起不来" class="headerlink" title="2.3.5　⭐ 故障现场一：以 root 启动过一次，之后再也起不来"></a>2.3.5　⭐ 故障现场一：以 root 启动过一次，之后再也起不来</h3><p>这是<strong>初学者 90% 会踩、且完全不知道原因</strong>的坑。完整重现一遍：</p><p><strong>现象</strong>：手动用 <code>root</code> 跑通了，然后删掉进程、改成 systemd 以 <code>prometheus</code> 用户启动，服务起不来。</p><pre><code class="language-bash">systemctl start prometheus
+systemctl status prometheus
+# 一直 failed
+</code></pre><p><strong>排查过程</strong>（这才是重点）：</p><ol><li><strong>先看端口有没有起来</strong>——<code>ss -ntlp | grep 9090</code>，没有。</li><li><strong>再看服务状态</strong>——<code>systemctl status prometheus</code>，只有一行”启动失败”，信息不够。</li><li><strong>看日志</strong>——<code>journalctl -u prometheus -n 50 --no-pager</code>（或看 <code>/usr/local/prometheus/data</code> 同级目录下有没有生成日志文件），发现关键的一句：</li></ol><pre><code class="language-text">msg=&quot;Error opening storage&quot; err=&quot;open /usr/local/prometheus/data/queries.active: permission denied&quot;
+</code></pre><ol start="4"><li><strong>验证猜想</strong>——<code>ls -l /usr/local/prometheus/data/</code>，发现里面的文件属主是 <code>root:root</code>。</li></ol><p><strong>根因</strong>：</p><blockquote><p>我第一次是<strong>用 root 身份手动启动</strong>的，Prometheus 在 <code>data/</code> 目录下自动创建了 <code>queries.active</code>、<code>lock</code>、<code>wal/</code> 等文件，<strong>属主全部是 root</strong>。<br>现在 systemd 以 <code>prometheus</code> 普通用户启动，去写这些 root 拥有的文件——<strong>权限不足</strong>。</p></blockquote><p><strong>解决</strong>：</p><pre><code class="language-bash">chown -R prometheus:prometheus /usr/local/prometheus/
+# 特别是 data 目录，重新设一遍
+chown -R prometheus:prometheus /usr/local/prometheus/data
+systemctl restart prometheus
+</code></pre><blockquote><p>⭐ <strong>这条经验请写进笔记</strong>：<br><strong>调试阶段用哪个身份启动，生产就用哪个身份。</strong><br>不要图省事用 root 试跑——它会污染数据目录、日志文件、以及你自己都没意识到的 PID 文件。<strong>“先 root 试跑，再改普通用户”是典型的错误顺序。</strong></p></blockquote><h3 id="2-3-6-写-systemd-服务单元"><a href="#2-3-6-写-systemd-服务单元" class="headerlink" title="2.3.6　写 systemd 服务单元"></a>2.3.6　写 systemd 服务单元</h3><p>标准单元文件（Ubuntu 在 <code>/lib/systemd/system/</code>，Rocky 在 <code>/usr/lib/systemd/system/</code>，两者都兼容 <code>/etc/systemd/system/</code>）：</p><pre><code class="language-ini">[Unit]
+Description=Prometheus Server
+Documentation=https://prometheus.io/docs/introduction/overview/
+After=network.target
+
+[Service]
+Restart=on-failure
+User=prometheus
+Group=prometheus
+WorkingDirectory=/usr/local/prometheus/
+ExecStart=/usr/local/prometheus/bin/prometheus \
+          --config.file=/usr/local/prometheus/conf/prometheus.yml
+ExecReload=/bin/kill -HUP $MAINPID
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+</code></pre><p><strong>逐行解释，这几行每一行都有用：</strong></p><table><thead><tr><th align="left">配置</th><th align="left">作用</th><th align="left">为什么必须有</th></tr></thead><tbody><tr><td align="left"><code>After=network.target</code></td><td align="left">在网络就绪后再启动</td><td align="left">否则开机可能先于网络起来，抓取全部失败</td></tr><tr><td align="left"><code>User</code> &#x2F; <code>Group</code></td><td align="left">以专用账号运行</td><td align="left">最小权限原则，避免被拿下后拿整机</td></tr><tr><td align="left"><code>WorkingDirectory</code></td><td align="left">工作目录</td><td align="left"><strong>关键</strong>：决定了相对路径（<code>data/</code>）解析到哪里</td></tr><tr><td align="left"><code>ExecStart</code> … <code>--config.file</code></td><td align="left">启动命令与配置路径</td><td align="left">用<strong>绝对路径</strong>，不依赖 PATH</td></tr><tr><td align="left"><code>ExecReload=/bin/kill -HUP $MAINPID</code></td><td align="left"><code>systemctl reload</code> 发 SIGHUP</td><td align="left">让<strong>不重启进程</strong>重载配置成为可能</td></tr><tr><td align="left"><code>LimitNOFILE=65535</code></td><td align="left">打开文件数上限</td><td align="left">TSDB 会打开大量 chunk 文件，默认 1024 不够。<strong>这是性能优化项</strong></td></tr><tr><td align="left"><code>Restart=on-failure</code></td><td align="left">异常退出自动拉起</td><td align="left">提高可用性</td></tr><tr><td align="left"><code>WantedBy=multi-user.target</code></td><td align="left">允许开机自启</td><td align="left"><code>systemctl enable</code> 才有意义</td></tr></tbody></table><p>启用：</p><pre><code class="language-bash">systemctl daemon-reload
+systemctl enable --now prometheus.service
+
+systemctl is-active prometheus
+ss -ntlp | grep 9090
+</code></pre><blockquote><p>⚠️ <strong><code>LimitNOFILE</code> 到底影响什么？</strong><br>它的效果你<strong>能亲眼看到</strong>——访问 <code>http://&lt;IP&gt;:9090/metrics</code>，搜索 <code>process_max_fds</code>：</p><pre><code class="language-text">process_max_fds 6.5535e+04
+</code></pre><p>改一下 service 文件里的值（比如改成 66666），重启服务后再看，这个指标就跟着变了。<strong>“配置文件的每一个数字，都会在某个指标里体现”</strong>——这是理解监控系统的一个非常好的思维方式。</p></blockquote><h3 id="2-3-7-验证：Web-UI-的三个菜单"><a href="#2-3-7-验证：Web-UI-的三个菜单" class="headerlink" title="2.3.7　验证：Web UI 的三个菜单"></a>2.3.7　验证：Web UI 的三个菜单</h3><p>浏览器访问 <code>http://&lt;prometheus-ip&gt;:9090/</code>，顶部菜单四项：</p><table><thead><tr><th align="left">菜单</th><th align="left">作用</th><th align="left">你需要知道的</th></tr></thead><tbody><tr><td align="left"><strong>Alerts</strong></td><td align="left">当前处于活动状态的告警</td><td align="left">显示由规则计算出的 pending &#x2F; firing 告警</td></tr><tr><td align="left"><strong>Graph</strong></td><td align="left">查询与画图界面</td><td align="left"><strong>默认落地页</strong>，PromQL 就在这里写</td></tr><tr><td align="left"><strong>Status</strong></td><td align="left">各种运行状态</td><td align="left">排障时最常用，见下</td></tr><tr><td align="left"><strong>Help</strong></td><td align="left">帮助与文档链接</td><td align="left">很少用</td></tr></tbody></table><p><strong>Status 下的子菜单（排障必去）</strong>：</p><table><thead><tr><th align="left">子菜单</th><th align="left">内容</th><th align="left">典型用途</th></tr></thead><tbody><tr><td align="left"><code>Runtime &amp; Build Information</code></td><td align="left">版本、启动时间、构建信息、内存等</td><td align="left">确认版本、确认服务是否刚重启</td></tr><tr><td align="left"><code>Command-Line Flags</code></td><td align="left">实际生效的启动参数</td><td align="left"><strong>确认 service 文件里写的参数真的生效了</strong></td></tr><tr><td align="left"><code>Configuration</code></td><td align="left">当前生效的配置（YAML 原文）</td><td align="left"><strong>确认 reload 之后配置真的变了</strong></td></tr><tr><td align="left"><code>Rules</code></td><td align="left">规则文件的加载与计算情况</td><td align="left">告警不触发时第一个该看的地方</td></tr><tr><td align="left"><code>Targets</code></td><td align="left">所有采集目标的健康状态</td><td align="left">⭐ <strong>抓不到数据时第一个该看的地方</strong></td></tr><tr><td align="left"><code>Service Discovery</code></td><td align="left">服务发现得到的动态目标列表</td><td align="left">排查 K8s &#x2F; file_sd 不生效</td></tr></tbody></table><blockquote><p>⚠️ <strong>两个”只存在于内存”的认知</strong>：</p><ol><li><strong>Graph 页面里写的表达式，刷新就没了。</strong> 这就是为什么必须要有 Grafana——它负责把表达式”存下来”变成面板。</li><li><strong>Targets 页面上的 <code>Last Scrape</code> 时间和 <code>State</code> 颜色</strong>，是你判断”数据到底有没有进来”最快的方式。绿色 UP &#x3D; 抓到了；红色 DOWN &#x3D; 抓不到。</li></ol></blockquote><hr><h2 id="2-4-管理-API-与-web-enable-lifecycle-的安全陷阱"><a href="#2-4-管理-API-与-web-enable-lifecycle-的安全陷阱" class="headerlink" title="2.4　管理 API 与 --web.enable-lifecycle 的安全陷阱"></a>2.4　管理 API 与 <code>--web.enable-lifecycle</code> 的安全陷阱</h2><h3 id="2-4-1-四个-API-端点"><a href="#2-4-1-四个-API-端点" class="headerlink" title="2.4.1　四个 API 端点"></a>2.4.1　四个 API 端点</h3><p>Prometheus 提供了一组管理 API 用于自动化运维：</p><table><thead><tr><th align="left">端点</th><th align="left">方法</th><th align="left">作用</th><th align="left">是否需要 <code>--web.enable-lifecycle</code></th></tr></thead><tbody><tr><td align="left"><code>/-/healthy</code></td><td align="left">GET</td><td align="left">健康检查，通常恒返回 200</td><td align="left">❌ 不需要</td></tr><tr><td align="left"><code>/-/ready</code></td><td align="left">GET</td><td align="left">就绪检查，能响应查询后返回 200</td><td align="left">❌ 不需要</td></tr><tr><td align="left"><code>/-/reload</code></td><td align="left">POST &#x2F; PUT</td><td align="left"><strong>重载配置文件</strong></td><td align="left">✅ <strong>需要</strong></td></tr><tr><td align="left"><code>/-/quit</code></td><td align="left">POST &#x2F; PUT</td><td align="left"><strong>关闭 Prometheus 进程</strong></td><td align="left">✅ <strong>需要</strong></td></tr></tbody></table><pre><code class="language-bash"># 健康 / 就绪：永远可用
+curl http://prom.example.com:9090/-/healthy
+# Prometheus Server is Healthy.
+
+curl http://prom.example.com:9090/-/ready
+# Prometheus Server is Ready.
+
+# 重载 / 关闭：需要开启 lifecycle
+curl -X POST http://prom.example.com:9090/-/reload
+curl -X POST http://prom.example.com:9090/-/quit
+# Requesting termination... Goodbye!
+</code></pre><p>未开启该选项时：</p><pre><code class="language-bash">curl -X POST http://prom.example.com:9090/-/quit
+# Lifecycle API is not enabled.
+</code></pre><h3 id="2-4-2-⭐-故障现场二：我在另一台机器上，一行命令关掉了你的监控"><a href="#2-4-2-⭐-故障现场二：我在另一台机器上，一行命令关掉了你的监控" class="headerlink" title="2.4.2　⭐ 故障现场二：我在另一台机器上，一行命令关掉了你的监控"></a>2.4.2　⭐ 故障现场二：我在另一台机器上，一行命令关掉了你的监控</h3><p>开 <code>--web.enable-lifecycle</code> 之后，会发生这样的事：</p><pre><code class="language-bash"># 注意：这是在【另一台无关的远程主机】上执行
+curl -X POST http://10.0.0.100:9090/-/quit
+
+# 服务直接退出
+ss -ntlp | grep 9090        # 端口没了
+systemctl is-active prometheus  # inactive
+</code></pre><p><strong>不需要任何认证，不需要登录服务器，只要能访问 9090 端口。</strong> 整个监控系统被一行 curl 干掉了。</p><blockquote><p>🚨 <strong>结论必须记住</strong>：<br><strong><code>--web.enable-lifecycle</code> 生产环境不要开。</strong></p><p>它的收益是什么？——能通过 API 触发 reload。<br>但问题是：<strong>我们本来就有 <code>systemctl reload prometheus</code></strong>（靠 <code>ExecReload</code> 发 SIGHUP），效果完全一样，还不需要暴露任何危险接口。</p><p>我在很多人的 service 文件里见过这一行，他们<strong>大多不知道这行意味着”谁都能远程关掉你的监控”</strong>。别做那个人。</p></blockquote><h3 id="2-4-3-重载配置的四种方式对比"><a href="#2-4-3-重载配置的四种方式对比" class="headerlink" title="2.4.3　重载配置的四种方式对比"></a>2.4.3　重载配置的四种方式对比</h3><table><thead><tr><th align="left">方式</th><th align="left">命令</th><th align="left">是否重启进程</th><th align="left">前提</th><th align="left">建议</th></tr></thead><tbody><tr><td align="left"><strong>systemd reload</strong></td><td align="left"><code>systemctl reload prometheus</code></td><td align="left">❌ 不重启</td><td align="left"><code>ExecReload</code> 配了 <code>kill -HUP</code></td><td align="left">⭐ <strong>生产首选</strong></td></tr><tr><td align="left">信号</td><td align="left"><code>kill -HUP &lt;pid&gt;</code></td><td align="left">❌ 不重启</td><td align="left">无</td><td align="left">手工排障可用</td></tr><tr><td align="left">API reload</td><td align="left"><code>curl -X POST :9090/-/reload</code></td><td align="left">❌ 不重启</td><td align="left">必须开 lifecycle（<strong>不建议</strong>）</td><td align="left">不推荐</td></tr><tr><td align="left">重启服务</td><td align="left"><code>systemctl restart prometheus</code></td><td align="left">✅ 重启</td><td align="left">无</td><td align="left">改了<strong>启动参数</strong>时才需要</td></tr></tbody></table><blockquote><p>📌 <strong>分清两类配置</strong>：</p><ul><li><strong>配置文件（<code>prometheus.yml</code>）</strong> 里的东西 → <strong>可以热加载</strong>；</li><li><strong>命令行启动参数</strong>（如 <code>--storage.tsdb.path</code>、<code>--web.listen-address</code>）→ <strong>必须重启</strong>才能生效。</li></ul><p>改了什么，就用对应的方式生效，不要图省事一律 restart。</p></blockquote><h3 id="2-4-4-顺带一提：谁来监控-Prometheus-自己"><a href="#2-4-4-顺带一提：谁来监控-Prometheus-自己" class="headerlink" title="2.4.4　顺带一提：谁来监控 Prometheus 自己"></a>2.4.4　顺带一提：谁来监控 Prometheus 自己</h3><p><code>/-/healthy</code> 和 <code>/-/ready</code> 的价值在于：<strong>它们让外部系统可以监控 Prometheus 本身</strong>。</p><pre><code>Prometheus 监控万物  ——  但 Prometheus 挂了，谁来发现？
+</code></pre><p>三种常见做法：</p><ol><li><strong>双机互监控</strong>：A 的 Prometheus 抓 B 的指标，B 的抓 A 的，任一方挂了另一方告警；</li><li><strong>外部探活</strong>：另一个系统（Zabbix &#x2F; 云监控 &#x2F; 负载均衡健康检查）定时 curl <code>/-/healthy</code>；</li><li><strong><code>up</code> 指标自监控</strong>：用另一个 Prometheus 实例抓本实例的 <code>/metrics</code>，看 <code>up&#123;job=&quot;prometheus&quot;&#125;</code>。</li></ol><blockquote><p>💡 回到第 1 章的比喻：<strong>警察管普通人，那谁管警察？</strong>——这既是技术问题，也是一个非常好的面试发散点。</p></blockquote><hr><h2 id="2-5-常用启动参数与容量规划"><a href="#2-5-常用启动参数与容量规划" class="headerlink" title="2.5　常用启动参数与容量规划"></a>2.5　常用启动参数与容量规划</h2><p>完整参数表：<a target="_blank" rel="noopener" href="https://prometheus.io/docs/prometheus/latest/command-line/prometheus/">https://prometheus.io/docs/prometheus/latest/command-line/prometheus/</a></p><p>不过真正需要你关心的是下面这几个：</p><table><thead><tr><th align="left">参数</th><th align="left">默认值</th><th align="left">作用</th><th align="left">调优建议</th></tr></thead><tbody><tr><td align="left"><code>--config.file</code></td><td align="left"><code>prometheus.yml</code></td><td align="left">配置文件路径</td><td align="left">用绝对路径</td></tr><tr><td align="left"><code>--web.listen-address</code></td><td align="left"><code>0.0.0.0:9090</code></td><td align="left">监听地址</td><td align="left">对外暴露时建议配合反向代理 + 认证</td></tr><tr><td align="left"><code>--web.read-timeout</code></td><td align="left"><code>5m</code></td><td align="left">请求读超时，关闭空闲连接</td><td align="left">防止空闲连接堆满</td></tr><tr><td align="left"><code>--web.max-connections</code></td><td align="left"><code>512</code></td><td align="left">最大并发连接数</td><td align="left">大屏轮询多时适当调大</td></tr><tr><td align="left"><code>--storage.tsdb.path</code></td><td align="left"><code>data/</code></td><td align="left"><strong>TSDB 数据目录</strong></td><td align="left">⭐ <strong>独立分区</strong>，别和根分区放一起</td></tr><tr><td align="left"><code>--storage.tsdb.retention.time</code></td><td align="left"><code>15d</code></td><td align="left">样本保留时长</td><td align="left">企业通常 <strong>15d</strong>；太长吃磁盘和内存，太短查不到历史</td></tr><tr><td align="left"><code>--query.timeout</code></td><td align="left"><code>2m</code></td><td align="left">单次查询最长执行时间</td><td align="left">复杂 PromQL 多时可调大</td></tr><tr><td align="left"><code>--query.max-concurrency</code></td><td align="left"><code>20</code></td><td align="left">最大并发查询数</td><td align="left">与 Grafana 面板数量相关</td></tr><tr><td align="left"><code>--web.enable-lifecycle</code></td><td align="left"><code>false</code></td><td align="left">允许 API reload&#x2F;quit</td><td align="left">🚨 <strong>生产保持 false</strong></td></tr></tbody></table><p><strong>保留期的取舍</strong>（面试常问）：</p><p>$$<br>\text{磁盘占用} \approx \text{活跃序列数} \times \text{采样频率} \times \text{保留时长} \times \text{单点字节数}<br>$$</p><blockquote><p>举例：10 万条活跃序列、每 15 秒采一次、保留 15 天、压缩后按 1.5 字节&#x2F;点估算：<br>$100000 \times \frac{86400}{15} \times 15 \times 1.5 \approx 1.3\ \text{GB}$</p><p>注意：<strong>这个公式只用于量级估算</strong>。真实占用还要看标签基数、chunk 对齐、索引大小等。但把”序列数”和”采样频率”作为两个乘法因子放在分子上，这个直觉是对的——<strong>序列爆炸和采集频率过高，是磁盘被打满的两大主因</strong>。</p></blockquote><hr><h2 id="2-6-prometheus-yml：逐行读懂配置文件"><a href="#2-6-prometheus-yml：逐行读懂配置文件" class="headerlink" title="2.6　prometheus.yml：逐行读懂配置文件"></a>2.6　<code>prometheus.yml</code>：逐行读懂配置文件</h2><p>官方参考：<a target="_blank" rel="noopener" href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/">https://prometheus.io/docs/prometheus/latest/configuration/configuration/</a></p><h3 id="2-6-1-两类配置的分工"><a href="#2-6-1-两类配置的分工" class="headerlink" title="2.6.1　两类配置的分工"></a>2.6.1　两类配置的分工</h3><table><thead><tr><th align="left">配置方式</th><th align="left">存什么</th><th align="left">例子</th></tr></thead><tbody><tr><td align="left"><strong>命令行参数</strong></td><td align="left">不可变的系统级参数</td><td align="left">数据目录、保留期、监听地址</td></tr><tr><td align="left"><strong>配置文件（YAML）</strong></td><td align="left">与”数据动态获取”相关的配置</td><td align="left">抓谁、怎么抓、告警规则、告警发往哪</td></tr></tbody></table><h3 id="2-6-2-默认配置的四段式结构"><a href="#2-6-2-默认配置的四段式结构" class="headerlink" title="2.6.2　默认配置的四段式结构"></a>2.6.2　默认配置的四段式结构</h3><pre><code class="language-yaml">global:
+  scrape_interval: 15s        # 抓取间隔，默认 1m
+  evaluation_interval: 15s    # 规则计算间隔，默认 1m
+  # scrape_timeout 默认取 global 默认值 10s，且不应超过 scrape_interval
+
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:                # 这里留空，等第 6 章再填
+
+rule_files:                   # 告警规则文件列表，先空着
+  # - &quot;rules/*.yml&quot;
+
+scrape_configs:               # ★ 最核心：监控谁
+  - job_name: &quot;prometheus&quot;
+    static_configs:
+    - targets: [&quot;localhost:9090&quot;]
+</code></pre><p><strong>四大段各自的作用：</strong></p><table><thead><tr><th align="left">段</th><th align="left">作用</th><th align="left">本章是否要改</th></tr></thead><tbody><tr><td align="left"><code>global</code></td><td align="left">全局默认值，被各 job 继承</td><td align="left">可能微调 <code>scrape_interval</code></td></tr><tr><td align="left"><code>alerting</code></td><td align="left">告警发给哪个 Alertmanager</td><td align="left">留空</td></tr><tr><td align="left"><code>rule_files</code></td><td align="left">外置规则文件（告警规则 &#x2F; 记录规则）</td><td align="left">留空</td></tr><tr><td align="left"><code>scrape_configs</code></td><td align="left"><strong>采集目标列表</strong>（一组 job）</td><td align="left">⭐ <strong>本章重点</strong></td></tr></tbody></table><p>除此之外，还有<strong>扩展配置 8 项</strong>（<code>tls_config</code>、<code>relabel_config</code>、<code>metric_relabel_configs</code>、<code>remote_write</code>、<code>remote_read</code>…）和<strong>平台集成配置 12 项</strong>（<code>file_sd_config</code>、<code>dns_sd_config</code>、<code>consul_sd_config</code>、<code>kubernetes_sd_config</code>…），后面章节逐个展开。</p><h3 id="2-6-3-scrape-configs-的结构"><a href="#2-6-3-scrape-configs-的结构" class="headerlink" title="2.6.3　scrape_configs 的结构"></a>2.6.3　<code>scrape_configs</code> 的结构</h3><pre><code class="language-yaml">scrape_configs:
+  - job_name: &quot;&lt;job_name&gt;&quot;
+    metrics_path: /metrics      # 默认值，可省略
+    scheme: http                # 默认值，可省略
+    static_configs:
+    - targets: [ &quot;&lt;host_ip&gt;:&lt;host_port&gt;&quot;, ... ]
+      labels: &#123; &lt;labelname&gt;: &lt;labelvalue&gt;, ... &#125;
+</code></pre><p><strong>三个概念对应第 1 章的知识点：</strong></p><ul><li>一个 <code>scrape_configs</code> 下可以有<strong>多个 job</strong>，<strong>job 就是分类</strong>（同一类指标的机器放一个 job）；</li><li>一个 job 下的 <code>static_configs.targets</code> 里每一项，就是一个 <strong>instance（实例）</strong>，格式 <code>ip:port</code>；</li><li><code>labels</code> 是给这个 job 下所有目标<strong>附加的标签</strong>，可用于后续 PromQL 过滤。</li></ul><blockquote><p>💡 <strong>给 job 命名的建议</strong>：起一个”<strong>能看出这是什么东西</strong>“的名字，比如 <code>node_exporter</code>、<code>mysql</code>、<code>redis</code>、<code>nginx</code>。这个名字会原封不动地出现在 <code>up&#123;job=&quot;...&quot;&#125;</code>、Grafana 的变量下拉框、以及告警模板里。名字起得烂，后面到处难受。</p></blockquote><h3 id="2-6-4-⭐-故障现场三：缩进错了，targets-永远不生效"><a href="#2-6-4-⭐-故障现场三：缩进错了，targets-永远不生效" class="headerlink" title="2.6.4　⭐ 故障现场三：缩进错了，targets 永远不生效"></a>2.6.4　⭐ 故障现场三：缩进错了，targets 永远不生效</h3><p>YAML 是<strong>缩进敏感</strong>的语言，而 <code>scrape_configs</code> 的结构是”列表套列表套字典”，嵌套很深。典型错误：</p><pre><code class="language-yaml"># ❌ 错误：targets 和 static_configs 不对齐
+  - job_name: &#39;node_exporter&#39;
+    static_configs:
+        - targets: [&#39;10.0.0.101:9100&#39;]
+</code></pre><p>或者：</p><pre><code class="language-yaml"># ❌ 错误：把 targets 写成了 static_configs 的兄弟
+  - job_name: &#39;node_exporter&#39;
+    static_configs:
+    - targets: [&#39;10.0.0.101:9100&#39;]
+  - targets: [&#39;10.0.0.102:9100&#39;]     # ← 这一行变成了一个新的 job（且没有 job_name）
+</code></pre><p><strong>后果</strong>：<code>promtool check config</code> 可能报错；也可能<strong>不报错但语义完全变了</strong>——targets 变成了另一个匿名 job，或者根本没被解析。</p><blockquote><p>⭐ <strong>所以：改完配置，先检查语法，再 reload。</strong></p><pre><code class="language-bash">promtool check config /usr/local/prometheus/conf/prometheus.yml
+# Checking /usr/local/prometheus/conf/prometheus.yml
+#  SUCCESS: ... is valid prometheus config file syntax
+</code></pre><p>故意少写一个冒号试试，它会准确告诉你<strong>第几行</strong>出错——这个反馈比”reload 之后没数据，然后你猜了半天”高效一百倍。</p></blockquote><h3 id="2-6-5-promtool：被严重低估的运维工具"><a href="#2-6-5-promtool：被严重低估的运维工具" class="headerlink" title="2.6.5　promtool：被严重低估的运维工具"></a>2.6.5　<code>promtool</code>：被严重低估的运维工具</h3><pre><code class="language-bash">promtool --help
+</code></pre><table><thead><tr><th align="left">子命令</th><th align="left">用途</th></tr></thead><tbody><tr><td align="left"><code>promtool check config &lt;file&gt;</code></td><td align="left">⭐ 检查配置语法与语义</td></tr><tr><td align="left"><code>promtool check rules &lt;file&gt;</code></td><td align="left">检查告警 &#x2F; 记录规则文件</td></tr><tr><td align="left"><code>promtool query instant &lt;url&gt; &lt;expr&gt;</code></td><td align="left">命令行直接跑 PromQL，便于脚本化</td></tr><tr><td align="left"><code>promtool tsdb ...</code></td><td align="left">TSDB 分析（如 <code>analyze</code> 看块与序列统计）</td></tr></tbody></table><blockquote><p>💡 <strong>养成习惯</strong>：<strong>任何配置变更 → 先 <code>check config</code> → 再 reload → 再去看 Targets 页面。</strong> 三步走，能省掉 80% 的”改完没生效”的困惑。</p></blockquote><hr><h2 id="2-7-方式三：容器化部署"><a href="#2-7-方式三：容器化部署" class="headerlink" title="2.7　方式三：容器化部署"></a>2.7　方式三：容器化部署</h2><h3 id="2-7-1-官方-Dockerfile-全解读"><a href="#2-7-1-官方-Dockerfile-全解读" class="headerlink" title="2.7.1　官方 Dockerfile 全解读"></a>2.7.1　官方 Dockerfile 全解读</h3><p>官方镜像：<code>prom/prometheus</code>（注意是 <strong><code>prom</code></strong> 组织，不是 <code>prometheus</code>，直接搜全名经常搜不到）</p><p>来源：<a target="_blank" rel="noopener" href="https://github.com/prometheus/prometheus/blob/main/Dockerfile">https://github.com/prometheus/prometheus/blob/main/Dockerfile</a></p><pre><code class="language-dockerfile">ARG ARCH=&quot;amd64&quot;
+ARG OS=&quot;linux&quot;
+FROM quay.io/prometheus/busybox-$&#123;OS&#125;-$&#123;ARCH&#125;:latest
+
+COPY .build/$&#123;OS&#125;-$&#123;ARCH&#125;/prometheus /bin/prometheus
+COPY .build/$&#123;OS&#125;-$&#123;ARCH&#125;/promtool   /bin/promtool
+COPY documentation/examples/prometheus.yml /etc/prometheus/prometheus.yml
+
+WORKDIR /prometheus
+RUN chown -R nobody:nobody /etc/prometheus /prometheus &amp;&amp; chmod g+w /prometheus
+USER nobody
+
+EXPOSE 9090
+VOLUME [ &quot;/prometheus&quot; ]
+ENTRYPOINT [ &quot;/bin/prometheus&quot; ]
+CMD [ &quot;--config.file=/etc/prometheus/prometheus.yml&quot;, &quot;--storage.tsdb.path=/prometheus&quot; ]
+</code></pre><p><strong>看懂了这 10 行，你就看懂了所有 Go 程序的官方镜像：</strong></p><table><thead><tr><th align="left">行</th><th align="left">含义</th><th align="left">对我们的启示</th></tr></thead><tbody><tr><td align="left"><code>FROM busybox</code></td><td align="left">基础镜像只是提供 shell 和根证书</td><td align="left">镜像可以做到很小（甚至 <code>scratch</code>）</td></tr><tr><td align="left"><code>COPY prometheus /bin/</code></td><td align="left"><strong>就是把我们手动装的那个二进制拷进去</strong></td><td align="left">二进制会了，镜像就是”打包”</td></tr><tr><td align="left">配置文件在 <code>/etc/prometheus/</code></td><td align="left">默认配置路径</td><td align="left">修改配置 &#x3D; 覆盖这个文件</td></tr><tr><td align="left"><code>USER nobody</code></td><td align="left">以 nobody 运行</td><td align="left">非 root，安全</td></tr><tr><td align="left"><code>VOLUME [&quot;/prometheus&quot;]</code></td><td align="left">数据目录</td><td align="left">不挂载就<strong>随容器删掉而丢失</strong></td></tr><tr><td align="left"><code>CMD [...]</code></td><td align="left">默认启动参数</td><td align="left">传入自己的参数会<strong>完全覆盖</strong> CMD</td></tr></tbody></table><blockquote><p>💡 <strong>这就是为什么”二进制学扎实”如此重要</strong>：容器里跑的就是那个二进制，参数一模一样，只是配置文件位置和数据目录换成了镜像里约定的路径。<strong>没有任何魔法。</strong></p></blockquote><h3 id="2-7-2-三种启动姿势"><a href="#2-7-2-三种启动姿势" class="headerlink" title="2.7.2　三种启动姿势"></a>2.7.2　三种启动姿势</h3><pre><code class="language-bash"># ① 最简：默认配置 + 默认数据目录（不持久化）
+docker run -d --name prometheus -p 9090:9090 prom/prometheus
+
+# ② 生产可用：挂载配置 + 数据卷
+docker run -d --name prometheus -p 9090:9090 \
+  -v $PWD/prometheus.yml:/etc/prometheus/prometheus.yml \
+  -v prometheus_data:/prometheus \
+  prom/prometheus:v2.53.0
+
+# ③ 自定义配置路径（不覆盖镜像内文件，而是改变启动参数）
+docker run -d --name prometheus -p 9090:9090 \
+  -v $PWD/prometheus.yml:/prometheus-config/prometheus.yml \
+  prom/prometheus \
+  --config.file=/prometheus-config/prometheus.yml
+</code></pre><blockquote><p>⚠️ <strong>注意第 ③ 种</strong>：一旦你在镜像名后面跟了参数，<strong>镜像里的 <code>CMD</code> 会被整体替换</strong>。所以必须把 <code>--storage.tsdb.path</code> 之类的必要参数一起写全，否则会回落到默认值（<code>data/</code>，相对于容器内工作目录）。</p></blockquote><h3 id="2-7-3-⭐-故障现场四：容器里的配置文件改不动"><a href="#2-7-3-⭐-故障现场四：容器里的配置文件改不动" class="headerlink" title="2.7.3　⭐ 故障现场四：容器里的配置文件改不动"></a>2.7.3　⭐ 故障现场四：容器里的配置文件改不动</h3><p>用 <code>docker run</code> 起完之后，你会发现一个尴尬事：</p><blockquote><p><strong>配置文件在镜像里。想改？得 <code>docker exec</code> 进去用 <code>vi</code> 改——而大多数精简镜像里根本没有 <code>vi</code>。</strong></p></blockquote><p><strong>正确做法（三步）</strong>：</p><pre><code class="language-bash"># 1. 把镜像内的默认配置拷出来
+docker cp prometheus:/etc/prometheus/prometheus.yml ./prometheus.yml
+
+# 2. 在宿主机上修改它（想改采集间隔就改）
+vi ./prometheus.yml
+
+# 3. 删掉旧容器，用 -v 挂载覆盖镜像内的配置
+docker rm -f prometheus
+docker run -d --name prometheus -p 9090:9090 \
+  -v $PWD/prometheus.yml:/etc/prometheus/prometheus.yml \
+  -v prometheus_data:/prometheus \
+  prom/prometheus
+</code></pre><p><strong>验证是否生效</strong>：访问 9090 → Status → Configuration，看里面的 <code>scrape_interval</code> 是不是你改的值。</p><blockquote><p>📌 <strong>容器化不是”更好的方式”，而是”另一种打包方式”。</strong><br>它把”改配置文件”这件简单的事，变成了”覆盖镜像内文件”这件事。<br>所以：<strong>实验环境用容器图快，生产环境很多人仍然用二进制 + systemd</strong>——改配置、看日志、排障都更直接。两种方式都要会，别只会一种。</p></blockquote><h3 id="2-7-4-Docker-Compose：一键起整套监控栈"><a href="#2-7-4-Docker-Compose：一键起整套监控栈" class="headerlink" title="2.7.4　Docker Compose：一键起整套监控栈"></a>2.7.4　Docker Compose：一键起整套监控栈</h3><p>中小规模环境可以直接用 Compose 拉起完整栈：</p><pre><code class="language-yaml">version: &#39;3.6&#39;
+
+volumes:
+  prometheus_data: &#123;&#125;
+  grafana_data: &#123;&#125;
+
+networks:
+  monitoring:
+    driver: bridge
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - &#39;--config.file=/etc/prometheus/prometheus.yml&#39;
+      - &#39;--storage.tsdb.path=/prometheus&#39;
+      - &#39;--storage.tsdb.retention.time=15d&#39;
+    ports:
+      - &quot;9090:9090&quot;
+    networks: [monitoring]
+    restart: unless-stopped
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    command:
+      - &#39;--config.file=/etc/alertmanager/config.yml&#39;
+      - &#39;--storage.path=/alertmanager&#39;
+    ports:
+      - &quot;9093:9093&quot;
+    networks: [monitoring]
+    restart: unless-stopped
+
+  node-exporter:
+    image: prom/node-exporter:v1.8.2
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - &#39;--path.procfs=/host/proc&#39;
+      - &#39;--path.sysfs=/host/sys&#39;
+      - &#39;--path.rootfs=/rootfs&#39;
+      - &#39;--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)&#39;
+    ports:
+      - &quot;9100:9100&quot;
+    networks: [monitoring]
+    restart: unless-stopped
+
+  pushgateway:
+    image: prom/pushgateway:v1.10.0
+    ports:
+      - &quot;9091:9091&quot;
+    networks: [monitoring]
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - &quot;3000:3000&quot;
+    networks: [monitoring]
+    restart: unless-stopped
+</code></pre><p>有两点必须提醒：</p><ol><li><strong><code>node-exporter</code> 的三个挂载不是可选项</strong>——它要读宿主机的 <code>/proc</code>、<code>/sys</code> 和根文件系统，否则采集到的是容器自己的（几乎为空的）指标。下一节会详细解释。</li><li><strong>容器内的 <code>prometheus</code> 抓容器内的 <code>node-exporter</code> 时，target 要写 <code>node-exporter:9100</code></strong>（服务名），而不是 <code>localhost:9100</code>。这是 Compose 网络里的 DNS 解析规则，也是新手最常见的”抓不到”原因之一。</li></ol><hr><h2 id="2-8-Node-Exporter：把主机指标”出口”出去"><a href="#2-8-Node-Exporter：把主机指标”出口”出去" class="headerlink" title="2.8　Node Exporter：把主机指标”出口”出去"></a>2.8　Node Exporter：把主机指标”出口”出去</h2><h3 id="2-8-1-为什么必须有它"><a href="#2-8-1-为什么必须有它" class="headerlink" title="2.8.1　为什么必须有它"></a>2.8.1　为什么必须有它</h3><p>回到第 1 章的结论：<strong>Prometheus 的所有指标都必须以 HTTP 形式暴露。</strong></p><p>而 Linux 操作系统<strong>本身不提供 HTTP 指标端点</strong>。你不可能让内核主动开个端口给你读 <code>/proc/stat</code>。</p><p>所以中间必须有个”转换器”：</p><pre><code class="language-mermaid">flowchart LR
+    K[&quot;Linux 内核&lt;br/&gt;/proc /sys&quot;] --&gt;|读取| NE[&quot;Node Exporter&lt;br/&gt;:9100&quot;]
+    NE --&gt;|&quot;HTTP GET /metrics&lt;br/&gt;纯文本格式&quot;| P[&quot;Prometheus Server&quot;]
+</code></pre><p><strong>Node Exporter 干的事：</strong></p><ol><li>读取本机的 <code>/proc</code>、<code>/sys</code>、系统调用，拿到 CPU、内存、磁盘、网络、文件系统等原始数据；</li><li>转换成 <strong>Prometheus 文本格式</strong>（<code># HELP</code> &#x2F; <code># TYPE</code> &#x2F; <code>指标 值</code>）；</li><li>在本机 <strong>9100</strong> 端口起一个 HTTP 服务，把结果暴露在 <code>/metrics</code>。</li></ol><blockquote><p>🧠 <strong>名字的由来</strong>：它把本节点的指标”<strong>出口（export）</strong>“出去，让 Prometheus 来”进货”。你不”出口”，人家就采不到——这个命名非常形象。</p><p><strong>和 Zabbix 的对照</strong>：</p></blockquote><table><thead><tr><th align="left"></th><th align="left">Zabbix</th><th align="left">Prometheus</th></tr></thead><tbody><tr><td align="left">采集代理</td><td align="left"><code>zabbix-agent</code></td><td align="left"><code>node_exporter</code></td></tr><tr><td align="left">通信协议</td><td align="left"><strong>Zabbix 专有协议</strong></td><td align="left"><strong>HTTP&#x2F;HTTPS</strong></td></tr><tr><td align="left">数据方向</td><td align="left">Server 拉（被动）或 Agent 推（主动）</td><td align="left"><strong>只有 Server 拉</strong></td></tr><tr><td align="left">谁的客户端&#x2F;服务端</td><td align="left">Server 是服务端，Agent 是客户端</td><td align="left">⭐ <strong>反过来了</strong>：Prometheus 是 HTTP <strong>客户端</strong>，Node Exporter 是 HTTP <strong>服务端</strong></td></tr></tbody></table><p>最后一行请特别注意：<strong>角色是反的</strong>。Prometheus 主动发起 HTTP 请求（像浏览器），Node Exporter 被动响应（像 Web 服务器）。</p><h3 id="2-8-2-安装（与-Prometheus-二进制安装几乎同构）"><a href="#2-8-2-安装（与-Prometheus-二进制安装几乎同构）" class="headerlink" title="2.8.2　安装（与 Prometheus 二进制安装几乎同构）"></a>2.8.2　安装（与 Prometheus 二进制安装几乎同构）</h3><p>官方下载：<a target="_blank" rel="noopener" href="https://prometheus.io/download/">https://prometheus.io/download/</a><br>GitHub：<a target="_blank" rel="noopener" href="https://github.com/prometheus/node_exporter">https://github.com/prometheus/node_exporter</a></p><p><strong>在每一台需要监控的节点上执行</strong>：</p><pre><code class="language-bash">cd /usr/local
+wget https://github.com/prometheus/node_exporter/releases/download/v1.8.2/node_exporter-1.8.2.linux-amd64.tar.gz
+tar xf node_exporter-1.8.2.linux-amd64.tar.gz
+ln -s node_exporter-1.8.2.linux-amd64 node_exporter
+
+cd node_exporter
+mkdir bin
+mv node_exporter bin/
+
+useradd -r -s /sbin/nologin prometheus
+chown -R prometheus:prometheus /usr/local/node_exporter/
+</code></pre><blockquote><p>💡 看出来了吗？<strong>解压 → 软链 → 分目录 → 建账号 → 改属主</strong>，和装 Prometheus 的步骤一模一样。这就是 Go 生态的统一”手感”。<strong>学会一个，就会一串。</strong></p></blockquote><h3 id="2-8-3-service-文件（含两个坑）"><a href="#2-8-3-service-文件（含两个坑）" class="headerlink" title="2.8.3　service 文件（含两个坑）"></a>2.8.3　service 文件（含两个坑）</h3><pre><code class="language-ini">[Unit]
+Description=Prometheus Node Exporter
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/node_exporter/bin/node_exporter --collector.cgroups
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+User=prometheus
+Group=prometheus
+
+[Install]
+WantedBy=multi-user.target
+</code></pre><pre><code class="language-bash">systemctl daemon-reload
+systemctl enable --now node_exporter.service
+systemctl is-active node_exporter
+ss -ntlp | grep 9100
+</code></pre><p><strong>两个参数坑，来自实战：</strong></p><table><thead><tr><th align="left">参数</th><th align="left">作用</th><th align="left">坑</th></tr></thead><tbody><tr><td align="left"><code>--collector.cgroups</code></td><td align="left">额外启用 cgroups 采集器</td><td align="left">想采容器资源占用时需要</td></tr><tr><td align="left"><code>--no-collector.uname</code></td><td align="left"><strong>禁用</strong> uname 采集器</td><td align="left">❌ <strong>千万别加！</strong> 禁用后 Grafana 里的 Dashboard <strong>拿不到主机名和内核版本</strong>，面板上会显示 <code>N/A</code></td></tr></tbody></table><blockquote><p>⚠️ 第二个坑非常隐蔽：有人为了”减少指标数量”加了 <code>--no-collector.uname</code>，结果所有社区 Dashboard 的主机信息栏全是空的，还以为是模板不兼容。<strong>优化指标量请用 relabel 丢弃，不要随手关采集器。</strong></p></blockquote><h3 id="2-8-4-验证暴露结果"><a href="#2-8-4-验证暴露结果" class="headerlink" title="2.8.4　验证暴露结果"></a>2.8.4　验证暴露结果</h3><pre><code class="language-bash">curl http://localhost:9100/metrics | head -40
+</code></pre><p>浏览器访问 <code>http://&lt;node-ip&gt;:9100/</code>，会看到一个只有一个 <code>metrics</code> 链接的极简页面——点进去就是全部指标。</p><blockquote><p>💡 <strong>这个页面本身就是最好的学习材料</strong>。随便挑几个指标，对照 <code># HELP</code> 的说明，你就能明白它代表什么。比看文档快得多。</p></blockquote><h3 id="2-8-5-常见指标速查（背诵级）"><a href="#2-8-5-常见指标速查（背诵级）" class="headerlink" title="2.8.5　常见指标速查（背诵级）"></a>2.8.5　常见指标速查（背诵级）</h3><table><thead><tr><th align="left">前缀 &#x2F; 指标</th><th align="left">含义</th></tr></thead><tbody><tr><td align="left"><code>node_cpu_seconds_total</code></td><td align="left">各 CPU、各模式（user&#x2F;system&#x2F;idle&#x2F;iowait&#x2F;softirq…）的累计秒数（<strong>Counter</strong>）</td></tr><tr><td align="left"><code>node_memory_*</code></td><td align="left">内存：<code>MemTotal</code>、<code>MemFree</code>、<code>MemAvailable</code>、<code>Buffers</code>、<code>Cached</code>、<code>Swap*</code></td></tr><tr><td align="left"><code>node_filesystem_*</code></td><td align="left">文件系统的容量与可用空间（按挂载点、设备、fstype 分标签）</td></tr><tr><td align="left"><code>node_disk_*</code></td><td align="left">磁盘 IO：读写字节、IOPS、耗时、队列长度</td></tr><tr><td align="left"><code>node_network_*</code></td><td align="left">网卡收发字节、包数、错误数、丢包（按 <code>device</code> 分标签）</td></tr><tr><td align="left"><code>node_load1</code> &#x2F; <code>5</code> &#x2F; <code>15</code></td><td align="left">1&#x2F;5&#x2F;15 分钟平均负载（<strong>Gauge</strong>）</td></tr><tr><td align="left"><code>node_boot_time_seconds</code></td><td align="left">系统启动时间（1970 起的秒数）</td></tr><tr><td align="left"><code>node_time_seconds</code></td><td align="left">当前系统时间</td></tr><tr><td align="left"><code>go_*</code></td><td align="left">Exporter 自身的 Go 运行时指标（GC、goroutine、堆）</td></tr><tr><td align="left"><code>process_*</code></td><td align="left">Exporter 自身进程指标（<code>process_max_fds</code> 就属于这类）</td></tr><tr><td align="left"><code>node_uname_info</code></td><td align="left">主机名、内核版本、架构等信息</td></tr></tbody></table><blockquote><p>🔗 <strong>回忆第 1 章</strong>：<code>top</code> 里的 user &#x2F; system &#x2F; nice &#x2F; idle &#x2F; iowait &#x2F; irq &#x2F; softirq &#x2F; steal，在 <code>node_cpu_seconds_total</code> 里就是 <code>mode=&quot;user&quot;|&quot;system&quot;|&quot;nice&quot;|&quot;idle&quot;|&quot;iowait&quot;|&quot;irq&quot;|&quot;softirq&quot;|&quot;steal&quot;</code> 这几个标签值。<strong>命令行的每一列，在 Prometheus 里都是一个标签维度。</strong></p></blockquote><h3 id="2-8-6-为什么容器里的-Node-Exporter-必须”三件套”"><a href="#2-8-6-为什么容器里的-Node-Exporter-必须”三件套”" class="headerlink" title="2.8.6　为什么容器里的 Node Exporter 必须”三件套”"></a>2.8.6　为什么容器里的 Node Exporter 必须”三件套”</h3><p>这是本章最值得深入理解的一处。官方推荐命令：</p><pre><code class="language-bash">docker run -d \
+  --net=&quot;host&quot; \
+  --pid=&quot;host&quot; \
+  -v &quot;/:/host:ro,rslave&quot; \
+  quay.io/prometheus/node-exporter:latest \
+  --path.rootfs=/host
+</code></pre><p>三个参数，各有其不可替代的原因：</p><table><thead><tr><th align="left">参数</th><th align="left">作用</th><th align="left">不加会怎样</th></tr></thead><tbody><tr><td align="left"><code>--net=&quot;host&quot;</code></td><td align="left">与宿主机共享网络命名空间</td><td align="left">采集到的网卡（<code>node_network_*</code>）是容器虚拟网卡的，<strong>看不到 eth0 &#x2F; bond &#x2F; 物理网卡</strong></td></tr><tr><td align="left"><code>--pid=&quot;host&quot;</code></td><td align="left">与宿主机共享 PID 命名空间</td><td align="left">进程类指标（进程数、<code>node_processes_*</code>）只看到容器内的 1 号进程</td></tr><tr><td align="left"><code>-v &quot;/:/host:ro,rslave&quot;</code></td><td align="left">把宿主机根挂进来 + <code>--path.rootfs=/host</code></td><td align="left"><strong>文件系统指标全是容器 overlay 的</strong>，磁盘使用率完全失真；<code>/proc</code>、<code>/sys</code> 读到的也是容器自己的</td></tr></tbody></table><blockquote><p>⭐ <strong>一句话记忆</strong>：<br><strong>Node Exporter 不是来监控”自己”的，是来监控”宿主机”的——所以它必须能看见宿主机。</strong><br>同理，K8s 里部署 node-exporter 一定要用 <strong>DaemonSet + <code>hostNetwork: true</code> + <code>hostPID: true</code> + <code>hostPath</code> 挂载 <code>/proc</code> <code>/sys</code> <code>/</code></strong>。</p></blockquote><h3 id="2-8-7-批量部署：脚本-→-Ansible-→-DaemonSet"><a href="#2-8-7-批量部署：脚本-→-Ansible-→-DaemonSet" class="headerlink" title="2.8.7　批量部署：脚本 → Ansible → DaemonSet"></a>2.8.7　批量部署：脚本 → Ansible → DaemonSet</h3><table><thead><tr><th align="left">规模</th><th align="left">方案</th><th align="left">说明</th></tr></thead><tbody><tr><td align="left">1～5 台</td><td align="left">手工 &#x2F; Shell 脚本</td><td align="left">课程提供的 <code>install_node_exporter.sh</code> 支持在线与离线安装</td></tr><tr><td align="left">10～100 台</td><td align="left"><strong>Ansible</strong></td><td align="left">官方 Role：<a target="_blank" rel="noopener" href="https://github.com/prometheus-community/ansible/tree/main/roles/node_exporter">https://github.com/prometheus-community/ansible/tree/main/roles/node_exporter</a>，改改变量即可</td></tr><tr><td align="left">K8s 集群</td><td align="left"><strong>DaemonSet</strong></td><td align="left">保证每个节点恰好一个 Pod</td></tr></tbody></table><p><strong>Shell 脚本的核心结构</strong>（值得学习它的工程化写法）：</p><pre><code class="language-bash">NODE_EXPORTER_VERSION=1.8.2
+NODE_EXPORTER_FILE=&quot;node_exporter-$&#123;NODE_EXPORTER_VERSION&#125;.linux-amd64.tar.gz&quot;
+GITHUB_PROXY=https://mirror.ghproxy.com/     # 加速代理，会失效，注意维护
+
+install_node_exporter() &#123;
+    [ -f &quot;$&#123;NODE_EXPORTER_FILE&#125;&quot; ] || wget &quot;$&#123;GITHUB_PROXY&#125;$&#123;NODE_EXPORTER_URL&#125;&quot; || &#123; color &quot;下载失败!&quot; 1; exit; &#125;
+    tar xf &quot;$&#123;NODE_EXPORTER_FILE&#125;&quot; -C &quot;$&#123;INSTALL_DIR&#125;&quot;
+    ln -s node_exporter-$&#123;NODE_EXPORTER_VERSION&#125;.linux-amd64 node_exporter
+    mkdir -p node_exporter/bin &amp;&amp; mv node_exporter bin/
+    id prometheus &amp;&gt;/dev/null || useradd -r -s /sbin/nologin prometheus
+    chown -R prometheus:prometheus node_exporter/
+&#125;
+
+node_exporter_service() &#123; ...  写 service 文件、daemon-reload、enable --now ... &#125;
+</code></pre><blockquote><p>💡 <strong>脚本里的三个好习惯</strong>：</p><ol><li><strong>版本号抽成变量</strong>——升级只改一行；</li><li><strong>先判断本地包是否存在</strong>——存在就不下载，天然支持<strong>离线安装</strong>；</li><li><strong>幂等</strong>——<code>id prometheus &amp;&gt;/dev/null || useradd</code>，重复执行不报错。</li></ol></blockquote><p><strong>Ansible（官方已现成）</strong>：</p><pre><code class="language-yaml">- hosts: all
+  become: true
+  roles:
+    - prometheus.prometheus.node_exporter
+</code></pre><p><strong>K8s DaemonSet（关键字段）</strong>：</p><pre><code class="language-yaml">apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: prometheus-node-exporter
+  namespace: prom
+spec:
+  selector:
+    matchLabels: &#123; app: prometheus, component: node-exporter &#125;
+  template:
+    metadata:
+      labels: &#123; app: prometheus, component: node-exporter &#125;
+    spec:
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master      # 主节点也要装，需要容忍污点
+      containers:
+      - image: prom/node-exporter:v1.8.2
+        name: prometheus-node-exporter
+        args:
+        - --path.procfs=/host/proc
+        - --path.sysfs=/host/sys
+        - --path.rootfs=/host
+        ports:
+        - containerPort: 9100
+          hostPort: 9100
+        volumeMounts:
+        - &#123; name: proc,   mountPath: /host/proc &#125;
+        - &#123; name: sys,    mountPath: /host/sys  &#125;
+        - &#123; name: rootfs, mountPath: /host      &#125;
+      hostNetwork: true     # ⭐ 与宿主机共享网络
+      hostPID: true         # ⭐ 与宿主机共享 PID
+      volumes:
+      - &#123; name: proc,   hostPath: &#123; path: /proc &#125; &#125;
+      - &#123; name: sys,    hostPath: &#123; path: /sys  &#125; &#125;
+      - &#123; name: rootfs, hostPath: &#123; path: /     &#125; &#125;
+</code></pre><blockquote><p>📌 <code>DaemonSet</code> &#x3D; “每个节点跑一个”。这正是 Node Exporter 需要的语义——<strong>它不是”一个服务”，而是”每台机器上的一个探针”</strong>。</p></blockquote><hr><h2 id="2-9-让-Prometheus-采集-Node-Exporter"><a href="#2-9-让-Prometheus-采集-Node-Exporter" class="headerlink" title="2.9　让 Prometheus 采集 Node Exporter"></a>2.9　让 Prometheus 采集 Node Exporter</h2><p>到这里，Node Exporter 已经在 9100 上”出口”了指标，但 <strong>Prometheus 还不知道它的存在</strong>——所以你在 Prometheus 里搜 <code>node_memory_*</code> 会一无所获。</p><p><strong>这是新手最常见的困惑</strong>：”我明明在浏览器里能看到指标，为什么 Prometheus 里查不到？”</p><blockquote><p>记住这句话：<strong>“暴露”是 Node Exporter 的事，”采集”是 Prometheus 的事。两件事必须都做。</strong></p></blockquote><h3 id="2-9-1-修改配置"><a href="#2-9-1-修改配置" class="headerlink" title="2.9.1　修改配置"></a>2.9.1　修改配置</h3><pre><code class="language-yaml">global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+
+rule_files:
+
+scrape_configs:
+  - job_name: &quot;prometheus&quot;
+    static_configs:
+    - targets: [&quot;localhost:9090&quot;]
+
+  # ★ 新增：采集 Node Exporter
+  - job_name: &#39;node_exporter&#39;
+    metrics_path: /metrics        # 默认值，可省略
+    scheme: http                  # 默认值，可省略
+    static_configs:
+    - targets:
+      - &#39;10.0.0.101:9100&#39;
+      - &#39;10.0.0.102:9100&#39;
+      - &#39;10.0.0.103:9100&#39;
+      - &#39;10.0.0.100:9100&#39;         # 别忘了 Prometheus 自己这台
+      labels:
+        env: prod
+        region: bj
+</code></pre><p><strong>targets 的两种写法（都合法，选顺眼的）</strong>：</p><pre><code class="language-yaml"># 写法 A：写在一行（机器少时更紧凑）
+    - targets: [&#39;10.0.0.101:9100&#39;,&#39;10.0.0.102:9100&#39;]
+
+# 写法 B：一行一个（机器多时更清晰，推荐）
+    - targets:
+      - &#39;10.0.0.101:9100&#39;
+      - &#39;10.0.0.102:9100&#39;
+</code></pre><blockquote><p>⚠️ 无论哪种写法，<code>targets</code> 都是<strong>列表</strong>，列表项以 <code>-</code> 开头。<strong>这是 YAML 缩进错误最高发的位置。</strong></p></blockquote><h3 id="2-9-2-检查-→-生效-→-验证"><a href="#2-9-2-检查-→-生效-→-验证" class="headerlink" title="2.9.2　检查 → 生效 → 验证"></a>2.9.2　检查 → 生效 → 验证</h3><pre><code class="language-bash"># 1. 语法检查
+promtool check config /usr/local/prometheus/conf/prometheus.yml
+
+# 2. 热加载（不重启）
+systemctl reload prometheus
+
+# 3. 验证：三种方式
+curl -s http://localhost:9090/-/ready
+# 浏览器 → Status → Targets：应看到 node_exporter 这个 job，状态 UP
+
+# 4. 用 PromQL 确认
+up&#123;job=&quot;node_exporter&quot;&#125;
+</code></pre><p><code>up</code> 指标的返回值：</p><table><thead><tr><th align="left">值</th><th align="left">含义</th></tr></thead><tbody><tr><td align="left"><code>1</code></td><td align="left">上一次抓取成功</td></tr><tr><td align="left"><code>0</code></td><td align="left">上一次抓取失败（连不上、超时、非 2xx）</td></tr></tbody></table><p>四个 target 全部 <code>1</code>，说明采集链路通了。此时再查 <code>node_memory_MemTotal_bytes</code>，四台机器的数据就都出来了。</p><h3 id="2-9-3-⭐-故障现场五：端口写错，一个字符排查半小时"><a href="#2-9-3-⭐-故障现场五：端口写错，一个字符排查半小时" class="headerlink" title="2.9.3　⭐ 故障现场五：端口写错，一个字符排查半小时"></a>2.9.3　⭐ 故障现场五：端口写错，一个字符排查半小时</h3><p>真实过程，值得完整复盘：</p><ol><li>配好了 job，<code>reload</code> 之后浏览器刷新 Graph 页面，搜 <code>memory</code> —— <strong>什么都没有</strong>。</li><li>第一反应：”是不是要等一会？”——<strong>对，采集是周期性的</strong>。当前 <code>scrape_interval</code> 是 20s，那就等 20s 再看。</li><li>等了 20s，还是没数据。</li><li>第二反应：”是不是配置没生效？”——去 <strong>Status → Configuration</strong> 确认新 job 在不在。在。</li><li>第三反应：”那到底抓没抓到？”——去 <strong>Status → Targets</strong>，看到 <code>node_exporter</code> 这个 job 是<strong>红色 DOWN</strong>，报错类似：</li></ol><pre><code class="language-text">Get &quot;http://10.0.0.101:9010/metrics&quot;: dial tcp 10.0.0.101:9010: connect: connection refused
+</code></pre><ol start="6"><li><strong>一眼看出问题</strong>：<code>9010</code>，不是 <code>9100</code>。<strong>打错了一个数字。</strong></li></ol><p>改完 reload，颜色变绿，数据立刻就有了。</p><blockquote><p>⭐ <strong>这就是”看 Targets 页面”的价值</strong>：它把”为什么没数据”这个问题，直接翻译成了<strong>一个具体的 URL 和一个具体的错误</strong>。<br>不要一上来就怀疑 Prometheus 有 bug、怀疑版本不兼容、怀疑网络——<strong>先看 Targets。</strong></p></blockquote><h3 id="2-9-4-“抓不到数据”五步排查法"><a href="#2-9-4-“抓不到数据”五步排查法" class="headerlink" title="2.9.4　“抓不到数据”五步排查法"></a>2.9.4　“抓不到数据”五步排查法</h3><p>把上面的经验固化成流程，以后照着走：</p><table><thead><tr><th align="left">步骤</th><th align="left">动作</th><th align="left">判断依据</th><th align="left">结论</th></tr></thead><tbody><tr><td align="left"><strong>① 目标端自测</strong></td><td align="left">在目标机上 <code>curl -s localhost:9100/metrics | head</code></td><td align="left">有输出？</td><td align="left">无 → exporter 没起 &#x2F; 端口不对</td></tr><tr><td align="left"><strong>② 跨机自测</strong></td><td align="left">在 Prometheus 机上 <code>curl -s &lt;target&gt;:9100/metrics</code></td><td align="left">通了？</td><td align="left">不通 → <strong>防火墙 &#x2F; 监听地址是 127.0.0.1 &#x2F; 网络不通</strong></td></tr><tr><td align="left"><strong>③ 看 Targets</strong></td><td align="left">Web UI → Status → Targets</td><td align="left">UP &#x2F; DOWN + 错误信息</td><td align="left">DOWN → 错误信息直接指出原因</td></tr><tr><td align="left"><strong>④ 看配置</strong></td><td align="left">Status → Configuration</td><td align="left">新 job 在不在、targets 对不对</td><td align="left">不在 → reload 没成功 &#x2F; 配置语法被拒</td></tr><tr><td align="left"><strong>⑤ 看日志</strong></td><td align="left"><code>journalctl -u prometheus -n 50</code></td><td align="left">有无 <code>Error reloading config</code></td><td align="left">有 → 配置有问题</td></tr></tbody></table><p><strong>四个高频根因</strong>（按出现频率排序）：</p><ol><li><strong>端口写错</strong>（<code>9100</code> → <code>9010</code> &#x2F; <code>9091</code> &#x2F; <code>910</code>）；</li><li><strong>服务监听在 <code>127.0.0.1</code> 而不是 <code>0.0.0.0</code></strong>——本机 curl 通、跨机不通，这是最迷惑人的一种；</li><li><strong>防火墙 &#x2F; 安全组没放行</strong>（<code>firewalld</code>、<code>ufw</code>、云安全组）；</li><li><strong>改完没 reload &#x2F; reload 失败但没人看日志</strong>。</li></ol><blockquote><p>💡 还有一个”假故障”：<strong>指标有延迟</strong>。刚配好就查，必然查不到——必须等至少一个 <code>scrape_interval</code>。学习时把间隔调成 <code>10s</code>，能少等很多；但<strong>生产不要低于 10s</strong>，否则序列数与磁盘写入会成倍增长。</p></blockquote><hr><h2 id="2-10-Grafana：让数据变成图"><a href="#2-10-Grafana：让数据变成图" class="headerlink" title="2.10　Grafana：让数据变成图"></a>2.10　Grafana：让数据变成图</h2><h3 id="2-10-1-它是什么"><a href="#2-10-1-它是什么" class="headerlink" title="2.10.1　它是什么"></a>2.10.1　它是什么</h3><p><strong>Grafana</strong> 是一个开源的度量分析与可视化套件，同样用 <strong>Go</strong> 开发。</p><p>核心能力：</p><table><thead><tr><th align="left">能力</th><th align="left">说明</th></tr></thead><tbody><tr><td align="left"><strong>多数据源</strong></td><td align="left">Prometheus、Zabbix、Graphite、InfluxDB、Elasticsearch、MySQL… 一个界面对接所有</td></tr><tr><td align="left"><strong>统一查询编辑器</strong></td><td align="left">每种数据源有自己的查询语言，Grafana 统一包装并保留各自特性</td></tr><tr><td align="left"><strong>同屏混合展示</strong></td><td align="left">同一个 Dashboard 上可以混用多个数据源</td></tr><tr><td align="left"><strong>海量现成模板</strong></td><td align="left"><a target="_blank" rel="noopener" href="https://grafana.com/grafana/dashboards/">https://grafana.com/grafana/dashboards/</a> 上有几万个社区面板</td></tr><tr><td align="left"><strong>告警</strong></td><td align="left">内置 Grafana Alerting（本章不展开）</td></tr><tr><td align="left"><strong>默认端口</strong></td><td align="left"><strong>3000</strong></td></tr><tr><td align="left"><strong>自带 <code>/metrics</code></strong></td><td align="left">能暴露自身运行指标给 Prometheus 采集</td></tr></tbody></table><blockquote><p>💡 <strong>和 Zabbix 的关键差异</strong>：Zabbix 内置的数据源能力有限（要装插件才支持某些源），而 <strong>Grafana 天生一等公民支持 Prometheus</strong>——数据源列表里 Prometheus 排第一。这也是”Prometheus + Grafana”成为事实标准组合的原因。</p></blockquote><h3 id="2-10-2-安装（deb-包）"><a href="#2-10-2-安装（deb-包）" class="headerlink" title="2.10.2　安装（deb 包）"></a>2.10.2　安装（deb 包）</h3><p>官方下载：<a target="_blank" rel="noopener" href="https://grafana.com/grafana/download">https://grafana.com/grafana/download</a></p><pre><code class="language-bash"># 官方源（慢）
+wget https://dl.grafana.com/enterprise/release/grafana-enterprise_11.2.0_amd64.deb
+
+# 或清华镜像（快）
+wget https://mirrors.tuna.tsinghua.edu.cn/grafana/apt/pool/main/g/grafana-enterprise/grafana-enterprise_11.2.0_amd64.deb
+</code></pre><p><strong>三种安装方式，强烈推荐第 2 种</strong>：</p><pre><code class="language-bash"># ① dpkg 装：依赖需要手工解决
+dpkg -i grafana-enterprise_11.2.0_amd64.deb
+apt -y --fix-broken install          # 缺依赖时补救
+
+# ② apt 装本地 deb 文件：依赖自动解决  ⭐ 推荐
+apt -y install ./grafana-enterprise_11.2.0_amd64.deb
+
+# ③ 先装依赖再 dpkg（等价于 ①，但更可控）
+apt-get install -y adduser libfontconfig1 musl
+dpkg -i grafana-enterprise_11.2.0_amd64.deb
+</code></pre><blockquote><p>📌 <strong>为什么 <code>apt install ./xxx.deb</code> 比 <code>dpkg -i</code> 好？</strong><br><code>dpkg</code> 只管解包，<strong>不解决依赖</strong>；<code>apt</code> 会自动把缺的包（如 <code>musl</code>、<code>libfontconfig1</code>）一并装上。<strong>“先装依赖还是先装包”这种顺序问题，用 apt 直接消失。</strong></p></blockquote><p>启动与验证：</p><pre><code class="language-bash">systemctl daemon-reload
+systemctl enable --now grafana-server.service
+systemctl status grafana-server
+ss -ntulp | grep 3000
+</code></pre><blockquote><p>💡 <strong>关于”企业版”</strong>：<code>grafana-enterprise</code> <strong>并不是收费版</strong>，核心功能完全免费开源（Apache 2.0 部分 + AGPLv3 部分）。企业版只是额外包含了一些企业级特性（如 SSO、报表）。<strong>个人和中小团队放心用。</strong></p></blockquote><h3 id="2-10-3-首次登录与添加数据源"><a href="#2-10-3-首次登录与添加数据源" class="headerlink" title="2.10.3　首次登录与添加数据源"></a>2.10.3　首次登录与添加数据源</h3><pre><code>浏览器访问：http://&lt;grafana-ip&gt;:3000/
+默认账号密码：admin / admin
+</code></pre><p>首次登录会要求改密码（可以跳过，生产环境请务必改）。</p><p><strong>添加数据源</strong>（这是 Grafana 的”第一课”，Zabbix 课程里也练过）：</p><ol><li>左侧菜单 → <strong>Connections → Data sources</strong>（或首页 “Add your first data source”）；</li><li>选择 <strong>Prometheus</strong>（列表里排第一）；</li><li><strong>Connection URL</strong> 填 <code>http://&lt;prometheus-ip&gt;:9090</code><ul><li>同一台机器上可以填 <code>http://localhost:9090</code>；</li></ul></li><li><strong>认证</strong>：Prometheus 默认无认证，留空；</li><li>拉到最下面点 <strong>Save &amp; Test</strong>，看到绿色提示 <strong>“Data source is working”</strong> 即成功。</li></ol><blockquote><p>⚠️ <strong>Grafana 服务端为你”代发请求”</strong>：Grafana 后端会去访问那个 URL。所以填 <code>localhost:9090</code> 只在 <strong>Grafana 和 Prometheus 同机</strong>时才有效。分机部署时必须填 Prometheus 的真实 IP。</p></blockquote><h3 id="2-10-4-⭐-认知难点：内置-Dashboard-为什么”部分没数据”"><a href="#2-10-4-⭐-认知难点：内置-Dashboard-为什么”部分没数据”" class="headerlink" title="2.10.4　⭐ 认知难点：内置 Dashboard 为什么”部分没数据”"></a>2.10.4　⭐ 认知难点：内置 Dashboard 为什么”部分没数据”</h3><p>添加完 Prometheus 数据源后，Grafana 会自动提示导入三个内置面板：</p><ul><li><code>Prometheus Stats</code></li><li><code>Prometheus 2.0 Stats</code></li><li><code>Grafana metrics</code></li></ul><p>导入后你会发现：<strong>有的能显示，有的全是 <code>No data</code>。</strong></p><p>原因有两个，<strong>性质完全不同</strong>：</p><p><strong>原因一：指标名变了（版本兼容问题）</strong></p><p>内置模板是几年前写的，里面用的 PromQL 表达式引用的指标，在新版本 Prometheus 里可能已经改名或移除。</p><p><strong>验证方法</strong>（非常值得掌握）：</p><ol><li>打开出问题面板 → 点 <strong>Edit</strong>（或 “Panel options”）；</li><li>看下面的 <strong>Query</strong> 里的表达式，例如 <code>prometheus_tsdb_...</code>；</li><li>把这段表达式复制出来，粘到 <strong>Prometheus 的 Graph 页面</strong>执行；</li><li>如果 Prometheus 里也查不到 → <strong>不是 Grafana 的问题，是这个指标在当前版本里不存在</strong>；</li><li>反过来，在 Graph 页输入 <code>prometheus_</code> 前缀，看下拉提示里有哪些指标——就能找到”改名后的那个”。</li></ol><blockquote><p>💡 <strong>这个排查手法适用于所有”面板没数据”的场景</strong>：<strong>永远先在 Prometheus 里验证表达式，再去怀疑 Grafana。</strong></p></blockquote><p><strong>原因二：数据源根本没被采集（逻辑问题）</strong></p><p><code>Grafana metrics</code> 这个面板展示的是 <strong>Grafana 自身的指标</strong>。但你现在还<strong>没有让 Prometheus 去采集 Grafana</strong>——所以 Prometheus 里压根没有这些数据。详见 2.11 节，那里会完整解释这条”绕一圈”的链路。</p><h3 id="2-10-5-导入社区-Dashboard-展示-Node-Exporter-数据"><a href="#2-10-5-导入社区-Dashboard-展示-Node-Exporter-数据" class="headerlink" title="2.10.5　导入社区 Dashboard 展示 Node Exporter 数据"></a>2.10.5　导入社区 Dashboard 展示 Node Exporter 数据</h3><p>内置模板不适合看主机指标，得用社区模板。</p><p><strong>第 1 步：找模板</strong></p><p>访问 <a target="_blank" rel="noopener" href="https://grafana.com/grafana/dashboards/">https://grafana.com/grafana/dashboards/</a>，搜索 <code>node exporter</code>。</p><p><strong>第 2 步：筛选（关键）</strong></p><table><thead><tr><th align="left">筛选条件</th><th align="left">为什么</th></tr></thead><tbody><tr><td align="left"><strong>Data source &#x3D; Prometheus</strong></td><td align="left">数据源必须匹配</td></tr><tr><td align="left"><strong>按下载量 &#x2F; 评分排序</strong></td><td align="left">经过大量用户验证，踩坑少</td></tr><tr><td align="left"><strong>看更新时间</strong></td><td align="left">⭐ <strong>太老的模板别用</strong>——指标名可能已经变了，会重演 2.10.4 的”没数据”</td></tr><tr><td align="left"><strong>看是否中文</strong></td><td align="left">英文面板不是不能用，但中文面板日常更顺手</td></tr></tbody></table><p><strong>几个常用 ID</strong>（注意：ID 会随社区更新变化，请以官网当前状态为准）：</p><table><thead><tr><th align="left">ID</th><th align="left">说明</th></tr></thead><tbody><tr><td align="left"><strong>1860</strong></td><td align="left">Node Exporter Full，英文&#x2F;日文，更新较新，指标最全</td></tr><tr><td align="left"><strong>8919</strong></td><td align="left">Node Exporter 中文版，日常查看更友好</td></tr><tr><td align="left"><strong>16098</strong></td><td align="left">Node Exporter 中文版（另一套风格）</td></tr><tr><td align="left"><strong>10465</strong></td><td align="left">Zookeeper 监控（2.12 节会用到）</td></tr></tbody></table><p><strong>第 3 步：导入</strong></p><pre><code>Grafana → Dashboards → New → Import
+→ 输入 Dashboard ID（如 1860）→ Load
+→ 选择数据源 Prometheus → Import
+</code></pre><blockquote><p>💡 <strong>两个实用技巧</strong>：</p><ol><li><strong>导入失败（网络拿不到 JSON）时</strong>，可以在官网页面直接下载 JSON 文件，再走 “Upload JSON file” 离线导入；</li><li><strong>给面板改名时带上 ID</strong>，例如 <code>Node Exporter Full (1860)</code>——半年后你还能知道它是从哪来的。</li></ol></blockquote><p><strong>第 4 步：看不到数据的四个检查点</strong></p><table><thead><tr><th align="left">检查点</th><th align="left">现象</th><th align="left">处理</th></tr></thead><tbody><tr><td align="left">节点上没装 Node Exporter</td><td align="left">面板全空</td><td align="left">装</td></tr><tr><td align="left">Prometheus 没采集该节点</td><td align="left">部分主机空</td><td align="left">加 target + reload</td></tr><tr><td align="left"><strong>浏览器时间与服务器时间差 &gt; 3 秒</strong></td><td align="left">数据”看起来是空的”</td><td align="left">⭐ <strong>校时（NTP）</strong></td></tr><tr><td align="left">选了错误的数据源 &#x2F; Cluster 变量</td><td align="left">全空或只有部分</td><td align="left">检查 Dashboard 顶部的变量下拉框</td></tr></tbody></table><blockquote><p>⚠️ <strong>时间误差 &gt; 3 秒会导致查不到数据</strong>，这一条很多人不知道，遇到”明明有数据但图是空的”时，先 <code>date</code> 对比一下。</p></blockquote><h3 id="2-10-6-时间显示：UTC-还是本地时间"><a href="#2-10-6-时间显示：UTC-还是本地时间" class="headerlink" title="2.10.6　时间显示：UTC 还是本地时间"></a>2.10.6　时间显示：UTC 还是本地时间</h3><p>Prometheus 内部<strong>统一使用 UTC</strong> 时间戳。Grafana 面板默认可能按 UTC 显示，导致”我明明下午 4 点起的服务，图上显示 8 点”。</p><p><strong>解决</strong>：Dashboard 右上角时间选择器 → 切到 <strong>Browser Time &#x2F; Local</strong>。</p><blockquote><p>💡 这不是 bug，是时区约定。<strong>记住：Prometheus 存 UTC，展示时再转本地时区。</strong> 排查告警时间对不上时，先确认时区。</p></blockquote><hr><h2 id="2-11-递归之美：监控-Grafana-自己"><a href="#2-11-递归之美：监控-Grafana-自己" class="headerlink" title="2.11　递归之美：监控 Grafana 自己"></a>2.11　递归之美：监控 Grafana 自己</h2><h3 id="2-11-1-那条”绕一圈”的链路"><a href="#2-11-1-那条”绕一圈”的链路" class="headerlink" title="2.11.1　那条”绕一圈”的链路"></a>2.11.1　那条”绕一圈”的链路</h3><p>这是本章最反直觉、也最值得理解的一个知识点。</p><p><strong>问题</strong>：我想在 Grafana 上看到 Grafana 自己的指标，怎么办？</p><p><strong>直觉答案</strong>：Grafana 自己展示自己就行了嘛。</p><p><strong>正确答案</strong>：不行。<strong>必须绕一圈。</strong></p><pre><code class="language-mermaid">flowchart LR
+    G1[&quot;Grafana&lt;br/&gt;:3000/metrics&lt;br/&gt;（自带暴露能力）&quot;]
+    P[&quot;Prometheus Server&lt;br/&gt;:9090&quot;]
+    G2[&quot;Grafana&lt;br/&gt;Dashboard&lt;br/&gt;（数据源指向 Prometheus）&quot;]
+
+    G1 --&gt;|&quot;① Prometheus Pull 采集&quot;| P
+    P --&gt;|&quot;② Grafana 用 PromQL 查询&quot;| G2
+    G2 -.-&gt;|&quot;③ 画出来的就是 Grafana 自己的指标&quot;| G1
+</code></pre><p><strong>为什么必须这样？</strong></p><blockquote><p><strong>Grafana 是”展示层”，不是”数据源”。它只能从数据源读数据，而它自己不是数据源。</strong></p></blockquote><p>即使要展示 Grafana 自己的指标，也必须：</p><ol><li>Grafana 把自身指标暴露在 <code>:3000/metrics</code>；</li><li><strong>Prometheus 去采集它</strong>（在 <code>prometheus.yml</code> 里加一个 job）；</li><li>Grafana 通过 Prometheus 数据源把这些指标查出来画图。</li></ol><p><strong>同理可推</strong>：Prometheus 自己的指标也是这么来的——Prometheus 默认就采集自己（<code>localhost:9090</code>），所以 <code>Prometheus Stats</code> 面板有数据；而 <code>Grafana metrics</code> 面板没数据，因为<strong>没人去采集 Grafana</strong>。</p><h3 id="2-11-2-配置"><a href="#2-11-2-配置" class="headerlink" title="2.11.2　配置"></a>2.11.2　配置</h3><p>先验证 Grafana 确实暴露了指标：</p><pre><code class="language-bash">curl -s http://localhost:3000/metrics | head -20
+# HELP go_gc_duration_seconds ...
+# HELP grafana_api_response_status_total ...
+</code></pre><p>然后在 <code>prometheus.yml</code> 里加一个 job：</p><pre><code class="language-yaml">  - job_name: &#39;grafana&#39;
+    static_configs:
+    - targets: [&#39;10.0.0.100:3000&#39;]
+</code></pre><pre><code class="language-bash">promtool check config /usr/local/prometheus/conf/prometheus.yml
+systemctl reload prometheus
+</code></pre><p>验证：</p><pre><code class="language-promql">up&#123;job=&quot;grafana&quot;&#125;          # 应为 1
+grafana_http_request_duration_seconds_count   # 应该有数据了
+</code></pre><p>回到 Grafana，刷新 <code>Grafana metrics</code> 面板——<strong>数据出来了</strong>。</p><h3 id="2-11-3-由此总结出的一条重要分类"><a href="#2-11-3-由此总结出的一条重要分类" class="headerlink" title="2.11.3　由此总结出的一条重要分类"></a>2.11.3　由此总结出的一条重要分类</h3><p>现在我们可以把”指标从哪来”分成三类，这是理解 Exporter 生态的钥匙：</p><table><thead><tr><th align="left">类型</th><th align="left">特征</th><th align="left">例子</th><th align="left">需要额外装 Exporter 吗</th></tr></thead><tbody><tr><td align="left"><strong>① 天生自带</strong></td><td align="left">软件内部主动暴露 <code>/metrics</code></td><td align="left"><strong>Prometheus 自己</strong>、<strong>Grafana</strong>、Zookeeper、Nacos、Etcd、Traefik</td><td align="left">❌ <strong>不需要</strong></td></tr><tr><td align="left"><strong>② 需要 Exporter</strong></td><td align="left">软件本身没有 HTTP 指标端点（尤其老软件）</td><td align="left"><strong>Linux 系统</strong>（→ node_exporter）、<strong>MySQL</strong>（→ mysqld_exporter）、<strong>Redis</strong>（→ redis_exporter）、Nginx、HAProxy</td><td align="left">✅ 需要</td></tr><tr><td align="left"><strong>③ 只能推</strong></td><td align="left">生命周期太短或无法被访问</td><td align="left">一次性脚本、定时任务、批处理作业</td><td align="left">✅ 用 Pushgateway</td></tr></tbody></table><blockquote><p>🧠 <strong>一句话决策法</strong>：<br><strong>先 <code>curl http://&lt;软件&gt;:&lt;端口&gt;/metrics</code> 试试。</strong><br>有 → 直接加 job 采；没有 → 找对应 Exporter；连”常驻”都做不到 → 上 Pushgateway。</p></blockquote><hr><h2 id="2-12-Pushgateway：给”抓不到”的指标开一扇门"><a href="#2-12-Pushgateway：给”抓不到”的指标开一扇门" class="headerlink" title="2.12　Pushgateway：给”抓不到”的指标开一扇门"></a>2.12　Pushgateway：给”抓不到”的指标开一扇门</h2><h3 id="2-12-1-为什么会有这个组件"><a href="#2-12-1-为什么会有这个组件" class="headerlink" title="2.12.1　为什么会有这个组件"></a>2.12.1　为什么会有这个组件</h3><p>考虑一个真实需求：<strong>统计当前有多少用户登录在这台机器上。</strong></p><pre><code class="language-bash">who | wc -l
+# 1
+</code></pre><p>就一个数字。但问题是：</p><ul><li>它是<strong>由一条命令临时算出来的</strong>，不是某个常驻服务持续提供；</li><li>机器上<strong>没有 HTTP 服务</strong>去暴露这个数字；</li><li>Prometheus 只会 <code>GET /metrics</code>——它没法”执行一条命令”。</li></ul><p><strong>Prometheus 抓不到它。</strong> 这就是 Pushgateway 存在的理由。</p><h3 id="2-12-2-工作原理：一个”代收点”"><a href="#2-12-2-工作原理：一个”代收点”" class="headerlink" title="2.12.2　工作原理：一个”代收点”"></a>2.12.2　工作原理：一个”代收点”</h3><pre><code class="language-mermaid">sequenceDiagram
+    participant J as 脚本或定时任务
+    participant PG as Pushgateway-9091
+    participant P as Prometheus-9090
+
+    J-&gt;&gt;PG: ① HTTP POST 推送指标（主动推）
+    Note over PG: ② 暂存指标（不会自动过期！）
+    P-&gt;&gt;PG: ③ GET /metrics（Pull 拉取）
+    PG--&gt;&gt;P: 返回暂存的指标
+</code></pre><p><strong>它就是一个”代理 &#x2F; 中转站”</strong>：</p><blockquote><p>你没有 HTTP 服务？<strong>我替你有。</strong><br>你把数据交给我（POST &#x2F;metrics），我挂在 <code>/metrics</code> 上等 Prometheus 来拉。</p></blockquote><p><strong>关键结论：Pushgateway 并没有改变 Prometheus”只拉不推”的本质</strong>——它只是给”无法被拉”的目标，额外增加了一个”可以被拉”的中转点。数据链路的最后一跳，<strong>仍然是 Pull</strong>。</p><h3 id="2-12-3-与-Exporter、与-Zabbix-Proxy-的对照"><a href="#2-12-3-与-Exporter、与-Zabbix-Proxy-的对照" class="headerlink" title="2.12.3　与 Exporter、与 Zabbix Proxy 的对照"></a>2.12.3　与 Exporter、与 Zabbix Proxy 的对照</h3><p>这是最容易混淆的一组概念，用表格彻底分清：</p><table><thead><tr><th align="left">维度</th><th align="left"><strong>Exporter</strong></th><th align="left"><strong>Pushgateway</strong></th><th align="left"><strong>Zabbix Proxy</strong></th></tr></thead><tbody><tr><td align="left">采集方向</td><td align="left"><strong>被动</strong>（等 Prometheus 来拉）</td><td align="left"><strong>主动接收</strong>（应用推过来）</td><td align="left">主动采集后上报</td></tr><tr><td align="left">装在哪儿</td><td align="left">⭐ <strong>每个被监控节点都要装一个</strong></td><td align="left">⭐ <strong>只装一个</strong>（任何位置都行，不必在被监控端）</td><td align="left">每个区域&#x2F;网段一个</td></tr><tr><td align="left">是否需要专属</td><td align="left">⭐ <strong>每种应用一个专用 Exporter</strong>（MySQL、Redis 各有各的）</td><td align="left"><strong>一个就够，所有应用都能往它推</strong></td><td align="left">一个通用的即可</td></tr><tr><td align="left">类比</td><td align="left"><strong><code>zabbix-agent</code></strong></td><td align="left"><strong><code>zabbix-proxy</code></strong></td><td align="left"><code>zabbix-proxy</code></td></tr></tbody></table><blockquote><p>🧠 <strong>记忆锚点</strong>：</p><ul><li><strong>Exporter 是”每个应用配一个专用翻译官”</strong>——MySQL 的翻译官不懂 Redis 的话。</li><li><strong>Pushgateway 是”一个公共收件箱”</strong>——谁都能往里投信，它不挑。</li></ul></blockquote><h3 id="2-12-4-必须知道的四个固有缺陷"><a href="#2-12-4-必须知道的四个固有缺陷" class="headerlink" title="2.12.4　必须知道的四个固有缺陷"></a>2.12.4　必须知道的四个固有缺陷</h3><p>Pushgateway 官方文档明确定义了这些局限，<strong>面试常问，生产必知</strong>：</p><table><thead><tr><th align="left">缺陷</th><th align="left">具体表现</th><th align="left">后果</th></tr></thead><tbody><tr><td align="left"><strong>① 单点瓶颈</strong></td><td align="left">只有一份 Pushgateway，多个应用同时推送</td><td align="left">进程挂了 → 全链路数据中断</td></tr><tr><td align="left"><strong>② <code>up</code> 指标失效</strong></td><td align="left">Prometheus 只能看到 Pushgateway 是否活着，<strong>看不到真实应用是否活着</strong></td><td align="left">⭐ <strong>服务挂了，旧数据还在，图表上一片”正常”——假存活！</strong></td></tr><tr><td align="left"><strong>③ 永不清理</strong></td><td align="left">推上去的数据<strong>永久保留</strong>并持续暴露，除非手动 DELETE</td><td align="left">已下线任务的指标一直”诈尸”</td></tr><tr><td align="left"><strong>④ 不做校验</strong></td><td align="left">脚本算错了、推了脏数据，它<strong>照单全收</strong></td><td align="left">错误数据进入 TSDB，无法追溯</td></tr></tbody></table><blockquote><p>🚨 <strong>② 号缺陷最危险</strong>。举个真实场景：你的备份任务每天推一次”备份成功&#x3D;1”。某天任务彻底挂了，不再推送——但 Pushgateway 上那条 <code>backup_success 1</code> <strong>还在</strong>，Prometheus 一直抓到 <code>1</code>，你的大屏一直显示”备份正常”。<strong>你会在真正需要备份的那天发现它已经坏了三个月。</strong></p><p><strong>应对</strong>：在<strong>应用侧</strong>实现”心跳&#x2F;时间戳”指标，用 <code>time() - backup_last_success_timestamp &gt; 86400</code> 这类表达式告警。<strong>不要指望 <code>up</code>。</strong></p></blockquote><h3 id="2-12-5-安装"><a href="#2-12-5-安装" class="headerlink" title="2.12.5　安装"></a>2.12.5　安装</h3><p>官方下载：<a target="_blank" rel="noopener" href="https://prometheus.io/download/">https://prometheus.io/download/</a> 或 <a target="_blank" rel="noopener" href="https://github.com/prometheus/pushgateway/releases">https://github.com/prometheus/pushgateway/releases</a></p><pre><code class="language-bash">cd /usr/local
+wget https://github.com/prometheus/pushgateway/releases/download/v1.10.0/pushgateway-1.10.0.linux-amd64.tar.gz
+tar xf pushgateway-1.10.0.linux-amd64.tar.gz -C /usr/local/
+ln -s pushgateway-1.10.0.linux-amd64 pushgateway
+
+mkdir -p /usr/local/pushgateway/bin
+mv /usr/local/pushgateway/pushgateway /usr/local/pushgateway/bin/
+useradd -r -s /sbin/nologin prometheus
+chown -R prometheus:prometheus /usr/local/pushgateway/
+</code></pre><p>service 文件：</p><pre><code class="language-ini">[Unit]
+Description=Prometheus Pushgateway
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/pushgateway/bin/pushgateway
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+User=prometheus
+Group=prometheus
+
+[Install]
+WantedBy=multi-user.target
+</code></pre><pre><code class="language-bash">systemctl daemon-reload
+systemctl enable --now pushgateway.service
+ss -ntlp | grep 9091
+</code></pre><p>浏览器访问 <code>http://&lt;ip&gt;:9091/</code> —— 界面是<strong>空的</strong>，因为还没人往里推过东西。这正是它的本质：<strong>数据不来自它自己，来自”推给它的应用”。</strong></p><blockquote><p>💡 <strong>但它自己也需要被监控</strong>——<code>http://&lt;ip&gt;:9091/metrics</code> 里能看到它自身的指标（请求数、推送成功数等）。所以按 2.11 节的分类，它属于”<strong>① 天生自带</strong>“，直接加 job 采就行。</p></blockquote><h3 id="2-12-6-让-Prometheus-采集-Pushgateway"><a href="#2-12-6-让-Prometheus-采集-Pushgateway" class="headerlink" title="2.12.6　让 Prometheus 采集 Pushgateway"></a>2.12.6　让 Prometheus 采集 Pushgateway</h3><pre><code class="language-yaml">  - job_name: &quot;pushgateway&quot;
+    honor_labels: true          # ⭐ 关键
+    scrape_interval: 10s
+    static_configs:
+    - targets: [&quot;10.0.0.100:9091&quot;]
+</code></pre><p><strong><code>honor_labels: true</code> 到底解决什么问题？</strong></p><p>不加它时，Prometheus 会把自己配置里的 <code>job=&quot;pushgateway&quot;</code> 和 <code>instance=&quot;10.0.0.100:9091&quot;</code> <strong>强加</strong>到所有指标上——于是<strong>所有应用推上来的指标看起来都来自同一台机器</strong>，标签全被覆盖了。</p><p>加上它之后，<strong>Pushgateway 上的 <code>job</code> &#x2F; <code>instance</code> 标签优先保留</strong>，Prometheus 自己的标签会被改名为 <code>exported_job</code> &#x2F; <code>exported_instance</code>。这样你才能区分”这条指标是哪个应用推的”。</p><blockquote><p>⚠️ <strong>所以：采集 Pushgateway，<code>honor_labels: true</code> 几乎是必选项。</strong></p></blockquote><p>也支持文件形式自动发现：</p><pre><code class="language-yaml">  - job_name: pushgateway
+    honor_labels: true
+    file_sd_configs:
+    - files:
+      - targets/pushgateway/*.json
+    refresh_interval: 5m
+</code></pre><pre><code class="language-json">// targets/pushgateway/test.json
+[&#123;&quot;targets&quot;: [&quot;pushgateway1.example.com:9091&quot;]&#125;]
+</code></pre><h3 id="2-12-7-推送数据：URL-格式详解"><a href="#2-12-7-推送数据：URL-格式详解" class="headerlink" title="2.12.7　推送数据：URL 格式详解"></a>2.12.7　推送数据：URL 格式详解</h3><pre><code>http://&lt;pg-addr&gt;:&lt;pg-port&gt;/metrics/job/&lt;job_name&gt;/[&lt;label_name&gt;/&lt;label_value&gt;]/...
+</code></pre><table><thead><tr><th align="left">路径片段</th><th align="left">作用</th></tr></thead><tbody><tr><td align="left"><code>/metrics</code></td><td align="left">固定接收接口</td></tr><tr><td align="left"><code>/job/&lt;job_name&gt;</code></td><td align="left">设置 <code>job</code> 标签</td></tr><tr><td align="left"><code>/instance/&lt;value&gt;</code></td><td align="left">设置 <code>instance</code> 标签</td></tr><tr><td align="left">其它 <code>&lt;label&gt;/&lt;value&gt;</code></td><td align="left">任意附加标签</td></tr></tbody></table><p><strong>最小示例</strong>（推一条：<code>age = 18</code>）：</p><pre><code class="language-bash">echo &quot;age 18&quot; | curl --data-binary @- \
+  http://pushgateway.example.com:9091/metrics/job/demo/instance/$(hostname -I | awk &#39;&#123;print $1&#125;&#39;)
+</code></pre><ul><li><code>echo &quot;age 18&quot;</code>：生成一行 Prometheus 格式的指标；</li><li><code>|</code>：管道，把内容交给 curl 的 stdin；</li><li><code>--data-binary @-</code>：从标准输入原样读取并 POST（<strong>注意用 <code>--data-binary</code>，不要用 <code>-d</code></strong>，后者会处理换行符）；</li><li><code>/job/demo</code>：这条指标的 <code>job</code> 标签是 <code>demo</code>；</li><li><code>/instance/&lt;ip&gt;</code>：<code>instance</code> 标签是当前主机第一个 IP。</li></ul><p><strong>带类型与帮助的完整示例</strong>：</p><pre><code class="language-bash">cat &lt;&lt;EOF | curl --data-binary @- http://pushgateway.example.com:9091/metrics/job/some_job/instance/some_instance
+# TYPE some_metric counter
+some_metric&#123;label=&quot;val1&quot;&#125; 42
+# TYPE another_metric gauge
+# HELP another_metric Just an example.
+another_metric 2398.283
+EOF
+</code></pre><p>三者作用（呼应第 1 章）：</p><table><thead><tr><th align="left">行</th><th align="left">作用</th></tr></thead><tbody><tr><td align="left"><code># TYPE</code></td><td align="left">声明类型（counter &#x2F; gauge &#x2F; histogram &#x2F; summary &#x2F; untyped）</td></tr><tr><td align="left"><code># HELP</code></td><td align="left">人类可读的说明，Grafana 面板会显示</td></tr><tr><td align="left"><code>some_metric&#123;...&#125; 42</code></td><td align="left">真正的样本：<code>指标名&#123;标签&#125; 值</code></td></tr></tbody></table><h3 id="2-12-8-删除数据（重要，别只会推不会删）"><a href="#2-12-8-删除数据（重要，别只会推不会删）" class="headerlink" title="2.12.8　删除数据（重要，别只会推不会删）"></a>2.12.8　删除数据（重要，别只会推不会删）</h3><pre><code class="language-bash"># 删除某个组下的全部指标
+curl -X DELETE http://pushgateway.example.com:9091/metrics/job/some_job/instance/some_instance
+
+# 删除某个 job 下的全部指标
+curl -X DELETE http://pushgateway.example.com:9091/metrics/job/some_job
+</code></pre><p>也可以直接在 Pushgateway 的 Web 界面点删除按钮。</p><blockquote><p>⚠️ <strong>生产纪律</strong>：<strong>任何上线了又下线的任务，必须清理它在 Pushgateway 上的残留</strong>。否则那些”僵尸指标”会一直出现在查询结果里，污染图表和告警判断。</p></blockquote><h3 id="2-12-9-生产可用脚本"><a href="#2-12-9-生产可用脚本" class="headerlink" title="2.12.9　生产可用脚本"></a>2.12.9　生产可用脚本</h3><p>一个通用的自定义指标推送脚本，把”采集命令”和”推送”解耦：</p><pre><code class="language-bash">#!/bin/bash
+set -uo pipefail
+
+# ===== 只改这几行：想监控什么，就换 METRIC_* =====
+METRIC_NAME=&quot;login_number&quot;
+METRIC_VALUE_CMD=&#39;who | wc -l&#39;
+METRIC_TYPE=&quot;gauge&quot;
+METRIC_HELP=&quot;Current login user number&quot;
+
+PUSHGATEWAY_HOST=&quot;pushgateway.example.com:9091&quot;
+JOB_NAME=&quot;custom_metrics&quot;
+INSTANCE=$(hostname -I | awk &#39;&#123;print $1&#125;&#39;)
+INTERVAL=60
+
+PUSH_URL=&quot;http://$&#123;PUSHGATEWAY_HOST&#125;/metrics/job/$&#123;JOB_NAME&#125;/instance/$&#123;INSTANCE&#125;&quot;
+
+trap &#39;echo &quot;[$(date &quot;+%F %T&quot;)] Exit.&quot;; exit 0&#39; INT TERM
+
+while true; do
+    VALUE=$(eval &quot;$METRIC_VALUE_CMD&quot;)
+
+    cat &lt;&lt;EOF | curl --silent --show-error --fail --data-binary @- &quot;$PUSH_URL&quot; &gt;/dev/null
+# HELP $&#123;METRIC_NAME&#125; $&#123;METRIC_HELP&#125;
+# TYPE $&#123;METRIC_NAME&#125; $&#123;METRIC_TYPE&#125;
+$&#123;METRIC_NAME&#125; $&#123;VALUE&#125;
+EOF
+
+    if [ $? -eq 0 ]; then
+        echo &quot;[$(date &#39;+%F %T&#39;)] Push OK: $&#123;METRIC_NAME&#125;=$&#123;VALUE&#125;&quot;
+    else
+        echo &quot;[$(date &#39;+%F %T&#39;)] Push FAILED!&quot;
+    fi
+
+    sleep &quot;$&#123;INTERVAL&#125;&quot;
+done
+</code></pre><p><strong>从”一次性任务”推数据</strong>，交给 cron 定时执行。但<strong>不要写超长的单行 cron 命令</strong>（引号嵌套会把你逼疯），正确做法是<strong>先写一个小脚本，cron 只负责调用它</strong>：</p><pre><code class="language-bash"># 1. 写脚本 /usr/local/bin/push_login_number.sh
+#!/bin/bash
+set -euo pipefail
+PG=&quot;http://pushgateway.example.com:9091&quot;
+IP=$(hostname -I | awk &#39;&#123;print $1&#125;&#39;)
+N=$(who | wc -l)
+cat &lt;&lt;EOF | curl -s --fail --data-binary @- &quot;$&#123;PG&#125;/metrics/job/custom_metrics/instance/$&#123;IP&#125;&quot; &gt;/dev/null
+# HELP login_number Current login user number
+# TYPE login_number gauge
+login_number $&#123;N&#125;
+EOF
+</code></pre><pre><code class="language-bash"># 2. 授权
+chmod +x /usr/local/bin/push_login_number.sh
+
+# 3. cron 只负责调用脚本（/etc/cron.d/push_login_number）
+*/5 * * * * root /usr/local/bin/push_login_number.sh
+</code></pre><blockquote><p>💡 <strong>脚本里的三个好习惯</strong>：</p><ol><li><strong><code>--fail</code></strong>：HTTP 4xx&#x2F;5xx 时让 curl 返回非 0，从而能判断推送失败；</li><li><strong>输出成功&#x2F;失败日志</strong>：不然任务”看起来在跑”，其实一直在失败；</li><li><strong><code>trap</code> 优雅退出</strong>：systemd 停止服务时不会留下僵尸循环。</li></ol></blockquote><h3 id="2-12-10-验证"><a href="#2-12-10-验证" class="headerlink" title="2.12.10　验证"></a>2.12.10　验证</h3><ol><li><strong>Pushgateway 页面</strong>：<code>http://&lt;ip&gt;:9091/</code> 能看到你推上去的指标组；</li><li><strong>Prometheus Graph</strong>：查 <code>login_number</code> 或 <code>mem_free</code>，能看到数据。</li></ol><blockquote><p>⚠️ 这里有个小陷阱：如果 <code>honor_labels: true</code> 没配，你在 Prometheus 里查到的 <code>instance</code> 是 <strong>Pushgateway 的地址</strong>，而不是推送方的地址。查不到特定主机的数据时，先检查这一点。</p></blockquote><hr><h2 id="2-13-一个完整例子：监控-Zookeeper"><a href="#2-13-一个完整例子：监控-Zookeeper" class="headerlink" title="2.13　一个完整例子：监控 Zookeeper"></a>2.13　一个完整例子：监控 Zookeeper</h2><p>前面所有例子里，被监控对象要么”本来没有指标”（Linux），要么”指标要中转”（脚本）。Zookeeper 属于第三类：<strong>软件自己就能开指标端口</strong>。</p><h3 id="2-13-1-三种指标来源分类"><a href="#2-13-1-三种指标来源分类" class="headerlink" title="2.13.1　三种指标来源分类"></a>2.13.1　三种指标来源分类</h3><table><thead><tr><th align="left">来源</th><th align="left">例子</th><th align="left">要点</th></tr></thead><tbody><tr><td align="left"><strong>① 软件内置</strong></td><td align="left">Grafana、Zookeeper、Nacos、Etcd</td><td align="left">改配置打开即可，<strong>不用装 Exporter</strong></td></tr><tr><td align="left"><strong>② 第三方 Exporter</strong></td><td align="left">MySQL、Redis、Nginx</td><td align="left">需要单独部署 exporter</td></tr><tr><td align="left"><strong>③ Pushgateway</strong></td><td align="left">一次性脚本、定时任务</td><td align="left">主动推</td></tr><tr><td align="left"><strong>④ 自行编程</strong></td><td align="left">业务指标</td><td align="left">需要开发能力，用客户端库</td></tr></tbody></table><h3 id="2-13-2-打开-Zookeeper-的内置指标端点"><a href="#2-13-2-打开-Zookeeper-的内置指标端点" class="headerlink" title="2.13.2　打开 Zookeeper 的内置指标端点"></a>2.13.2　打开 Zookeeper 的内置指标端点</h3><p>Zookeeper 的 <code>zoo_sample.cfg</code> 里已经<strong>预置</strong>了 Prometheus 相关注释，取消注释即可：</p><pre><code class="language-properties"># 在 zoo.cfg 末尾添加（模板里默认就有，只是被注释了）
+metricsProvider.className=org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider
+metricsProvider.httpPort=7000
+metricsProvider.exportJvmInfo=true
+</code></pre><pre><code class="language-bash">systemctl restart zookeeper.service
+curl http://localhost:7000/metrics | head
+</code></pre><blockquote><p>💡 <strong><code>metricsProvider.httpPort=7000</code></strong> 就是这个软件给自己开的”出口”。<strong>凡是能在某个端口 <code>curl</code> 到 <code>/metrics</code> 的软件，都不需要额外装 Exporter。</strong></p></blockquote><h3 id="2-13-3-加-job，看数据"><a href="#2-13-3-加-job，看数据" class="headerlink" title="2.13.3　加 job，看数据"></a>2.13.3　加 job，看数据</h3><pre><code class="language-yaml">  - job_name: &#39;zookeeper&#39;
+    static_configs:
+    - targets: [&#39;10.0.0.101:7000&#39;]
+</code></pre><pre><code class="language-bash">promtool check config /usr/local/prometheus/conf/prometheus.yml
+systemctl reload prometheus
+</code></pre><ul><li><strong>Prometheus</strong> → Status → Targets，确认 <code>zookeeper</code> 是 UP；</li><li><strong>Grafana</strong> → 导入社区模板（如 <strong>ID 10465</strong>）→ 注意在面板顶部<strong>选对 Cluster 变量</strong>，否则显示为空。</li></ul><hr><h2 id="2-14-本章小结"><a href="#2-14-本章小结" class="headerlink" title="2.14　本章小结"></a>2.14　本章小结</h2><pre><code class="language-mermaid">mindmap
+  root((&quot;第2章&lt;br/&gt;部署与点亮&quot;))
+    五个软件
+      Prometheus 9090 采集+存储
+      Node Exporter 9100 系统指标
+      Grafana 3000 展示
+      Alertmanager 9093 告警
+      Pushgateway 9091 中转
+    安装方式
+      包安装 快但版本旧
+      二进制 生产标准
+      容器 注意挂载
+      Ansible 批量
+    关键参数
+      config.file
+      storage.tsdb.path
+      storage.tsdb.retention.time
+      web.enable-lifecycle 危险
+    配置文件
+      global
+      alerting
+      rule_files
+      scrape_configs
+    踩过的坑
+      root启动污染权限
+      YAML缩进
+      端口写错
+      容器内配置文件
+      指标有延迟
+      uname采集器
+    Pushgateway
+      up指标失效
+      永不清理
+      单点
+      不校验
+</code></pre><p><strong>六条必须记住的运维经验</strong>：</p><table><thead><tr><th align="left">#</th><th align="left">经验</th><th align="left">出处</th></tr></thead><tbody><tr><td align="left">1</td><td align="left"><strong>调试用哪个身份启动，生产就用哪个身份</strong></td><td align="left">root 污染 data 目录</td></tr><tr><td align="left">2</td><td align="left"><strong><code>--web.enable-lifecycle</code> 生产禁用</strong></td><td align="left">一行 curl 就能远程关掉服务</td></tr><tr><td align="left">3</td><td align="left"><strong>改配置：先 <code>promtool check config</code>，再 reload，再查 Targets</strong></td><td align="left">三步固定流程</td></tr><tr><td align="left">4</td><td align="left"><strong>“暴露”和”采集”是两件事</strong></td><td align="left">Node Exporter 有了还得加 job</td></tr><tr><td align="left">5</td><td align="left"><strong>抓不到数据先看 Targets，它会告诉你具体 URL 和错误</strong></td><td align="left">端口写成 9010 的教训</td></tr><tr><td align="left">6</td><td align="left"><strong>容器化 Node Exporter 必须 host 网络 + host PID + 挂载 &#x2F;</strong></td><td align="left">否则采的是容器自己</td></tr></tbody></table><hr><h2 id="2-15-面试高频问答"><a href="#2-15-面试高频问答" class="headerlink" title="2.15　面试高频问答"></a>2.15　面试高频问答</h2><p><strong>Q1：Prometheus 有几种安装方式？生产推荐哪种，为什么？</strong></p><blockquote><p>包安装、二进制、Ansible、Docker、Docker Compose、K8s 六种。<br>生产推荐<strong>二进制 + systemd</strong>：版本可控（不被发行版仓库锁死）、零依赖（Go 静态编译）、目录布局自由（配置&#x2F;数据可分离、数据目录可独立分区）、排障直观（日志、进程、路径都在明处）。大规模机器建议 <strong>Ansible</strong>，云原生环境用 <strong>Operator &#x2F; Helm</strong>。</p></blockquote><p><strong>Q2：<code>--web.enable-lifecycle</code> 是干什么的？为什么不建议开？</strong></p><blockquote><p>它允许通过 HTTP API 触发 <code>/-/reload</code> 和 <code>/-/quit</code>。风险在于<strong>无任何认证</strong>：任何能访问 9090 的人都能 <code>POST /-/quit</code> 直接把监控服务关掉。而 reload 这件事用 <code>systemctl reload</code>（配合 <code>ExecReload=/bin/kill -HUP</code>）完全能实现。所以<strong>生产保持默认 false</strong>。</p></blockquote><p><strong>Q3：改了配置文件怎么让它生效？</strong></p><blockquote><p>三步：<code>promtool check config</code> 校验语法 → <code>systemctl reload prometheus</code>（SIGHUP 热加载）→ 在 Status → Configuration 确认生效、Status → Targets 确认目标 UP。<br>注意：<strong>改启动参数（如 <code>--storage.tsdb.path</code>）必须 restart</strong>，热加载不了。</p></blockquote><p><strong>Q4：为什么 Node Exporter 装在容器里要 <code>--net=host --pid=host -v /:/host</code>？</strong></p><blockquote><p>因为它的职责是采集<strong>宿主机</strong>的指标，而不是容器自己的。共享网络命名空间才能看到真实网卡；共享 PID 命名空间才能看到宿主机全部进程；挂载宿主机根目录并指定 <code>--path.rootfs=/host</code> 才能读到真实的 <code>/proc</code>、<code>/sys</code> 和文件系统使用率。否则采到的全是容器 overlay 里的数据。</p></blockquote><p><strong>Q5：Pushgateway 有什么缺点？</strong></p><blockquote><p>四个：① 单点故障；② <strong><code>up</code> 指标失效</strong>（看不到真实目标存活，服务挂了旧数据还在，造成”假存活”）；③ 数据永不自动清理，必须手动 DELETE；④ 不做数据校验，脏数据照单全收。<br>因此它只适合<strong>短周期 &#x2F; 一次性任务的指标</strong>，长期运行的服务应该用 Exporter。</p></blockquote><p><strong>Q6：如何监控 Grafana 自身？</strong></p><blockquote><p>Grafana 自带 <code>/metrics</code> 端点（:3000），在 <code>prometheus.yml</code> 里加一个 job 采集它，然后在 Grafana 里用 Prometheus 数据源查询展示。<strong>注意它不能自己展示自己——Grafana 是展示层不是数据源，必须经 Prometheus 中转。</strong></p></blockquote><p><strong>Q7：<code>honor_labels: true</code> 有什么作用？</strong></p><blockquote><p>采集 Pushgateway 时必须加。否则 Prometheus 会用自己配置的 <code>job</code>&#x2F;<code>instance</code> 覆盖掉推送方设置的标签，导致所有应用的数据都像是同一个来源。加上之后保留 Pushgateway 上的标签，Prometheus 自己的标签改名为 <code>exported_job</code>&#x2F;<code>exported_instance</code>。</p></blockquote><hr><h2 id="2-16-动手实验"><a href="#2-16-动手实验" class="headerlink" title="2.16　动手实验"></a>2.16　动手实验</h2><h3 id="实验一（必做）-二进制装全套-采集四台主机"><a href="#实验一（必做）-二进制装全套-采集四台主机" class="headerlink" title="实验一（必做）　二进制装全套 + 采集四台主机"></a>实验一（必做）　二进制装全套 + 采集四台主机</h3><p><strong>目标</strong>：<code>up&#123;job=&quot;node_exporter&quot;&#125;</code> 返回 4 条，值全为 1。</p><pre><code>步骤清单（打勾）
+□ 1. 三台机器规划：100=监控服务器，101/102/103=被监控节点
+□ 2. 100 上二进制安装 Prometheus（2.53.x 或 3.x LTS）
+□ 3. 目录规划 bin/conf/data + 建 prometheus 服务账号 + chown
+□ 4. 先手动启动一次验证（注意：用 prometheus 身份，别用 root！）
+□ 5. 写 systemd 单元（含 LimitNOFILE、ExecReload），enable --now
+□ 6. 访问 9090，看 Status → Runtime 确认版本与启动时间
+□ 7. 四台机器全装 node_exporter，加 service，9100 监听
+□ 8. curl 各自 9100/metrics 确认暴露正常
+□ 9. prometheus.yml 新增 node_exporter job，4 个 target
+□ 10. promtool check config → systemctl reload
+□ 11. Status → Targets 确认 4 个全 UP
+□ 12. Graph 里查 node_memory_MemAvailable_bytes，应有 4 条序列
+</code></pre><p><strong>思考题</strong>（做完实验再回答）：</p><ol><li>为什么 <code>data/</code> 目录第一次启动是空的，第二次启动就有内容了？</li><li><code>process_max_fds</code> 这个指标的值，是从哪里来的？（提示：service 文件）</li><li>如果把 <code>scrape_interval</code> 改成 <code>1s</code>，<code>up</code> 的变化会更快，但会带来什么代价？</li></ol><h3 id="实验二-容器化对照实验"><a href="#实验二-容器化对照实验" class="headerlink" title="实验二　容器化对照实验"></a>实验二　容器化对照实验</h3><p>用 Docker 起 Prometheus 和 Node Exporter，<strong>故意不加 <code>--net=host</code></strong>，然后：</p><ol><li>在容器里执行 <code>curl localhost:9100/metrics | grep node_network</code> —— 看有几块网卡？</li><li>加上 <code>--net=host</code> 再执行一次 —— 有几块？</li><li><strong>用两行命令理解”网络命名空间隔离”这句话是什么意思。</strong></li></ol><h3 id="实验三-Grafana-全链路"><a href="#实验三-Grafana-全链路" class="headerlink" title="实验三　Grafana 全链路"></a>实验三　Grafana 全链路</h3><pre><code>□ 1. 安装 Grafana（apt install ./xxx.deb）
+□ 2. 登 3000，admin/admin，改密码
+□ 3. 加 Prometheus 数据源，Save &amp; Test 成功
+□ 4. 导入内置 Prometheus Stats → 看数据
+□ 5. 导入内置 Grafana metrics → 看到 No data，解释原因
+□ 6. 在 prometheus.yml 加 grafana job，reload
+□ 7. 回 Grafana 刷新 → Grafana metrics 有数据了
+□ 8. 导入 Dashboard 1860 / 8919 → 看到四台主机 CPU 曲线
+</code></pre><p><strong>关键问答</strong>：第 5 步为什么没数据？第 7 步为什么就有了？<strong>用一句话讲清这条链路。</strong></p><h3 id="实验四-Pushgateway-推一个自定义指标"><a href="#实验四-Pushgateway-推一个自定义指标" class="headerlink" title="实验四　Pushgateway 推一个自定义指标"></a>实验四　Pushgateway 推一个自定义指标</h3><pre><code class="language-bash"># 1. 装 Pushgateway，9091 监听
+# 2. prometheus.yml 加 job（务必 honor_labels: true），reload
+# 3. 推一个登录数
+echo &quot;login_number $(who | wc -l)&quot; | curl --data-binary @- \
+  http://&lt;pg-ip&gt;:9091/metrics/job/custom_metrics/instance/$(hostname -I | awk &#39;&#123;print $1&#125;&#39;)
+
+# 4. Pushgateway 页面看到指标组
+# 5. Prometheus 里查 login_number
+# 6. 故意停掉脚本，等 5 分钟，再查 login_number —— 数据还在吗？为什么？
+# 7. 用 DELETE 清掉，再查 —— 没了吧
+</code></pre><p><strong>第 6 步的答案，就是 Pushgateway 最大的坑。</strong> 请务必亲手做一次。</p><hr><h2 id="2-17-下章预告"><a href="#2-17-下章预告" class="headerlink" title="2.17　下章预告"></a>2.17　下章预告</h2><p>本章我们把”能跑起来”这件事做到了：四个端口全亮，四台主机的 CPU 曲线出现在 Grafana 上。</p><p>但你会发现一个尴尬的事实：<strong>图虽然有了，可我看不懂那些指标名，也不知道该怎么算。</strong></p><p><code>node_cpu_seconds_total</code> 为什么是一个<strong>只增不减</strong>的巨大数字？为什么不能直接画它就要先做 <code>rate()</code>？</p><p>下一章专门解决这个问题：</p><ul><li><strong>四种指标类型的本质区别</strong>：Counter &#x2F; Gauge &#x2F; Histogram &#x2F; Summary</li><li>为什么 <code>node_cpu_seconds_total</code> 必须配 <code>rate()</code>，而 <code>node_memory_MemAvailable_bytes</code> 可以直接画</li><li><strong>标签基数（cardinality）</strong> 为什么会让 Prometheus 内存爆掉</li><li><code>node_exporter</code> 的常用指标该怎么读</li></ul><p><strong>本章作业</strong>：把”抓不到数据五步排查法”抄在笔记本第一页。后面所有实验，你都会用到它。</p><div class="tags"><a href="/tags/Prometheus/" rel="tag"><i class="ic i-tag"></i>Prometheus</a></div></div><footer><div class="meta"><span class="icon"><i class="ic i-eye"></i></span><span>此文章已被阅读次数:</span><span class="waline-pageview-count" id="twikoo_visitors" data-path="/posts/3486386405.html">正在加载...</span><span class="item"><span class="icon"><i class="ic i-calendar-check"></i></span><span class="text">更新于</span><time title="修改时间：2026-11-09 08:56:38" itemprop="dateModified" datetime="2026-11-09T08:56:38+08:00">2026-11-09</time></span></div><div class="reward"><button><i class="ic i-heartbeat"></i>赞赏</button><p>请我喝[茶]~(￣▽￣)~*</p><div id="qr"><div><img loading="lazy" data-src="/assets/wechatpay.png" alt="Jaxx.Wang 微信支付"><p>微信支付</p></div><div><img loading="lazy" data-src="/assets/alipay.png" alt="Jaxx.Wang 支付宝"><p>支付宝</p></div></div></div><div id="copyright"><ul><li class="author"><strong>本文作者：</strong>Jaxx.Wang<i class="ic i-at"><em>@</em></i>老王的个人博客</li><li class="link"><strong>本文链接：</strong><a href="http://blog.jaxxwang.cn/posts/3486386405.html" title="02 部署与点亮：让 Prometheus 真正跑起来">http://blog.jaxxwang.cn/posts/3486386405.html</a></li><li class="license"><strong>版权声明：</strong>本站所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li></ul></div></footer></article></div><div class="post-nav"><div class="item left"><a href="/posts/65018325.html" rel="prev" itemprop="url" data-background-image="https:&#x2F;&#x2F;pic1.imgdb.cn&#x2F;item&#x2F;6937b67900233646958ccbb4.jpg" title="01 Prometheus入门：从监控到可观测性"><span class="type">上一篇</span><span class="category"><i class="ic i-flag"></i>Prometheus</span><h3>01 Prometheus入门：从监控到可观测性</h3></a></div><div class="item right"><a href="/posts/1096553236.html" rel="next" itemprop="url" data-background-image="https:&#x2F;&#x2F;pic1.imgdb.cn&#x2F;item&#x2F;6937b67900233646958ccbb1.jpg" title="03 PromQL：把指标变成答案"><span class="type">下一篇</span><span class="category"><i class="ic i-flag"></i>Prometheus</span><h3>03 PromQL：把指标变成答案</h3></a></div></div><div class="wrap" id="comments"></div></div><div id="sidebar"><div class="inner"><div class="panels"><div class="inner"><div class="contents panel pjax" data-title="文章目录"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC-2-%E7%AB%A0-%E9%83%A8%E7%BD%B2%E4%B8%8E%E7%82%B9%E4%BA%AE%EF%BC%9A%E8%AE%A9-Prometheus-%E7%9C%9F%E6%AD%A3%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">第 2 章　部署与点亮：让 Prometheus 真正跑起来</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%BC%80%E5%B7%A5%E4%B9%8B%E5%89%8D%EF%BC%9A%E5%85%88%E6%8A%8A%E6%8B%BC%E5%9B%BE%E6%91%86%E5%A5%BD"><span class="toc-number">1.1.</span> <span class="toc-text">2.1　开工之前：先把拼图摆好</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-1-%E4%BA%94%E4%B8%AA%E8%BD%AF%E4%BB%B6%EF%BC%8C%E5%90%84%E7%AE%A1%E4%B8%80%E6%AE%B5"><span class="toc-number">1.1.1.</span> <span class="toc-text">2.1.1　五个软件，各管一段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-2-%E9%83%A8%E7%BD%B2%E6%8B%93%E6%89%91%EF%BC%9A%E8%B0%81%E8%A3%85%E5%9C%A8%E5%93%AA"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.1.2　部署拓扑：谁装在哪</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-3-%E7%89%88%E6%9C%AC%E6%80%8E%E4%B9%88%E9%80%89%EF%BC%9A%E5%85%88%E7%9C%8B%E5%85%BC%E5%AE%B9%E6%80%A7"><span class="toc-number">1.1.3.</span> <span class="toc-text">2.1.3　版本怎么选：先看兼容性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-4-%E5%85%AD%E7%A7%8D%E9%83%A8%E7%BD%B2%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.4.</span> <span class="toc-text">2.1.4　六种部署方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E5%8C%85%E5%AE%89%E8%A3%85%EF%BC%885-%E5%88%86%E9%92%9F%E4%B8%8A%E6%89%8B%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">2.2　方式一：包安装（5 分钟上手）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-1-Ubuntu-Debian"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.2.1　Ubuntu &#x2F; Debian</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-2-RHEL-Rocky-CentOS"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2.2　RHEL &#x2F; Rocky &#x2F; CentOS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E8%A3%85%EF%BC%88%E7%94%9F%E4%BA%A7%E6%A0%87%E5%87%86%E5%81%9A%E6%B3%95%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">2.3　方式二：二进制安装（生产标准做法）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-1-%E4%B8%BA%E4%BB%80%E4%B9%88-Go-%E7%A8%8B%E5%BA%8F%E8%A3%85%E8%B5%B7%E6%9D%A5%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95"><span class="toc-number">1.3.1.</span> <span class="toc-text">2.3.1　为什么 Go 程序装起来这么简单</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-2-%E4%B8%8B%E8%BD%BD%E4%B8%8E%E8%A7%A3%E5%8E%8B"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.3.2　下载与解压</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-3-%E7%9B%AE%E5%BD%95%E8%A7%84%E5%88%92%E4%B8%8E%E6%9D%83%E9%99%90"><span class="toc-number">1.3.3.</span> <span class="toc-text">2.3.3　目录规划与权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-4-%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%90%AF%E5%8A%A8%EF%BC%9A%E5%85%88%E8%AE%A9%E5%AE%83%E2%80%9D%E8%A3%B8%E8%B7%91%E2%80%9D%E4%B8%80%E4%B8%8B"><span class="toc-number">1.3.4.</span> <span class="toc-text">2.3.4　第一次启动：先让它”裸跑”一下</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-5-%E2%AD%90-%E6%95%85%E9%9A%9C%E7%8E%B0%E5%9C%BA%E4%B8%80%EF%BC%9A%E4%BB%A5-root-%E5%90%AF%E5%8A%A8%E8%BF%87%E4%B8%80%E6%AC%A1%EF%BC%8C%E4%B9%8B%E5%90%8E%E5%86%8D%E4%B9%9F%E8%B5%B7%E4%B8%8D%E6%9D%A5"><span class="toc-number">1.3.5.</span> <span class="toc-text">2.3.5　⭐ 故障现场一：以 root 启动过一次，之后再也起不来</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-6-%E5%86%99-systemd-%E6%9C%8D%E5%8A%A1%E5%8D%95%E5%85%83"><span class="toc-number">1.3.6.</span> <span class="toc-text">2.3.6　写 systemd 服务单元</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-7-%E9%AA%8C%E8%AF%81%EF%BC%9AWeb-UI-%E7%9A%84%E4%B8%89%E4%B8%AA%E8%8F%9C%E5%8D%95"><span class="toc-number">1.3.7.</span> <span class="toc-text">2.3.7　验证：Web UI 的三个菜单</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-%E7%AE%A1%E7%90%86-API-%E4%B8%8E-web-enable-lifecycle-%E7%9A%84%E5%AE%89%E5%85%A8%E9%99%B7%E9%98%B1"><span class="toc-number">1.4.</span> <span class="toc-text">2.4　管理 API 与 --web.enable-lifecycle 的安全陷阱</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-1-%E5%9B%9B%E4%B8%AA-API-%E7%AB%AF%E7%82%B9"><span class="toc-number">1.4.1.</span> <span class="toc-text">2.4.1　四个 API 端点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-2-%E2%AD%90-%E6%95%85%E9%9A%9C%E7%8E%B0%E5%9C%BA%E4%BA%8C%EF%BC%9A%E6%88%91%E5%9C%A8%E5%8F%A6%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%EF%BC%8C%E4%B8%80%E8%A1%8C%E5%91%BD%E4%BB%A4%E5%85%B3%E6%8E%89%E4%BA%86%E4%BD%A0%E7%9A%84%E7%9B%91%E6%8E%A7"><span class="toc-number">1.4.2.</span> <span class="toc-text">2.4.2　⭐ 故障现场二：我在另一台机器上，一行命令关掉了你的监控</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-3-%E9%87%8D%E8%BD%BD%E9%85%8D%E7%BD%AE%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F%E5%AF%B9%E6%AF%94"><span class="toc-number">1.4.3.</span> <span class="toc-text">2.4.3　重载配置的四种方式对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-4-%E9%A1%BA%E5%B8%A6%E4%B8%80%E6%8F%90%EF%BC%9A%E8%B0%81%E6%9D%A5%E7%9B%91%E6%8E%A7-Prometheus-%E8%87%AA%E5%B7%B1"><span class="toc-number">1.4.4.</span> <span class="toc-text">2.4.4　顺带一提：谁来监控 Prometheus 自己</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-%E5%B8%B8%E7%94%A8%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E4%B8%8E%E5%AE%B9%E9%87%8F%E8%A7%84%E5%88%92"><span class="toc-number">1.5.</span> <span class="toc-text">2.5　常用启动参数与容量规划</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-prometheus-yml%EF%BC%9A%E9%80%90%E8%A1%8C%E8%AF%BB%E6%87%82%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.6.</span> <span class="toc-text">2.6　prometheus.yml：逐行读懂配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-1-%E4%B8%A4%E7%B1%BB%E9%85%8D%E7%BD%AE%E7%9A%84%E5%88%86%E5%B7%A5"><span class="toc-number">1.6.1.</span> <span class="toc-text">2.6.1　两类配置的分工</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-2-%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E7%9A%84%E5%9B%9B%E6%AE%B5%E5%BC%8F%E7%BB%93%E6%9E%84"><span class="toc-number">1.6.2.</span> <span class="toc-text">2.6.2　默认配置的四段式结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-3-scrape-configs-%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-number">1.6.3.</span> <span class="toc-text">2.6.3　scrape_configs 的结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-4-%E2%AD%90-%E6%95%85%E9%9A%9C%E7%8E%B0%E5%9C%BA%E4%B8%89%EF%BC%9A%E7%BC%A9%E8%BF%9B%E9%94%99%E4%BA%86%EF%BC%8Ctargets-%E6%B0%B8%E8%BF%9C%E4%B8%8D%E7%94%9F%E6%95%88"><span class="toc-number">1.6.4.</span> <span class="toc-text">2.6.4　⭐ 故障现场三：缩进错了，targets 永远不生效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-5-promtool%EF%BC%9A%E8%A2%AB%E4%B8%A5%E9%87%8D%E4%BD%8E%E4%BC%B0%E7%9A%84%E8%BF%90%E7%BB%B4%E5%B7%A5%E5%85%B7"><span class="toc-number">1.6.5.</span> <span class="toc-text">2.6.5　promtool：被严重低估的运维工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-%E6%96%B9%E5%BC%8F%E4%B8%89%EF%BC%9A%E5%AE%B9%E5%99%A8%E5%8C%96%E9%83%A8%E7%BD%B2"><span class="toc-number">1.7.</span> <span class="toc-text">2.7　方式三：容器化部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-1-%E5%AE%98%E6%96%B9-Dockerfile-%E5%85%A8%E8%A7%A3%E8%AF%BB"><span class="toc-number">1.7.1.</span> <span class="toc-text">2.7.1　官方 Dockerfile 全解读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-2-%E4%B8%89%E7%A7%8D%E5%90%AF%E5%8A%A8%E5%A7%BF%E5%8A%BF"><span class="toc-number">1.7.2.</span> <span class="toc-text">2.7.2　三种启动姿势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-3-%E2%AD%90-%E6%95%85%E9%9A%9C%E7%8E%B0%E5%9C%BA%E5%9B%9B%EF%BC%9A%E5%AE%B9%E5%99%A8%E9%87%8C%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%94%B9%E4%B8%8D%E5%8A%A8"><span class="toc-number">1.7.3.</span> <span class="toc-text">2.7.3　⭐ 故障现场四：容器里的配置文件改不动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-4-Docker-Compose%EF%BC%9A%E4%B8%80%E9%94%AE%E8%B5%B7%E6%95%B4%E5%A5%97%E7%9B%91%E6%8E%A7%E6%A0%88"><span class="toc-number">1.7.4.</span> <span class="toc-text">2.7.4　Docker Compose：一键起整套监控栈</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-8-Node-Exporter%EF%BC%9A%E6%8A%8A%E4%B8%BB%E6%9C%BA%E6%8C%87%E6%A0%87%E2%80%9D%E5%87%BA%E5%8F%A3%E2%80%9D%E5%87%BA%E5%8E%BB"><span class="toc-number">1.8.</span> <span class="toc-text">2.8　Node Exporter：把主机指标”出口”出去</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-8-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%85%E9%A1%BB%E6%9C%89%E5%AE%83"><span class="toc-number">1.8.1.</span> <span class="toc-text">2.8.1　为什么必须有它</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-8-2-%E5%AE%89%E8%A3%85%EF%BC%88%E4%B8%8E-Prometheus-%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E8%A3%85%E5%87%A0%E4%B9%8E%E5%90%8C%E6%9E%84%EF%BC%89"><span class="toc-number">1.8.2.</span> <span class="toc-text">2.8.2　安装（与 Prometheus 二进制安装几乎同构）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-8-3-service-%E6%96%87%E4%BB%B6%EF%BC%88%E5%90%AB%E4%B8%A4%E4%B8%AA%E5%9D%91%EF%BC%89"><span class="toc-number">1.8.3.</span> <span class="toc-text">2.8.3　service 文件（含两个坑）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-8-4-%E9%AA%8C%E8%AF%81%E6%9A%B4%E9%9C%B2%E7%BB%93%E6%9E%9C"><span class="toc-number">1.8.4.</span> <span class="toc-text">2.8.4　验证暴露结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-8-5-%E5%B8%B8%E8%A7%81%E6%8C%87%E6%A0%87%E9%80%9F%E6%9F%A5%EF%BC%88%E8%83%8C%E8%AF%B5%E7%BA%A7%EF%BC%89"><span class="toc-number">1.8.5.</span> <span class="toc-text">2.8.5　常见指标速查（背诵级）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-8-6-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%B9%E5%99%A8%E9%87%8C%E7%9A%84-Node-Exporter-%E5%BF%85%E9%A1%BB%E2%80%9D%E4%B8%89%E4%BB%B6%E5%A5%97%E2%80%9D"><span class="toc-number">1.8.6.</span> <span class="toc-text">2.8.6　为什么容器里的 Node Exporter 必须”三件套”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-8-7-%E6%89%B9%E9%87%8F%E9%83%A8%E7%BD%B2%EF%BC%9A%E8%84%9A%E6%9C%AC-%E2%86%92-Ansible-%E2%86%92-DaemonSet"><span class="toc-number">1.8.7.</span> <span class="toc-text">2.8.7　批量部署：脚本 → Ansible → DaemonSet</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-9-%E8%AE%A9-Prometheus-%E9%87%87%E9%9B%86-Node-Exporter"><span class="toc-number">1.9.</span> <span class="toc-text">2.9　让 Prometheus 采集 Node Exporter</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-9-1-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE"><span class="toc-number">1.9.1.</span> <span class="toc-text">2.9.1　修改配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-9-2-%E6%A3%80%E6%9F%A5-%E2%86%92-%E7%94%9F%E6%95%88-%E2%86%92-%E9%AA%8C%E8%AF%81"><span class="toc-number">1.9.2.</span> <span class="toc-text">2.9.2　检查 → 生效 → 验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-9-3-%E2%AD%90-%E6%95%85%E9%9A%9C%E7%8E%B0%E5%9C%BA%E4%BA%94%EF%BC%9A%E7%AB%AF%E5%8F%A3%E5%86%99%E9%94%99%EF%BC%8C%E4%B8%80%E4%B8%AA%E5%AD%97%E7%AC%A6%E6%8E%92%E6%9F%A5%E5%8D%8A%E5%B0%8F%E6%97%B6"><span class="toc-number">1.9.3.</span> <span class="toc-text">2.9.3　⭐ 故障现场五：端口写错，一个字符排查半小时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-9-4-%E2%80%9C%E6%8A%93%E4%B8%8D%E5%88%B0%E6%95%B0%E6%8D%AE%E2%80%9D%E4%BA%94%E6%AD%A5%E6%8E%92%E6%9F%A5%E6%B3%95"><span class="toc-number">1.9.4.</span> <span class="toc-text">2.9.4　“抓不到数据”五步排查法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-10-Grafana%EF%BC%9A%E8%AE%A9%E6%95%B0%E6%8D%AE%E5%8F%98%E6%88%90%E5%9B%BE"><span class="toc-number">1.10.</span> <span class="toc-text">2.10　Grafana：让数据变成图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-10-1-%E5%AE%83%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.10.1.</span> <span class="toc-text">2.10.1　它是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-10-2-%E5%AE%89%E8%A3%85%EF%BC%88deb-%E5%8C%85%EF%BC%89"><span class="toc-number">1.10.2.</span> <span class="toc-text">2.10.2　安装（deb 包）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-10-3-%E9%A6%96%E6%AC%A1%E7%99%BB%E5%BD%95%E4%B8%8E%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE%E6%BA%90"><span class="toc-number">1.10.3.</span> <span class="toc-text">2.10.3　首次登录与添加数据源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-10-4-%E2%AD%90-%E8%AE%A4%E7%9F%A5%E9%9A%BE%E7%82%B9%EF%BC%9A%E5%86%85%E7%BD%AE-Dashboard-%E4%B8%BA%E4%BB%80%E4%B9%88%E2%80%9D%E9%83%A8%E5%88%86%E6%B2%A1%E6%95%B0%E6%8D%AE%E2%80%9D"><span class="toc-number">1.10.4.</span> <span class="toc-text">2.10.4　⭐ 认知难点：内置 Dashboard 为什么”部分没数据”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-10-5-%E5%AF%BC%E5%85%A5%E7%A4%BE%E5%8C%BA-Dashboard-%E5%B1%95%E7%A4%BA-Node-Exporter-%E6%95%B0%E6%8D%AE"><span class="toc-number">1.10.5.</span> <span class="toc-text">2.10.5　导入社区 Dashboard 展示 Node Exporter 数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-10-6-%E6%97%B6%E9%97%B4%E6%98%BE%E7%A4%BA%EF%BC%9AUTC-%E8%BF%98%E6%98%AF%E6%9C%AC%E5%9C%B0%E6%97%B6%E9%97%B4"><span class="toc-number">1.10.6.</span> <span class="toc-text">2.10.6　时间显示：UTC 还是本地时间</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-11-%E9%80%92%E5%BD%92%E4%B9%8B%E7%BE%8E%EF%BC%9A%E7%9B%91%E6%8E%A7-Grafana-%E8%87%AA%E5%B7%B1"><span class="toc-number">1.11.</span> <span class="toc-text">2.11　递归之美：监控 Grafana 自己</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-11-1-%E9%82%A3%E6%9D%A1%E2%80%9D%E7%BB%95%E4%B8%80%E5%9C%88%E2%80%9D%E7%9A%84%E9%93%BE%E8%B7%AF"><span class="toc-number">1.11.1.</span> <span class="toc-text">2.11.1　那条”绕一圈”的链路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-11-2-%E9%85%8D%E7%BD%AE"><span class="toc-number">1.11.2.</span> <span class="toc-text">2.11.2　配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-11-3-%E7%94%B1%E6%AD%A4%E6%80%BB%E7%BB%93%E5%87%BA%E7%9A%84%E4%B8%80%E6%9D%A1%E9%87%8D%E8%A6%81%E5%88%86%E7%B1%BB"><span class="toc-number">1.11.3.</span> <span class="toc-text">2.11.3　由此总结出的一条重要分类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-12-Pushgateway%EF%BC%9A%E7%BB%99%E2%80%9D%E6%8A%93%E4%B8%8D%E5%88%B0%E2%80%9D%E7%9A%84%E6%8C%87%E6%A0%87%E5%BC%80%E4%B8%80%E6%89%87%E9%97%A8"><span class="toc-number">1.12.</span> <span class="toc-text">2.12　Pushgateway：给”抓不到”的指标开一扇门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-12-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89%E8%BF%99%E4%B8%AA%E7%BB%84%E4%BB%B6"><span class="toc-number">1.12.1.</span> <span class="toc-text">2.12.1　为什么会有这个组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-12-2-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%9A%E4%B8%80%E4%B8%AA%E2%80%9D%E4%BB%A3%E6%94%B6%E7%82%B9%E2%80%9D"><span class="toc-number">1.12.2.</span> <span class="toc-text">2.12.2　工作原理：一个”代收点”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-12-3-%E4%B8%8E-Exporter%E3%80%81%E4%B8%8E-Zabbix-Proxy-%E7%9A%84%E5%AF%B9%E7%85%A7"><span class="toc-number">1.12.3.</span> <span class="toc-text">2.12.3　与 Exporter、与 Zabbix Proxy 的对照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-12-4-%E5%BF%85%E9%A1%BB%E7%9F%A5%E9%81%93%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%9B%BA%E6%9C%89%E7%BC%BA%E9%99%B7"><span class="toc-number">1.12.4.</span> <span class="toc-text">2.12.4　必须知道的四个固有缺陷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-12-5-%E5%AE%89%E8%A3%85"><span class="toc-number">1.12.5.</span> <span class="toc-text">2.12.5　安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-12-6-%E8%AE%A9-Prometheus-%E9%87%87%E9%9B%86-Pushgateway"><span class="toc-number">1.12.6.</span> <span class="toc-text">2.12.6　让 Prometheus 采集 Pushgateway</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-12-7-%E6%8E%A8%E9%80%81%E6%95%B0%E6%8D%AE%EF%BC%9AURL-%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.12.7.</span> <span class="toc-text">2.12.7　推送数据：URL 格式详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-12-8-%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%8C%E5%88%AB%E5%8F%AA%E4%BC%9A%E6%8E%A8%E4%B8%8D%E4%BC%9A%E5%88%A0%EF%BC%89"><span class="toc-number">1.12.8.</span> <span class="toc-text">2.12.8　删除数据（重要，别只会推不会删）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-12-9-%E7%94%9F%E4%BA%A7%E5%8F%AF%E7%94%A8%E8%84%9A%E6%9C%AC"><span class="toc-number">1.12.9.</span> <span class="toc-text">2.12.9　生产可用脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-12-10-%E9%AA%8C%E8%AF%81"><span class="toc-number">1.12.10.</span> <span class="toc-text">2.12.10　验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-13-%E4%B8%80%E4%B8%AA%E5%AE%8C%E6%95%B4%E4%BE%8B%E5%AD%90%EF%BC%9A%E7%9B%91%E6%8E%A7-Zookeeper"><span class="toc-number">1.13.</span> <span class="toc-text">2.13　一个完整例子：监控 Zookeeper</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-13-1-%E4%B8%89%E7%A7%8D%E6%8C%87%E6%A0%87%E6%9D%A5%E6%BA%90%E5%88%86%E7%B1%BB"><span class="toc-number">1.13.1.</span> <span class="toc-text">2.13.1　三种指标来源分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-13-2-%E6%89%93%E5%BC%80-Zookeeper-%E7%9A%84%E5%86%85%E7%BD%AE%E6%8C%87%E6%A0%87%E7%AB%AF%E7%82%B9"><span class="toc-number">1.13.2.</span> <span class="toc-text">2.13.2　打开 Zookeeper 的内置指标端点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-13-3-%E5%8A%A0-job%EF%BC%8C%E7%9C%8B%E6%95%B0%E6%8D%AE"><span class="toc-number">1.13.3.</span> <span class="toc-text">2.13.3　加 job，看数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-14-%E6%9C%AC%E7%AB%A0%E5%B0%8F%E7%BB%93"><span class="toc-number">1.14.</span> <span class="toc-text">2.14　本章小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-15-%E9%9D%A2%E8%AF%95%E9%AB%98%E9%A2%91%E9%97%AE%E7%AD%94"><span class="toc-number">1.15.</span> <span class="toc-text">2.15　面试高频问答</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-16-%E5%8A%A8%E6%89%8B%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.16.</span> <span class="toc-text">2.16　动手实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E4%B8%80%EF%BC%88%E5%BF%85%E5%81%9A%EF%BC%89-%E4%BA%8C%E8%BF%9B%E5%88%B6%E8%A3%85%E5%85%A8%E5%A5%97-%E9%87%87%E9%9B%86%E5%9B%9B%E5%8F%B0%E4%B8%BB%E6%9C%BA"><span class="toc-number">1.16.1.</span> <span class="toc-text">实验一（必做）　二进制装全套 + 采集四台主机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E4%BA%8C-%E5%AE%B9%E5%99%A8%E5%8C%96%E5%AF%B9%E7%85%A7%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.16.2.</span> <span class="toc-text">实验二　容器化对照实验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E4%B8%89-Grafana-%E5%85%A8%E9%93%BE%E8%B7%AF"><span class="toc-number">1.16.3.</span> <span class="toc-text">实验三　Grafana 全链路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E5%9B%9B-Pushgateway-%E6%8E%A8%E4%B8%80%E4%B8%AA%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E6%A0%87"><span class="toc-number">1.16.4.</span> <span class="toc-text">实验四　Pushgateway 推一个自定义指标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-17-%E4%B8%8B%E7%AB%A0%E9%A2%84%E5%91%8A"><span class="toc-number">1.17.</span> <span class="toc-text">2.17　下章预告</span></a></li></ol></li></ol></div><div class="related panel pjax" data-title="系列文章"><ul><li><a href="/posts/1096553236.html" rel="bookmark" title="03 PromQL：把指标变成答案">03 PromQL：把指标变成答案</a></li><li class="active"><a href="/posts/3486386405.html" rel="bookmark" title="02 部署与点亮：让 Prometheus 真正跑起来">02 部署与点亮：让 Prometheus 真正跑起来</a></li><li><a href="/posts/65018325.html" rel="bookmark" title="01 Prometheus入门：从监控到可观测性">01 Prometheus入门：从监控到可观测性</a></li></ul></div><div class="overview panel" data-title="站点概览"><div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="image" loading="lazy" decoding="async" itemprop="image" alt="Jaxx.Wang" src="/assets/avatar.jpg"><p class="name" itemprop="name">Jaxx.Wang</p><div class="description" itemprop="description">这是一个 LinuxSre 相关的技术播客</div></div><nav class="state"><div class="item posts"><a href="/archives/"><span class="count">7</span><span class="name">文章</span></a></div><div class="item categories"><a href="/categories/"><span class="count">2</span><span class="name">分类</span></a></div><div class="item tags"><a href="/tags/"><span class="count">2</span><span class="name">标签</span></a></div></nav><div class="social"><a target="_blank" rel="noopener" href="https://github.com/REPUC" class="item github" title="https:&#x2F;&#x2F;github.com&#x2F;REPUC"><i class="ic i-github"></i></a><a target="_blank" rel="noopener" href="https://space.bilibili.com/1886736881" class="item bilibili" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;1886736881"><i class="ic i-youtube"></i></a><a href="mailto:1281570031@qq.com" class="item email" title="mailto:1281570031@qq.com"><i class="ic i-envelope"></i></a></div><div class="menu"><li class="item"><a href="/" rel="section"><i class="ic i-home"></i>首页</a></li><li class="item"><a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a></li><li class="item"><a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a></li><li class="item"><a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a></li><li class="item"><a href="/about/" rel="section"><i class="ic i-user"></i>关于</a></li><li class="item"><a href="/friends/" rel="section"><i class="ic i-heart"></i>友链</a></li></div></div></div></div><ul id="quick"><li class="prev pjax"><a href="/posts/1096553236.html" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a></li><li class="up"><i class="ic i-arrow-up"></i></li><li class="down"><i class="ic i-arrow-down"></i></li><li class="next pjax"><a href="/posts/65018325.html" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a></li><li class="percent"></li></ul></div></div><div class="dimmer"></div></div></main><footer id="footer"><div class="inner"><div class="widgets"><div class="rpost pjax"><h2>随机文章</h2><ul><li class="item"><div class="breadcrumb"><a href="/categories/ELK/" title="分类于ELK">ELK</a></div><span><a href="/posts/3825997150.html">01 ELK 日志收集系统概述</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Prometheus/" title="分类于Prometheus">Prometheus</a></div><span><a href="/posts/65018325.html">01 Prometheus入门：从监控到可观测性</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/ELK/" title="分类于ELK">ELK</a></div><span><a href="/posts/3192084428.html">03 Elasticsearch 集群</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/ELK/" title="分类于ELK">ELK</a></div><span><a href="/posts/2265425726.html">04 Filebeat 日志收集入门</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/ELK/" title="分类于ELK">ELK</a></div><span><a href="/posts/4103087246.html">02 Elasticsearch 入门</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Prometheus/" title="分类于Prometheus">Prometheus</a></div><span><a href="/posts/1096553236.html">03 PromQL：把指标变成答案</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Prometheus/" title="分类于Prometheus">Prometheus</a></div><span><a href="/posts/3486386405.html">02 部署与点亮：让 Prometheus 真正跑起来</a></span></li></ul></div><div class="rpost pjax"><h2>最新评论</h2><ul class="leancloud-recent-comment" id="new-comment"></ul></div></div><div class="status"><div class="copyright">&copy; 2022 -<span itemprop="copyrightYear">2026</span><span class="with-love"><i class="ic i-sakura rotate"></i></span><span class="author" itemprop="copyrightHolder">Jaxx.Wang @ Jaxx.Wang</span></div><div class="count"><span class="post-meta-item-icon"><i class="ic i-chart-area"></i></span><span title="站点总字数">171k 字</span><span class="post-meta-divider"> | </span><span class="post-meta-item-icon"><i class="ic i-coffee"></i></span><span title="站点阅读时长">2:36</span></div><div class="powered-by">基于 <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> & Theme.<a target="_blank" rel="noopener" href="https://github.com/theme-shoka-x/hexo-theme-shokaX/">ShokaX</a></div><br><span style="display:inline;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:var(--grey-5)"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn">2022002072</a><br><a target="_blank" href="https://beian.mps.gov.cn/#/query/webSearch?code=xxx"><img loading="lazy" decoding="async" data-src="/assets/wangan.png" style="max-width: 2em;display:inline" width="20" height="20" alt="备案">湘 ICP 备 2022002072 号</a></span></div></div></footer></div><script data-config type="text/javascript">var LOCAL = {
+    ispost: true,
+        path: `posts/3486386405.html`,
+        favicon: {
+        show: `（●´3｀●）やれやれだぜ`,
+        hide: `(´Д｀)大変だ！`
+    },
+    search: {
+        placeholder: "文章搜索",
+        empty: "关于 「 ${query} 」，什么也没搜到",
+        stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    copy_tex: false,
+    katex: false,
+    mermaid: false,
+    audio: undefined,
+    fancybox: true,
+    nocopy: false,
+    outime: true,
+    template: `<div class="note warning"><p><span class="label warning">文章时效性提示</span><br>这是一篇发布于 {{publish}} 天前，最后一次更新在 {{updated}} 天前的文章，部分信息可能已经发生改变，请注意甄别。</p></div>`,
+    quiz: {
+        choice: `单选题`,
+        multiple: `多选题`,
+        true_false: `判断题`,
+        essay: `问答题`,
+        gap_fill: `填空题`,
+        mistake: `错题备注`
+    },
+    ignores: [
+        (uri) => uri.includes('#'),
+        (uri) => new RegExp(LOCAL.path + '$').test(uri),
+            []
+    ]
+};</script><script src="https://s4.zstatic.net/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous" fetchpriority="high"></script><script src="https://s4.zstatic.net/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha384-ZvpUoO&#x2F;+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn&#x2F;6Z&#x2F;hRTt8+pR6L4N2" crossorigin="anonymous" fetchpriority="high"></script><script src="/js/siteInit.js?v=0.4.17" type="module" fetchpriority="high" defer></script></body></html><!-- rebuild by hrmmi -->
