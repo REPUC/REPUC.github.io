@@ -7,10 +7,10 @@
         <language>zh-CN</language>
         <pubDate>Thu, 11 Dec 2025 00:00:00 +0800</pubDate>
         <lastBuildDate>Thu, 11 Dec 2025 00:00:00 +0800</lastBuildDate>
-        <category>Nginx</category>
         <category>Linux</category>
-        <category>MySQL</category>
+        <category>Nginx</category>
         <category>Ansible</category>
+        <category>MySQL</category>
         <category>Prometheus</category>
         <category>ELK</category>
         <item>
