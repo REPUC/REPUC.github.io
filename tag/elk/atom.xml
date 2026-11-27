@@ -6,8 +6,8 @@
     <updated>2025-12-10T16:00:00.000Z</updated>
     <category term="Linux" />
     <category term="Nginx" />
-    <category term="MySQL" />
     <category term="Ansible" />
+    <category term="MySQL" />
     <category term="Prometheus" />
     <category term="ELK" />
     <entry>
