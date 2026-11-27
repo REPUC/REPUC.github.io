@@ -12094,7 +12094,7 @@ When setting it on the command-line or in a server option group in an option fil
             <title>01 数据库原理</title>
             <link>http://blog.jaxxwang.cn/posts/1679277359.html</link>
             <category>MySQL</category>
-            <pubDate>Thu, 01 Oct 2026 03:16:56 +0800</pubDate>
+            <pubDate>Thu, 01 Oct 2026 11:16:56 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;mysql-数据库-第1章-数据库原理&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#mysql-数据库-第1章-数据库原理&#34;&gt;#&lt;/a&gt; MySQL 数据库 · 第1章 数据库原理&lt;/h1&gt;
 &lt;p&gt;本章从数据的时代特征出发，梳理数据库系统从文件管理到关系型数据库的发展脉络，介绍数据库管理系统（DBMS）的概念、优点与基本功能，并系统讲解关系型数据库的核心理论，包括实体-联系模型、联系类型、数据操作、数据库规划与正规化分析（范式）、SQL 简介、数据约束、关系运算及数据抽象层次，为后续 MySQL 的实操学习奠定理论基础。&lt;/p&gt;
 &lt;h2 id=&#34;11-数据的时代&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#11-数据的时代&#34;&gt;#&lt;/a&gt; 1.1 数据的时代&lt;/h2&gt;
